@@ -15,6 +15,7 @@ const orderRoutes = require('./routes/orders');
 const quoteRoutes = require('./routes/quotes');
 const partnerRoutes = require('./routes/partners');
 const userRoutes = require('./routes/users');
+const { seedProductsIfEmpty } = require('./config/seed');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -111,7 +112,7 @@ app.use((err, req, res, next) => {
 });
 
 // ── Start Server ──────────────────────────────────────────
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
   console.log('\n╔═══════════════════════════════════════════╗');
   console.log(`║  OH I SEE API Server                      ║`);
   console.log(`║  Running on http://localhost:${PORT}         ║`);
@@ -131,6 +132,9 @@ app.listen(PORT, () => {
   console.log('  POST /api/auth/signup');
   console.log('  POST /api/auth/login');
   console.log('  GET  /api/health');
+
+  // Auto-seed database if empty
+  await seedProductsIfEmpty();
 });
 
 module.exports = app;

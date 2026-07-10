@@ -236,6 +236,14 @@
           if (a.textContent.includes(catParam) || a.href.includes(catParam)) a.classList.add('active');
         });
       }
+
+      const stockToggle = document.getElementById('stock-toggle');
+      if (stockToggle) {
+        stockToggle.addEventListener('click', () => {
+          applyFilters();
+        });
+      }
+
       applyFilters();
 
       // Mobile filter toggle
