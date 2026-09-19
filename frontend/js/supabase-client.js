@@ -5,11 +5,12 @@
 // Find them at: https://supabase.com/dashboard → Settings → API
 // ============================================================
 
-const SUPABASE_URL = 'https://vsqdqgmndgjfhosozxfn.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_TJJWAY3Xi6jrk2WlHKh_OA_fL-Y51XY';
+const RT = window.OHISEE_RUNTIME || {};
+const SUPABASE_URL = RT.SUPABASE_URL || 'https://vsqdqgmndgjfhosozxfn.supabase.co';
+const SUPABASE_ANON_KEY = RT.SUPABASE_ANON_KEY || 'sb_publishable_TJJWAY3Xi6jrk2WlHKh_OA_fL-Y51XY';
 
 // Initialize the Supabase client
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+var supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
   auth: {
     persistSession: true,
     autoRefreshToken: true

@@ -15,6 +15,21 @@ const orderRoutes = require('./routes/orders');
 const quoteRoutes = require('./routes/quotes');
 const partnerRoutes = require('./routes/partners');
 const userRoutes = require('./routes/users');
+const aiRoutes = require('./routes/ai');
+const projectRoutes = require('./routes/projects');
+const procurementRoutes = require('./routes/procurement');
+const subcontractRoutes = require('./routes/subcontract');
+const logisticsRoutes = require('./routes/logistics');
+const financeRoutes = require('./routes/finance');
+const qualityRoutes = require('./routes/quality');
+const analyticsRoutes = require('./routes/analytics');
+const supplierRoutes = require('./routes/suppliers');
+const buildSupplyRoutes = require('./routes/buildSupply');
+const construction = require('./routes/construction');
+const quotationsRoutes = require('./routes/quotations');
+const blueprintRoutes = require('./routes/blueprint');
+const bimRoutes = require('./routes/bim');
+const geoRoutes = require('./routes/geo');
 const { seedProductsIfEmpty } = require('./config/seed');
 
 const app = express();
@@ -53,6 +68,7 @@ app.use(cors({
 app.options('*', cors());
 
 // ── Request Parsing ───────────────────────────────────────
+app.post('/api/construction/payments/webhook', express.raw({ type: 'application/json', limit: '1mb' }), construction.webhook);
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
@@ -60,10 +76,7 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use((req, res, next) => {
   console.log(`\n[REQ] ${req.method} ${req.path}`);
   if (['POST', 'PUT', 'PATCH'].includes(req.method) && req.body && Object.keys(req.body || {}).length) {
-    // Clone body to hide passwords in logs
-    const safeBody = { ...(req.body || {}) };
-    if (safeBody.password) safeBody.password = '***';
-    console.log('[BODY]', safeBody);
+    console.log('[BODY] omitted');
   }
   next();
 });
@@ -76,10 +89,36 @@ if (process.env.NODE_ENV !== 'test') {
 // ── Rate Limiting ─────────────────────────────────────────
 app.use('/api', apiLimiter);
 
+// ── Root — API is not the web app; point browsers to the frontend ──
+app.get('/', (req, res) => {
+  const frontend = process.env.FRONTEND_URL || 'http://localhost:3000';
+  const accept = req.headers.accept || '';
+  if (accept.includes('text/html')) {
+    return res.type('html').send(`<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><title>OH I SEE API</title>
+<meta http-equiv="refresh" content="0;url=${frontend}/pages/index.html">
+<style>body{font-family:system-ui;background:#0a0a0a;color:#eee;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}
+.box{text-align:center;padding:2rem;border:1px solid #333;border-radius:12px;max-width:420px}
+a{color:#FFD400}</style></head><body><div class="box">
+<h1>OH I SEE API</h1>
+<p>This is the <strong>backend API</strong> (port ${PORT}), not the website.</p>
+<p><a href="${frontend}/pages/index.html">Open the app →</a></p>
+<p style="font-size:12px;color:#888"><a href="/api/health">API health</a></p>
+</div></body></html>`);
+  }
+  res.json({
+    status: 'running',
+    server: 'OH I SEE API',
+    message: 'This is the backend API. Use the frontend at ' + frontend,
+    frontend: `${frontend}/pages/index.html`,
+    health: '/api/health',
+  });
+});
+
 // ── Health Check ─────────────────────────────────────────
 app.get('/api/health', (req, res) => {
   res.json({
-    status: 'running',
+    status: 'ok',
     server: 'backend',
     port: PORT,
     version: '1.0.0',
@@ -87,13 +126,56 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// ── Readiness Check (K8s / load balancers) ───────────────
+app.get('/api/ready', async (req, res) => {
+  const checks = { supabase: 'skipped' };
+  if (process.env.SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY
+      && !process.env.SUPABASE_URL.includes('placeholder')) {
+    try {
+      const supabase = require('./config/supabase');
+      const { error } = await supabase.from('users').select('id').limit(1);
+      checks.supabase = error ? 'degraded' : 'ok';
+    } catch {
+      checks.supabase = 'degraded';
+    }
+  }
+  const ready = checks.supabase === 'ok' || checks.supabase === 'skipped';
+  res.status(ready ? 200 : 503).json({
+    status: ready ? 'ready' : 'not_ready',
+    checks,
+    timestamp: new Date().toISOString(),
+  });
+});
+
 // ── Routes ────────────────────────────────────────────────
-app.use('/api/auth',     authRoutes);
-app.use('/api/products', productRoutes);
-app.use('/api/orders',   orderRoutes);
-app.use('/api/quotes',   quoteRoutes);
-app.use('/api/partners', partnerRoutes);
-app.use('/api/users',    userRoutes);
+app.use('/api/geo',          geoRoutes);
+app.use('/api/auth',         authRoutes);
+app.use('/api/products',     productRoutes);
+app.use('/api/orders',       orderRoutes);
+app.use('/api/quotes',       quoteRoutes);
+app.use('/api/partners',     partnerRoutes);
+app.use('/api/users',        userRoutes);
+app.use('/api/ai',           aiRoutes);
+app.use('/api/marketplace', require('./routes/marketplace'));
+app.use('/api/portal',       require('./routes/portal'));
+app.use('/api/projects',     require('./routes/projectSetup'));
+app.use('/api/projects',     projectRoutes);
+app.use('/api/projects/:projectId/bim', bimRoutes);
+app.use('/api/projects/:projectId/home-designs', require('./routes/homeDesign'));
+app.use('/api/procurement',  procurementRoutes);
+app.use('/api/subcontract',  subcontractRoutes);
+app.use('/api/logistics',    logisticsRoutes);
+app.use('/api/finance',      financeRoutes);
+app.use('/api/quality',      qualityRoutes);
+app.use('/api/analytics',    analyticsRoutes);
+app.use('/api/suppliers',    supplierRoutes);
+app.use('/api/build-supply', buildSupplyRoutes);
+app.use('/api/construction', require('./routes/homeRequirements'));
+app.use('/api/construction', construction.router);
+app.use('/api/quotations',   quotationsRoutes);
+app.use('/api/blueprints',   blueprintRoutes);
+
+app.use('/api/3d', require('./routes/design3d').router);
 
 // ── 404 Handler ───────────────────────────────────────────
 app.use((req, res) => {
@@ -134,7 +216,8 @@ app.listen(PORT, async () => {
   console.log('  GET  /api/health');
 
   // Auto-seed database if empty
-  await seedProductsIfEmpty();
+  if (process.env.SEED_DEMO_DATA === 'true') await seedProductsIfEmpty();
 });
 
 module.exports = app;
+

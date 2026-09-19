@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Materials — OH I SEE</title>
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/project-workspace.css">
+  <link rel="icon" href="/images/logo.png" type="image/png">
+</head>
+<body class="pw-body">
+  <header class="pw-header"><div class="container pw-header-inner"><a href="index.html" class="pw-back">← OH I SEE</a><div><div class="pw-project-id" id="pw-header-id">—</div><div class="pw-project-name" id="pw-header-name">Loading…</div></div></div></header>
+  <div class="pw-shell"><aside class="pw-sidebar" id="pw-nav"></aside><main class="pw-main"><div class="pw-topbar" id="pw-topbar"></div><div class="pw-content" id="pw-content"></div></main></div>
+  <script src="../js/utils/helpers.js"></script><script src="../js/components/notifications.js"></script><script src="../js/api/api-core.js"></script><script src="../js/api/projects.js"></script><script src="../js/bim/api/bim.js"></script><script src="../js/bim/project-workspace.js"></script>
+  <script>
+    async function init() {
+      const projectId = ProjectWorkspace.getProjectId();
+      if (!projectId || !ProjectWorkspace.requireAuth(projectId)) return;
+      const project = await ProjectWorkspace.loadProject(projectId);
+      if (!project) return;
+      document.getElementById('pw-header-id').textContent = project.project_id;
+      document.getElementById('pw-header-name').textContent = project.project_name;
+      ProjectWorkspace.renderNav('materials', projectId);
+      let status = 'none', materials = [];
+      try {
+        const res = await BimAPI.getModel(projectId);
+        status = res.data?.status || 'none';
+        materials = res.data?.quantities?.materialSummary || [];
+      } catch (e) {}
+      ProjectWorkspace.renderTopbar(project, 'Materials', status);
+      ProjectWorkspace.wireBimActions(projectId, init);
+      const rows = Array.isArray(materials) ? materials : Object.entries(materials || {}).map(([id, v]) => ({ materialId: id, ...v }));
+      document.getElementById('pw-content').innerHTML = rows.length ? `
+        <div class="pw-stat-card"><table class="pw-table"><thead><tr><th>Material</th><th>Measure</th><th>Qty</th></tr></thead>
+        <tbody>${rows.map((m) => `<tr><td>${m.materialId || m.id || '—'}</td><td>${m.measureType || '—'}</td><td>${m.value} ${m.unit || ''}</td></tr>`).join('')}</tbody></table></div>`
+        : `<div class="pw-stat-card"><p style="color:#888;">Material breakdown appears after BIM generation.</p></div>`;
+    }
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>

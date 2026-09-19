@@ -1,0 +1,333 @@
+/* ============================================================
+   OH I SEE — Blueprint Builder CSS
+   ============================================================ */
+
+/* ── Blueprint Page Base ───────────────────────────────────*/
+.blueprint-page { background: #000; min-height: 100vh; color: #fff; font-family: 'Inter', sans-serif; }
+
+.blueprint-hero {
+  background: #050505;
+  border-bottom: 1px solid #1a1a1a;
+  padding: 36px 0;
+}
+
+/* ── Steps Indicator ───────────────────────────────────────*/
+.blueprint-steps {
+  display: flex;
+  gap: 0;
+  align-items: center;
+  margin-bottom: 40px;
+  overflow-x: auto;
+}
+
+.bp-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.bp-step-dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #111;
+  border: 2px solid #222;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  color: #444;
+  transition: all 0.3s;
+}
+
+.bp-step-dot.active { background: rgba(255,212,0,0.12); border-color: #FFD400; color: #FFD400; }
+.bp-step-dot.done   { background: #FFD400; border-color: #FFD400; color: #000; }
+
+.bp-step-label {
+  font-family: 'Space Grotesk', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: #333;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.bp-step.active .bp-step-label { color: #FFD400; }
+.bp-step.done .bp-step-label { color: #888; }
+
+.bp-step-line {
+  width: 48px;
+  height: 2px;
+  background: #1a1a1a;
+  margin: 0 4px 0;
+  flex-shrink: 0;
+  transition: background 0.3s;
+}
+
+.bp-step-line.done { background: rgba(255,212,0,0.5); }
+
+/* ── Requirements Form ─────────────────────────────────────*/
+.blueprint-form {
+  background: #080808;
+  border: 1px solid #1a1a1a;
+  border-radius: 20px;
+  padding: 40px;
+  margin-bottom: 32px;
+}
+
+.bp-form-section-title {
+  font-family: 'Space Grotesk', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #FFD400;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #1a1a1a;
+}
+
+.bp-form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.bp-form-field label {
+  display: block;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #555;
+  margin-bottom: 8px;
+}
+
+.bp-form-field input,
+.bp-form-field select {
+  width: 100%;
+  background: #111;
+  border: 1.5px solid #222;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  padding: 12px 14px;
+  outline: none;
+  transition: border-color 0.2s ease;
+  box-sizing: border-box;
+}
+
+.bp-form-field input:focus,
+.bp-form-field select:focus { border-color: rgba(255,212,0,0.45); }
+.bp-form-field input::placeholder { color: #333; }
+
+.bp-checkbox-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.bp-checkbox-chip {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: #111;
+  border: 1.5px solid #222;
+  border-radius: 8px;
+  padding: 9px 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 13px;
+  color: #888;
+}
+
+.bp-checkbox-chip:hover { border-color: #333; color: #ccc; }
+.bp-checkbox-chip.checked { border-color: #FFD400; background: rgba(255,212,0,0.07); color: #FFD400; }
+.bp-checkbox-chip input[type="checkbox"] { display: none; }
+
+/* ── Summary & Generate ────────────────────────────────────*/
+.blueprint-summary {
+  background: #050505;
+  border: 1px solid rgba(255,212,0,0.15);
+  border-radius: 20px;
+  padding: 32px;
+  margin-bottom: 32px;
+  display: none;
+}
+
+.bp-summary-title {
+  font-family: 'Space Grotesk', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #FFD400;
+  margin-bottom: 20px;
+}
+
+.bp-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: 28px;
+}
+
+.bp-summary-item {
+  background: #0d0d0d;
+  border: 1px solid #1a1a1a;
+  border-radius: 10px;
+  padding: 14px;
+}
+
+.bp-summary-item-label {
+  font-family: 'Space Grotesk', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #444;
+  margin-bottom: 6px;
+}
+
+.bp-summary-item-val { font-size: 14px; font-weight: 600; color: #fff; }
+
+/* ── Blueprint SVG Viewer ──────────────────────────────────*/
+.blueprint-viewer {
+  background: #0a0a0a;
+  border: 1px solid #1e1e1e;
+  border-radius: 20px;
+  padding: 32px;
+  display: none;
+}
+
+.blueprint-viewer-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.bp-tool-btn {
+  background: #111;
+  border: 1px solid #222;
+  border-radius: 8px;
+  color: #aaa;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.bp-tool-btn:hover { border-color: #FFD400; color: #FFD400; }
+
+.bp-download-btn {
+  background: #FFD400;
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 9px 16px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.bp-download-btn:hover { background: #e6c200; transform: translateY(-1px); }
+
+.blueprint-canvas-wrap {
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  min-height: 500px;
+}
+
+.blueprint-canvas-wrap svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* ── Validation checklist ──────────────────────────────────*/
+.validation-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.validation-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  padding: 7px 12px;
+  border-radius: 6px;
+}
+
+.validation-item.pass {
+  background: rgba(0,166,81,0.1);
+  border: 1px solid rgba(0,166,81,0.25);
+  color: #00A651;
+}
+
+.validation-item.warn {
+  background: rgba(255,152,0,0.1);
+  border: 1px solid rgba(255,152,0,0.25);
+  color: #FF9800;
+}
+
+.validation-item.fail {
+  background: rgba(229,57,53,0.1);
+  border: 1px solid rgba(229,57,53,0.25);
+  color: #E53935;
+}
+
+/* ── AI Disclaimer ─────────────────────────────────────────*/
+.ai-disclaimer-badge {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: rgba(255,152,0,0.06);
+  border: 1px solid rgba(255,152,0,0.2);
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-size: 12px;
+  color: #aaa;
+  line-height: 1.5;
+  margin-top: 20px;
+}
+
+.ai-disclaimer-badge span:first-child { flex-shrink: 0; font-size: 16px; }
+/* Presentation sheet refinements, scoped to the existing blueprint page. */
+.blueprint-page .container { max-width: 1320px; }
+.blueprint-viewer { padding: 26px; border-color: #30322b; box-shadow: 0 24px 90px #0006; }
+.blueprint-canvas-wrap { border-radius: 6px; min-height: 0; background: #faf9f4; }
+.blueprint-viewer-toolbar { padding-bottom: 18px; border-bottom: 1px solid #292b25; }
+.blueprint-page .bp-step-label,.blueprint-page .bp-form-field label { color: #a3a69b; }
+.blueprint-page .bp-summary-item-label { color: #999f91; }
+.blueprint-page .validation-item { font-family: 'Inter',sans-serif; font-weight: 500; letter-spacing: 0; }
+@media(max-width:700px){.blueprint-viewer{padding:12px}.blueprint-viewer-toolbar{gap:7px}.bp-download-btn,.bp-tool-btn{padding:9px 10px;font-size:10px}.blueprint-canvas-wrap{overflow-x:auto}.blueprint-canvas-wrap svg{min-width:760px}.blueprint-form{padding:20px}}
+.bp-style-options{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:24px}.bp-style-options button{text-align:left;padding:20px;background:#121410;border:1px solid #373b31;border-radius:12px;color:#fff;cursor:pointer}.bp-style-options button[aria-pressed=true]{border-color:#ffd400;background:#242210;box-shadow:inset 0 0 0 1px #ffd400}.bp-style-options span{display:block;font-size:13px;font-weight:700;letter-spacing:.6px}.bp-style-options small{display:block;margin-top:9px;color:#b5b8aa;line-height:1.5}.bp-style-options button:focus-visible{outline:3px solid white;outline-offset:3px}@media(max-width:650px){.bp-style-options{grid-template-columns:1fr}}
+.bp-cad-panel{margin:20px 0;border:1px solid #34372f;border-radius:10px;padding:18px;color:#cdd0c5}.bp-cad-panel summary{cursor:pointer;color:#ffd400}.bp-cad-content p{margin:18px 0;font-size:13px}.bp-cad-content h3{margin:24px 0 12px;font-size:15px}.bp-cad-table{overflow:auto}.bp-cad-table table{width:100%;border-collapse:collapse;font-size:12px}.bp-cad-table th,.bp-cad-table td{padding:10px;text-align:left;border-bottom:1px solid #34372f}.bp-cad-table th{color:#fff}

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ohisee-api
+  labels:
+    app.kubernetes.io/name: ohisee-api
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: ohisee-api
+  ports:
+    - name: http
+      port: 3001
+      targetPort: http

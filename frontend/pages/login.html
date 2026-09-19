@@ -19,6 +19,292 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
+    .login-portal-switch {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+    .login-portal-btn {
+      border: 1px solid #ddd;
+      background: #fafafa;
+      border-radius: 10px;
+      padding: 14px 12px;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s ease;
+    }
+    .login-portal-btn:hover { border-color: #ccc; background: #fff; }
+    .login-portal-btn.active {
+      border-color: var(--primary, #FFD400);
+      background: #fffbe6;
+      box-shadow: inset 0 0 0 1px rgba(255, 212, 0, 0.35);
+    }
+    .login-portal-btn strong {
+      display: block;
+      font-family: 'Space Grotesk', monospace;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+      color: #111;
+    }
+    .login-portal-btn span {
+      display: block;
+      font-size: 12px;
+      color: #666;
+      line-height: 1.4;
+    }
+    .login-portal-note {
+      font-size: 12px;
+      color: #777;
+      margin: -8px 0 18px;
+      line-height: 1.5;
+    }
+    .login-switch-link {
+      display: inline-block;
+      margin-top: 16px;
+      font-size: 13px;
+      color: var(--text-secondary, #666);
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
+    /* ── Signup panel — smarter layout & friendly selects ── */
+    .login-form-container:has(#register-panel.active) .login-form,
+    .login-form.login-form--wide { max-width: 520px; }
+    .reg-account-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .reg-section-label {
+      font-family: 'Space Grotesk', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: #888;
+      margin: 0 0 12px;
+    }
+    .reg-account-picker {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .reg-account-card {
+      border: 1.5px solid #e5e5e5;
+      background: #fafafa;
+      border-radius: 12px;
+      padding: 14px 10px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s ease;
+      font: inherit;
+      color: inherit;
+    }
+    .reg-account-card:hover {
+      border-color: #ccc;
+      background: #fff;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    }
+    .reg-account-card.active {
+      border-color: var(--primary, #FFD400);
+      background: #fffdf0;
+      box-shadow: 0 0 0 1px rgba(255, 212, 0, 0.35), 0 4px 16px rgba(255, 212, 0, 0.12);
+    }
+    .reg-account-card .reg-account-icon {
+      display: block;
+      font-size: 22px;
+      margin-bottom: 6px;
+      line-height: 1;
+    }
+    .reg-account-card strong {
+      display: block;
+      font-family: 'Space Grotesk', monospace;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: #111;
+      margin-bottom: 4px;
+    }
+    .reg-account-card span {
+      display: block;
+      font-size: 11px;
+      color: #777;
+      line-height: 1.35;
+    }
+    .reg-hint {
+      font-size: 12px;
+      color: #888;
+      line-height: 1.5;
+      margin: 0 0 20px;
+    }
+    .reg-provider-block {
+      overflow: hidden;
+      max-height: 0;
+      opacity: 0;
+      margin: 0;
+      transition: max-height 0.35s ease, opacity 0.25s ease, margin 0.35s ease;
+    }
+    .reg-provider-block.visible {
+      max-height: 520px;
+      opacity: 1;
+      margin-bottom: 20px;
+    }
+    .reg-location-card {
+      background: linear-gradient(135deg, #fffdf5 0%, #fff 100%);
+      border: 1px solid #ece8d8;
+      border-radius: 14px;
+      padding: 16px;
+    }
+    .reg-location-card .reg-section-label { margin-bottom: 10px; color: #9a8f5a; }
+    .select-wrap {
+      position: relative;
+    }
+    .select-wrap::after {
+      content: '▾';
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+      color: #666;
+      font-size: 12px;
+    }
+    .reg-select {
+      width: 100%;
+      min-height: 48px;
+      padding: 12px 40px 12px 16px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: inherit;
+      color: #111;
+      background: #fff;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .reg-select:hover { border-color: #bbb; }
+    .reg-select:focus {
+      outline: none;
+      border-color: var(--primary, #FFD400);
+      box-shadow: 0 0 0 3px rgba(255, 212, 0, 0.18);
+    }
+    .reg-select option {
+      padding: 10px;
+      color: #111;
+      background: #fff;
+    }
+    #register-panel .form-group input {
+      min-height: 48px;
+      border-radius: 10px;
+      border-color: #ddd;
+      padding: 12px 16px;
+    }
+    #register-panel .form-group input:focus {
+      border-color: var(--primary, #FFD400);
+      box-shadow: 0 0 0 3px rgba(255, 212, 0, 0.18);
+    }
+    #register-panel .form-group label {
+      font-size: 11px;
+      letter-spacing: 0.8px;
+      margin-bottom: 6px;
+    }
+    #register-panel .form-row { gap: 14px; margin-bottom: 4px; }
+    .reg-terms {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 13px;
+      color: #555;
+      line-height: 1.5;
+      margin-bottom: 24px;
+      cursor: pointer;
+      padding: 12px 14px;
+      background: #fafafa;
+      border: 1px solid #eee;
+      border-radius: 10px;
+    }
+    .reg-terms input { width: 18px; height: 18px; margin-top: 2px; flex-shrink: 0; accent-color: var(--primary); }
+    .reg-submit-btn {
+      width: 100%;
+      padding: 15px 0;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      border-radius: 10px;
+    }
+    @media (max-width: 560px) {
+      .reg-account-picker { grid-template-columns: 1fr; }
+      .reg-account-card { text-align: left; display: flex; align-items: center; gap: 12px; padding: 12px 14px; }
+      .reg-account-card .reg-account-icon { margin: 0; font-size: 20px; }
+      .reg-account-card strong, .reg-account-card span { text-align: left; }
+    }
+
+    /* ── GPS location bar (login + signup) ── */
+    .auth-location-bar {
+      display: none;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px 14px;
+      margin-bottom: 20px;
+      border-radius: 12px;
+      border: 1px solid #e8e8e8;
+      background: #fafafa;
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .auth-location-bar.is-loading {
+      border-color: #dbeafe;
+      background: #f0f7ff;
+    }
+    .auth-location-bar.is-ok {
+      border-color: #cde8d4;
+      background: linear-gradient(135deg, #f0fdf4 0%, #fafafa 100%);
+    }
+    .auth-location-bar.is-error {
+      border-color: #fcd9a3;
+      background: #fff9ed;
+    }
+    .auth-location-icon {
+      width: 24px; height: 24px; flex-shrink: 0;
+      display: inline-flex; align-items: center; justify-content: center;
+    }
+    .auth-location-icon img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .auth-location-copy { flex: 1; min-width: 0; }
+    .auth-location-copy strong {
+      display: block;
+      font-family: 'Space Grotesk', monospace;
+      font-size: 11px;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      color: #111;
+      margin-bottom: 2px;
+    }
+    .auth-location-copy span { color: #555; word-break: break-word; }
+    .auth-location-retry {
+      flex-shrink: 0;
+      border: 1px solid #ddd;
+      background: #fff;
+      color: #111;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .auth-location-retry:hover { border-color: var(--primary, #FFD400); }
+    .auth-location-bar.is-error .auth-location-retry {
+      border-color: #f59e0b;
+      background: #fffbeb;
+      color: #92400e;
+    }
   </style>
 </head>
 <body>
@@ -88,17 +374,7 @@
       <h2>OH I SEE</h2>
       <p>India's high-contrast procurement terminal. Stage and track bulk commercial operations, order status updates, and download project reports from one central dashboard.</p>
       
-      <div style="margin-top:24px; border-top:1px solid rgba(255,255,255,0.1); padding-top:16px; text-align:center; width:100%; max-width:320px;">
-        <div style="font-size:11px; text-transform:uppercase; letter-spacing:2px; color:var(--primary); font-weight:700; margin-bottom:8px;">Operational Desk Mock Logins</div>
-        <div style="color:rgba(255,255,255,0.5); font-size:11px; line-height:1.4; text-align:left; padding: 0 10px;">
-          <strong>Super Admin:</strong> ops@ohisee.industrial / admin123<br>
-          <strong>Admin:</strong> admin@ohisee.industrial / admin123<br>
-          <strong>Customer:</strong> andrew@ohisee.industrial / 123456<br>
-          <strong>Gold Partner:</strong> partner-gold@ohisee.industrial / partner123<br>
-          <strong>Diamond Partner:</strong> partner-diamond@ohisee.industrial / partner123<br>
-          <strong>Pending Partner:</strong> partner-pending@ohisee.industrial / partner123
-        </div>
-      </div>
+      <p>Create a customer, contractor or vendor account to manage your projects and conversations.</p>
     </div>
 
     <!-- Right Column: Form Container -->
@@ -111,19 +387,41 @@
           <div class="login-tab" data-form="partner-panel">Partner Account</div>
         </div>
 
+        <div id="auth-location-bar" class="auth-location-bar is-loading" aria-live="polite">
+          <span class="auth-location-icon" aria-hidden="true"><img src="/images/location-pin.png" alt=""></span>
+          <div class="auth-location-copy">
+            <strong id="auth-location-label">Detecting your location…</strong>
+            <span id="auth-location-detail">Please allow GPS when your browser asks.</span>
+          </div>
+          <button type="button" class="auth-location-retry" id="auth-location-retry" style="display:none;">Enable GPS</button>
+        </div>
+
         <!-- Log In Panel -->
         <div class="login-form-panel active" id="login-panel">
-          <h2>Welcome Back</h2>
-          <p class="subtitle">Access your purchasing accounts and GST configurations</p>
+          <h2 id="login-panel-title">Customer Login</h2>
+          <p class="subtitle" id="login-panel-subtitle">Shop materials, manage projects, orders and quotations.</p>
+
+          <div class="login-portal-switch" role="tablist" aria-label="Login type">
+            <button type="button" class="login-portal-btn active" data-portal="customer" onclick="setLoginPortal('customer')">
+              <strong>Customer Login</strong>
+              <span>Homeowners & buyers</span>
+            </button>
+            <button type="button" class="login-portal-btn" data-portal="vendor" onclick="setLoginPortal('vendor')">
+              <strong>Vendor Login</strong>
+              <span>Contractors & vendors</span>
+            </button>
+          </div>
+          <p class="login-portal-note" id="login-portal-note">Use Customer Login for shopping and project planning.</p>
+          <div id="login-alert" style="display:none; margin-bottom:16px; padding:12px 14px; border-radius:8px; background:#fff5f5; border:1px solid #f5c2c2; color:#8a1f1f; font-size:13px; line-height:1.5;"></div>
           
           <div class="form-group">
             <label>Email Address *</label>
-            <input type="email" id="login-email" placeholder="andrew@ohisee.industrial" value="andrew@ohisee.industrial">
+            <input type="email" id="login-email" placeholder="you@example.com" autocomplete="email">
           </div>
 
           <div class="form-group">
             <label>Password *</label>
-            <input type="password" id="login-pass" placeholder="Enter password" value="123456">
+            <input type="password" id="login-pass" placeholder="Enter password" autocomplete="current-password">
           </div>
 
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; font-size:13px;">
@@ -134,51 +432,167 @@
             <a href="#" id="forgot-password-link" style="color:var(--text-secondary); text-decoration:underline;" onclick="openForgotPasswordModal(event)">Forgot Password?</a>
           </div>
 
-          <button class="btn btn-primary" style="width:100%; padding:14px 0;" onclick="handleLogin()">
-            Authenticate Access
+          <button class="btn btn-primary" id="login-submit-btn" style="width:100%; padding:14px 0;" onclick="handleLogin()">
+            Login as Customer
           </button>
+          <a class="login-switch-link" id="login-switch-link" onclick="setLoginPortal(document.getElementById('login-portal').value === 'vendor' ? 'customer' : 'vendor')">Switch to Vendor Login →</a>
+          <input type="hidden" id="login-portal" value="customer">
         </div>
 
         <!-- Register Panel -->
         <div class="login-form-panel" id="register-panel">
-          <h2>Create Corporate Account</h2>
-          <p class="subtitle">Gain credit access and tax exemptions on volume procurement</p>
+          <h2>Create your OH I SEE account</h2>
+          <p class="subtitle">Plan your home, offer construction services, or register your vendor business.</p>
 
+          <p class="reg-section-label">1. Choose account type</p>
+          <div class="reg-account-picker" role="radiogroup" aria-label="Account type">
+            <button type="button" class="reg-account-card active" data-type="Customer" onclick="setRegAccountType('Customer')">
+              <span class="reg-account-icon">🏠</span>
+              <div>
+                <strong>Customer</strong>
+                <span>Plan &amp; build your home</span>
+              </div>
+            </button>
+            <button type="button" class="reg-account-card" data-type="Contractor" onclick="setRegAccountType('Contractor')">
+              <span class="reg-account-icon">🏗️</span>
+              <div>
+                <strong>Contractor</strong>
+                <span>Accept client projects</span>
+              </div>
+            </button>
+            <button type="button" class="reg-account-card" data-type="Vendor" onclick="setRegAccountType('Vendor')">
+              <span class="reg-account-icon">📦</span>
+              <div>
+                <strong>Vendor</strong>
+                <span>Supply materials &amp; services</span>
+              </div>
+            </button>
+            <button type="button" class="reg-account-card" data-type="Supplier" onclick="setRegAccountType('Supplier')"><span class="reg-account-icon">📦</span><div><strong>Supplier</strong><span>Publish products &amp; material prices</span></div></button>
+          </div>
+          <input type="hidden" id="reg-account-type" value="Customer">
+          <p class="reg-hint" id="reg-account-hint">Shop materials, plan projects, and track your build journey.</p>
+
+          <div id="reg-provider-business" class="reg-provider-block">
+            <div class="reg-location-card">
+              <p class="reg-section-label">Business details</p>
+              <div class="form-group">
+                <label for="reg-company">Company / Business Name *</label>
+                <input type="text" id="reg-company" placeholder="e.g. Apex Builders Pvt Ltd" autocomplete="organization">
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="reg-gstin">GSTIN Number *</label>
+                  <input type="text" id="reg-gstin" placeholder="15-digit GSTIN" maxlength="15" autocomplete="off" style="text-transform:uppercase;">
+                </div>
+                <div class="form-group">
+                  <label for="reg-provider-phone">Business Phone *</label>
+                  <input type="tel" id="reg-provider-phone" placeholder="+91 98765 43210" autocomplete="tel">
+                </div>
+              </div>
+              <p class="reg-hint" style="margin-bottom:0;">Required for contractor and vendor accounts. Shown on your company profile.</p>
+            </div>
+          </div>
+
+          <div id="reg-provider-location" class="reg-provider-block">
+            <div class="reg-location-card">
+              <p class="reg-section-label">Service location</p>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="reg-city">Service City *</label>
+                  <div class="select-wrap">
+                    <select id="reg-city" class="reg-select" aria-label="Service city">
+                      <option value="">Choose your city</option>
+                      <option value="Coimbatore">Coimbatore</option>
+                      <option value="Chennai">Chennai</option>
+                      <option value="Bangalore">Bangalore</option>
+                      <option value="Madurai">Madurai</option>
+                      <option value="Salem">Salem</option>
+                      <option value="Trichy">Trichy</option>
+                      <option value="Kochi">Kochi</option>
+                      <option value="Hyderabad">Hyderabad</option>
+                    </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="reg-state">State *</label>
+                  <div class="select-wrap">
+                    <select id="reg-state" class="reg-select" aria-label="State">
+                      <option value="Tamil Nadu">Tamil Nadu</option>
+                      <option value="Karnataka">Karnataka</option>
+                      <option value="Kerala">Kerala</option>
+                      <option value="Telangana">Telangana</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              <p class="reg-hint" style="margin-bottom:0;">You will only see client requirements posted in your selected city.</p>
+            </div>
+          </div>
+
+          <p class="reg-section-label">2. Your details</p>
           <div class="form-group">
-            <label>Point of Contact Full Name *</label>
-            <input type="text" id="reg-name" placeholder="John Doe">
+            <label for="reg-name">Point of Contact Full Name *</label>
+            <input type="text" id="reg-name" placeholder="John Doe" autocomplete="name">
+          </div>
+
+          <div class="form-group" style="margin-bottom: 18px;">
+            <label id="reg-image-label" style="font-weight:600; font-size:13px; color:#111; display:block; margin-bottom:6px;">
+              Profile Photo / Avatar
+            </label>
+            <div style="display:flex; align-items:center; gap:14px; background:#f8fafc; border:1px dashed #cbd5e1; border-radius:10px; padding:12px 14px;">
+              <div id="reg-image-preview-wrap" style="width:56px; height:56px; border-radius:50%; background:#e2e8f0; display:flex; align-items:center; justify-content:center; overflow:hidden; border:2px solid #FFD400; box-shadow:0 2px 8px rgba(0,0,0,0.12); flex-shrink:0; position:relative;">
+                <span id="reg-image-placeholder" style="font-size:24px;">👤</span>
+                <img id="reg-image-preview" src="" alt="Preview" style="display:none; width:100%; height:100%; object-fit:cover; position:absolute; inset:0;">
+              </div>
+              <div style="flex:1;">
+                <input type="file" id="reg-image-input" accept="image/png, image/jpeg, image/webp, image/gif" style="display:none;" onchange="handleRegImageSelect(event)">
+                <button type="button" class="btn btn-outline" style="padding:6px 14px; font-size:12px; font-weight:600; border-radius:6px; background:#fff; border:1px solid #cbd5e1; cursor:pointer;" onclick="document.getElementById('reg-image-input').click()">
+                  📷 Choose Image / Logo
+                </button>
+                <button type="button" id="reg-image-remove-btn" class="btn btn-outline" style="display:none; padding:6px 10px; font-size:12px; border-radius:6px; color:#e11d48; border-color:#fecdd3; margin-left:6px; cursor:pointer;" onclick="removeRegImage()">
+                  Remove
+                </button>
+                <div id="reg-image-hint" style="font-size:11px; color:#64748b; margin-top:4px;">
+                  Upload your profile photo (PNG, JPG, WebP up to 5MB). Shown when creating projects & managing your build.
+                </div>
+              </div>
+            </div>
           </div>
 
           <div class="form-row">
             <div class="form-group">
-              <label>Business Email *</label>
-              <input type="email" id="reg-email" placeholder="procurement@corp.in">
+              <label for="reg-email">Business Email *</label>
+              <input type="email" id="reg-email" placeholder="you@company.com" autocomplete="email">
             </div>
             <div class="form-group">
-              <label>Phone Number *</label>
-              <input type="tel" id="reg-phone" placeholder="+91 XXXXX XXXXX">
+              <label for="reg-phone">Phone Number *</label>
+              <input type="tel" id="reg-phone" placeholder="+91 98765 43210" autocomplete="tel">
             </div>
           </div>
 
           <div class="form-row">
             <div class="form-group">
-              <label>Password *</label>
-              <input type="password" id="reg-pass" placeholder="Min. 8 characters">
+              <label for="reg-pass">Password *</label>
+              <input type="password" id="reg-pass" placeholder="Min. 8 characters" autocomplete="new-password">
             </div>
             <div class="form-group">
-              <label>Confirm Password *</label>
-              <input type="password" id="reg-pass-confirm" placeholder="Re-enter password">
+              <label for="reg-pass-confirm">Confirm Password *</label>
+              <input type="password" id="reg-pass-confirm" placeholder="Re-enter password" autocomplete="new-password">
             </div>
           </div>
 
-          <label style="display:flex; align-items:center; gap:12px; font-size:13px; margin-bottom:24px; cursor:pointer;">
-            <input type="checkbox" style="width:18px; height:18px; accent-color:var(--primary);">
+          <label class="reg-terms">
+            <input type="checkbox" id="reg-terms">
             <span>I register as an Authorized GST Contractor or Corporate Procurement Agent.</span>
           </label>
 
-          <button class="btn btn-dark" style="width:100%; padding:14px 0;" onclick="handleRegister()">
-            Register Account
+          <button type="button" class="btn btn-dark reg-submit-btn" onclick="handleRegister()">
+            Create Account
           </button>
+          <p style="margin-top:16px; font-size:13px; color:#666;">
+            Already registered?
+            <a href="#" style="color:#111; text-decoration:underline;" onclick="switchToLoginWithEmail(document.getElementById('reg-email').value); return false;">Log in here</a>
+          </p>
         </div>
 
         <!-- Partner Registration Panel -->
@@ -369,9 +783,7 @@
   <script src="../js/api/users.js"></script>
   <script src="../js/api/session-restore.js"></script>
   <script src="../js/utils/helpers.js"></script>
-  <script src="../js/components/notifications.js"></script>
-  <script src="../js/utils/helpers.js"></script>
-  <script src="../js/components/notifications.js"></script>
+  <script src="../js/utils/location.js?v=2"></script>
   <script src="../js/app.js"></script>
   <script>
     // ============================================================
@@ -389,37 +801,162 @@
       if (hash.get('type') === 'recovery') {
         showResetPasswordPanel(hash.get('access_token'));
       }
+      const forgotEmail = sessionStorage.getItem('ohisee_forgot_email');
+      if (forgotEmail) {
+        sessionStorage.removeItem('ohisee_forgot_email');
+        document.getElementById('login-email').value = forgotEmail;
+        setTimeout(() => openForgotPasswordModal(), 300);
+      }
     })();
+
+    let activeLoginPortal = 'customer';
+
+    function isProviderAccount(user) {
+      return user?.role === 'Partner'
+        || ['Contractor', 'Vendor', 'Supplier'].includes(user?.partner_type)
+        || ['Contractor', 'Vendor', 'Supplier'].includes(user?.role);
+    }
+
+    function setLoginPortal(portal) {
+      activeLoginPortal = portal === 'vendor' ? 'vendor' : 'customer';
+      document.getElementById('login-portal').value = activeLoginPortal;
+      document.querySelectorAll('.login-portal-btn').forEach((btn) => {
+        btn.classList.toggle('active', btn.dataset.portal === activeLoginPortal);
+      });
+
+      const isVendor = activeLoginPortal === 'vendor';
+      document.getElementById('login-panel-title').textContent = isVendor ? 'Vendor Login' : 'Customer Login';
+      document.getElementById('login-panel-subtitle').textContent = isVendor
+        ? 'Access client leads, accepted projects and your contractor dashboard.'
+        : 'Shop materials, manage projects, orders and quotations.';
+      document.getElementById('login-portal-note').textContent = isVendor
+        ? 'Use Vendor Login for contractors and material vendors.'
+        : 'Use Customer Login for shopping and project planning.';
+      document.getElementById('login-submit-btn').textContent = isVendor ? 'Login as Vendor' : 'Login as Customer';
+      document.getElementById('login-switch-link').textContent = isVendor
+        ? '← Switch to Customer Login'
+        : 'Switch to Vendor Login →';
+    }
+
+    function switchToLoginWithEmail(email, portal = 'customer') {
+      document.querySelector('.login-tab[data-form="login-panel"]')?.click();
+      if (email) document.getElementById('login-email').value = email.trim();
+      setLoginPortal(portal);
+      document.getElementById('login-pass').focus();
+    }
 
     // ---- LOGIN ----
     async function handleLogin() {
       const email = document.getElementById('login-email').value.trim();
       const pass = document.getElementById('login-pass').value;
+      const portal = activeLoginPortal;
 
       if (!email || !pass) {
         showToast('Please fill all credentials.', 'error');
         return;
       }
 
-      // Clear any stale local session state before attempting a new login
       TokenStore.clear();
       UserCache.clear();
+      document.getElementById('login-alert').style.display = 'none';
 
-      const btn = event.target || document.querySelector('#login-panel .btn-primary');
+      const btn = document.getElementById('login-submit-btn');
       const orig = btn.textContent;
       btn.disabled = true;
       btn.textContent = 'Authenticating...';
 
       try {
-        const data = await AuthAPI.login(email, pass);
-        showToast(`Welcome back, ${data.user.name}!`, 'success');
-        setTimeout(() => AuthAPI.redirectByRole(data.user.role), 900);
+        const location = window.OhiseeLocation?.getPayload?.() || null;
+        const data = await AuthAPI.login(email, pass, location);
+        const user = data.user;
+        if (location) {
+          try { localStorage.setItem('ohisee_last_login_location', JSON.stringify(location)); } catch (_) {}
+        }
+        const provider = isProviderAccount(user);
+
+        if (portal === 'vendor' && !provider) {
+          throw new Error('This email is a customer account. Switch to Customer Login.');
+        }
+        if (portal === 'customer' && provider) {
+          throw new Error('This email is a vendor/contractor account. Switch to Vendor Login.');
+        }
+
+        showToast(`Welcome back, ${user.name}!`, 'success');
+        setTimeout(() => {
+          if (portal === 'vendor') {
+            window.location.href = (user?.role === 'Supplier' || user?.partner_type === 'Supplier') ? 'supplier-dashboard.html' : 'vendor-dashboard.html';
+            return;
+          }
+          AuthAPI.redirectByRole(user.role);
+        }, 900);
       } catch (err) {
-        showToast(err.message || 'Login failed. Check your credentials.', 'error');
+        const message = err.message || 'Login failed. Check your credentials.';
+        const hint = err.hint || '';
+        showToast(hint ? `${message} ${hint}` : message, 'error');
+        const alertEl = document.getElementById('login-alert');
+        if (/registered|forgot password|not verified/i.test(message) || /forgot password/i.test(hint)) {
+          alertEl.style.display = 'block';
+          alertEl.innerHTML = `${message}${hint ? `<br><small style="display:block;margin-top:6px;color:#666;">${hint}</small>` : ''}<br><button type="button" class="btn btn-dark" style="margin-top:10px; width:100%; padding:10px 0;" onclick="openForgotPasswordModal()">Send Password Reset Email</button>`;
+        } else if (/vendor|contractor|customer account/i.test(message)) {
+          alertEl.style.display = 'block';
+          alertEl.innerHTML = `${message}<br><small style="display:block;margin-top:8px;color:#666;">Use the correct login tab above, then try again.</small>`;
+        } else {
+          alertEl.style.display = 'block';
+          alertEl.innerHTML = `${message}<br><small style="display:block;margin-top:8px;color:#666;">Check your email and password. Vendor accounts must use <strong>Vendor Login</strong>.</small>`;
+        }
         btn.disabled = false;
         btn.textContent = orig;
       }
     }
+
+    document.getElementById('login-pass')?.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') handleLogin();
+    });
+
+    // ---- REGISTRATION IMAGE HANDLING ----
+    let selectedRegImageBase64 = '';
+
+    window.handleRegImageSelect = function(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      if (!file.type.startsWith('image/')) {
+        showToast('Please select a valid image file (PNG, JPG, WebP).', 'error');
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        showToast('Image file size must be under 5MB.', 'error');
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        selectedRegImageBase64 = e.target.result;
+        const previewImg = document.getElementById('reg-image-preview');
+        const placeholder = document.getElementById('reg-image-placeholder');
+        const removeBtn = document.getElementById('reg-image-remove-btn');
+        if (previewImg) {
+          previewImg.src = selectedRegImageBase64;
+          previewImg.style.display = 'block';
+        }
+        if (placeholder) placeholder.style.display = 'none';
+        if (removeBtn) removeBtn.style.display = 'inline-block';
+      };
+      reader.readAsDataURL(file);
+    };
+
+    window.removeRegImage = function() {
+      selectedRegImageBase64 = '';
+      const input = document.getElementById('reg-image-input');
+      if (input) input.value = '';
+      const previewImg = document.getElementById('reg-image-preview');
+      const placeholder = document.getElementById('reg-image-placeholder');
+      const removeBtn = document.getElementById('reg-image-remove-btn');
+      if (previewImg) {
+        previewImg.src = '';
+        previewImg.style.display = 'none';
+      }
+      if (placeholder) placeholder.style.display = 'inline-block';
+      if (removeBtn) removeBtn.style.display = 'none';
+    };
 
     // ---- REGISTER (Customer) ----
     async function handleRegister() {
@@ -469,14 +1006,79 @@
       TokenStore.clear();
       UserCache.clear();
 
+      const accountType = document.getElementById('reg-account-type').value;
+      const isProvider = ['Contractor','Vendor','Supplier'].includes(accountType);
+      const gpsLoc = window.OhiseeLocation?.getPayload?.() || null;
+      let serviceCity = document.getElementById('reg-city')?.value?.trim() || '';
+      let serviceState = document.getElementById('reg-state')?.value?.trim() || 'Tamil Nadu';
+      if (isProvider && !serviceCity && gpsLoc?.city) {
+        serviceCity = gpsLoc.city;
+        document.getElementById('reg-city').value = serviceCity;
+      }
+      if (isProvider && gpsLoc?.state) serviceState = gpsLoc.state;
+      if (isProvider && !serviceCity) {
+        showToast('Please select your service city or enable GPS to detect it.', 'error');
+        btn.disabled = false;
+        btn.textContent = origText;
+        return;
+      }
+      let company = '';
+      let gstin = '';
+      let providerPhone = phone;
+      if (isProvider) {
+        company = document.getElementById('reg-company')?.value?.trim() || '';
+        gstin = (document.getElementById('reg-gstin')?.value?.trim() || '').toUpperCase();
+        providerPhone = document.getElementById('reg-provider-phone')?.value?.trim() || phone;
+        if (!company) {
+          showToast('Company name is required for contractors and vendors.', 'error');
+          btn.disabled = false;
+          btn.textContent = origText;
+          return;
+        }
+        if (!gstin || gstin.length !== 15) {
+          showToast('Enter a valid 15-character GSTIN.', 'error');
+          btn.disabled = false;
+          btn.textContent = origText;
+          return;
+        }
+        const cleanedProviderPhone = providerPhone.startsWith('+') ? providerPhone.slice(1) : providerPhone;
+        if (!/^\d{10,15}$/.test(cleanedProviderPhone)) {
+          showToast('Enter a valid business phone number (10+ digits).', 'error');
+          btn.disabled = false;
+          btn.textContent = origText;
+          return;
+        }
+      }
+
+      const business = isProvider
+        ? { city: serviceCity, state: serviceState, company, gstin }
+        : (gpsLoc?.city ? { city: gpsLoc.city, state: gpsLoc.state } : {});
       try {
-        const data = await AuthAPI.signup(name, email, pass, phone, 'Customer');
+        const data = await AuthAPI.signup(
+          name, email, pass, isProvider ? providerPhone : phone,
+          accountType === 'Customer' ? 'Customer' : 'Partner',
+          accountType,
+          business,
+          gpsLoc,
+          selectedRegImageBase64
+        );
         showToast('Account Created Successfully', 'success');
         setTimeout(() => {
-          window.location.href = 'login.html'; // Redirect to login page
+          if (accountType === 'Customer') {
+            AuthAPI.redirectByRole(data.user.role);
+          } else {
+            window.location.href = accountType === 'Supplier' ? 'supplier-dashboard.html' : 'vendor-dashboard.html';
+          }
         }, 1500);
       } catch (err) {
-        showToast(err.message || 'Registration failed. Please try again.', 'error');
+        const message = err.message || 'Registration failed. Please try again.';
+        if (/already registered/i.test(message)) {
+          const portal = accountType === 'Customer' ? 'customer' : 'vendor';
+          showToast('This email is already registered. Please log in instead.', 'error');
+          setTimeout(() => switchToLoginWithEmail(email, portal), 900);
+          return;
+        }
+        showToast(message, 'error');
       } finally {
         btn.disabled = false;
         btn.textContent = origText;
@@ -540,14 +1142,7 @@
       UserCache.clear();
 
       try {
-        // 1. Register via API (role = Partner)
-        const data = await AuthAPI.signup(name, email, pass, phone, 'Partner');
-        // 2. Update partner-specific fields via Supabase client directly
-        if (typeof SupabaseAuth !== 'undefined' && data.user) {
-          await SupabaseAuth.updatePartnerProfile(data.user.id, {
-            company, gst, pan, address, city, state, pincode, phone, partnerType
-          }).catch(() => {});
-        }
+        const data = await AuthAPI.signup(name, email, pass, phone, 'Partner', /contractor/i.test(partnerType)?'Contractor':'Vendor', {company,gst,pan,address,city,state,pincode});
         showToast('Account Created Successfully', 'success');
         setTimeout(() => {
           window.location.href = 'login.html'; // Redirect to login page
@@ -561,7 +1156,7 @@
     }
 
     function handlePartnerDraft() {
-      showToast('Draft saved. Complete the form to submit your application.', 'success');
+      const draft={};document.querySelectorAll('#partner-panel input:not([type=password]),#partner-panel select').forEach(el=>draft[el.id]=el.value);sessionStorage.setItem('ohisee_provider_draft',JSON.stringify(draft));showToast('Business draft saved in this browser. Passwords are not saved.', 'success');
     }
 
     // ---- FORGOT PASSWORD MODAL ----
@@ -604,8 +1199,9 @@
           <input type="password" id="reset-confirm-pass" placeholder="Re-enter new password">
         </div>
         <button class="btn btn-primary" style="width:100%; padding:14px 0;"
-          onclick="handleResetPassword('${accessToken}')">Update Password</button>
+          id="reset-submit">Update Password</button>
       `;
+      document.getElementById('reset-submit').onclick=()=>handleResetPassword(accessToken);
       const loginTab = document.querySelector('.login-tab[data-form="login-panel"]');
       if (loginTab) loginTab.click();
     }
@@ -632,5 +1228,115 @@
   </script>
 
 
+<script>
+const REG_ACCOUNT_HINTS = {
+  Customer: 'Shop materials, plan projects, and track your build journey.',
+  Contractor: 'Get client leads in your city and manage site workers from your dashboard.',
+  Vendor: 'List your business, receive local project requirements, and grow your pipeline.',
+  Supplier: 'Publish your company, material products, unit prices and available quantities.'
+};
+
+function setRegAccountType(type) {
+  const hidden = document.getElementById('reg-account-type');
+  if (hidden) hidden.value = type;
+  document.querySelectorAll('.reg-account-card').forEach((card) => {
+    card.classList.toggle('active', card.dataset.type === type);
+  });
+  const hint = document.getElementById('reg-account-hint');
+  if (hint) hint.textContent = REG_ACCOUNT_HINTS[type] || REG_ACCOUNT_HINTS.Customer;
+
+  const imageLabel = document.getElementById('reg-image-label');
+  const imageHint = document.getElementById('reg-image-hint');
+  const placeholder = document.getElementById('reg-image-placeholder');
+  if (imageLabel) {
+    imageLabel.textContent = type === 'Customer'
+      ? 'Profile Photo / Avatar'
+      : (type === 'Contractor' ? 'Company Logo / Contractor Photo' : 'Company Logo / Storefront Photo');
+  }
+  if (imageHint) {
+    imageHint.textContent = type === 'Customer'
+      ? 'Upload your profile photo (PNG, JPG, WebP up to 5MB). Shown when creating projects & managing your build.'
+      : 'Upload your company logo or business photo. Shown on your company profile & client project leads.';
+  }
+  if (placeholder) {
+    placeholder.textContent = type === 'Customer' ? '👤' : (type === 'Contractor' ? '🏗️' : '🏬');
+    if (typeof selectedRegImageBase64 !== 'undefined' && selectedRegImageBase64) {
+      placeholder.style.display = 'none';
+      const previewImg = document.getElementById('reg-image-preview');
+      if (previewImg) previewImg.style.display = 'block';
+    }
+  }
+
+  toggleProviderLocationFields();
+}
+
+function toggleProviderLocationFields() {
+  const type = document.getElementById('reg-account-type')?.value || 'Customer';
+  const locationBlock = document.getElementById('reg-provider-location');
+  const businessBlock = document.getElementById('reg-provider-business');
+  const isProvider = ['Contractor','Vendor','Supplier'].includes(type);
+  if (locationBlock) locationBlock.classList.toggle('visible', isProvider);
+  if (businessBlock) businessBlock.classList.toggle('visible', isProvider);
+  if (isProvider) window.OhiseeLocation?.applyToSignupForm?.(window.OhiseeLocation.readCache());
+}
+
+function updateAuthLocationBarVisibility(panelId) {
+  const bar = document.getElementById('auth-location-bar');
+  if (!bar) return;
+  const show = panelId === 'login-panel' || panelId === 'register-panel';
+  bar.style.display = show ? 'flex' : 'none';
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  window.OhiseeLocation?.initAuthLocationUI?.();
+  updateAuthLocationBarVisibility(document.querySelector('.login-form-panel.active')?.id || 'login-panel');
+  setRegAccountType(document.getElementById('reg-account-type')?.value || 'Customer');
+  const params=new URLSearchParams(location.search);
+  const account=params.get('account');
+  const portal=params.get('portal');
+  const tab=params.get('tab') || params.get('mode');
+  const reason=params.get('reason');
+
+  if(tab === 'register' || tab === 'signup'){
+    document.querySelector('.login-tab[data-form="register-panel"]')?.click();
+  } else if(tab === 'login'){
+    document.querySelector('.login-tab[data-form="login-panel"]')?.click();
+  }
+
+  if(['Customer','Contractor','Vendor','Supplier'].includes(account)){
+    setRegAccountType(account);
+    document.querySelector('.login-tab[data-form="register-panel"]')?.click();
+  }
+  if(portal==='vendor'||account==='Contractor'||account==='Vendor'||account==='Supplier'){
+    setLoginPortal('vendor');
+    document.querySelector('.login-tab[data-form="login-panel"]')?.click();
+  }
+  const prefillEmail = params.get('email');
+  if (prefillEmail) {
+    const loginEmail = document.getElementById('login-email');
+    if (loginEmail) loginEmail.value = prefillEmail.trim();
+  }
+  if(params.get('login')==='1'){
+    document.querySelector('.login-tab[data-form="login-panel"]')?.click();
+  }
+
+  if(reason === 'create_project' || (params.get('redirect') && params.get('redirect').toLowerCase().includes('project'))){
+    const alertEl = document.getElementById('login-alert');
+    if (alertEl) {
+      alertEl.style.display = 'block';
+      alertEl.style.background = '#fffdf0';
+      alertEl.style.borderColor = '#ffd400';
+      alertEl.style.color = '#111';
+      alertEl.style.fontSize = '14px';
+      alertEl.innerHTML = `<strong>📋 Sign Up or Log In to Create Your Project</strong><br><span style="font-size:12px;color:#555;">Please log in or create a free account to save your project details, access AI design reports, and receive builder quotes.</span>`;
+    }
+  }
+
+  try{
+    const draft=JSON.parse(sessionStorage.getItem('ohisee_provider_draft')||'null');
+    if(draft)for(const [id,value]of Object.entries(draft)){const el=document.getElementById(id);if(el&&el.type!=='password')el.value=value;}
+  }catch{}
+});
+</script>
 </body>
 </html>

@@ -1,0 +1,635 @@
+/* ============================================================
+   OH I SEE — Intent Engine CSS
+   Conversational AI flow / progressive questioning UI
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
+
+/* ── Base ──────────────────────────────────────────────────*/
+.intent-page {
+  background: #000;
+  min-height: 100vh;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ── Intent Header Banner ──────────────────────────────────*/
+.intent-hero {
+  background: linear-gradient(135deg, #0a0a0a 0%, #111 50%, #0d0d0d 100%);
+  border-bottom: 1px solid #1a1a1a;
+  padding: 40px 0 32px;
+  position: relative;
+  overflow: hidden;
+}
+
+.intent-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 20% 50%, rgba(255,212,0,0.04) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.intent-hero-badge {
+  font-family: 'Space Grotesk', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #FFD400;
+  background: rgba(255,212,0,0.08);
+  border: 1px solid rgba(255,212,0,0.2);
+  border-radius: 20px;
+  padding: 5px 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.intent-hero-title {
+  font-family: 'Space Grotesk', monospace;
+  font-size: 32px;
+  font-weight: 800;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+  line-height: 1.1;
+}
+
+.intent-hero-title span {
+  color: #FFD400;
+}
+
+.intent-hero-sub {
+  font-size: 14px;
+  color: #666;
+  max-width: 480px;
+}
+
+/* ── Progress Bar ──────────────────────────────────────────*/
+.intent-progress-track {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-top: 28px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.intent-progress-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.intent-progress-dot {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #111;
+  border: 2px solid #222;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  color: #444;
+  transition: all 0.3s ease;
+}
+
+.intent-progress-dot.active {
+  background: rgba(255,212,0,0.15);
+  border-color: #FFD400;
+  color: #FFD400;
+  box-shadow: 0 0 12px rgba(255,212,0,0.2);
+}
+
+.intent-progress-dot.done {
+  background: #FFD400;
+  border-color: #FFD400;
+  color: #000;
+}
+
+.intent-progress-label {
+  font-family: 'Space Grotesk', monospace;
+  font-size: 9px;
+  font-weight: 600;
+  color: #333;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.intent-progress-step.active .intent-progress-label { color: #FFD400; }
+.intent-progress-step.done .intent-progress-label { color: #888; }
+
+.intent-progress-line {
+  width: 40px;
+  height: 2px;
+  background: #1a1a1a;
+  flex-shrink: 0;
+  margin-bottom: 20px;
+  transition: background 0.3s ease;
+}
+
+.intent-progress-line.done { background: #FFD400; }
+
+/* ── Main Conversation Area ────────────────────────────────*/
+.intent-body {
+  padding: 48px 0 80px;
+}
+
+.intent-layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 32px;
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .intent-layout { grid-template-columns: 1fr; }
+}
+
+/* ── Single-page form ──────────────────────────────────────*/
+.intent-form-meta {
+  font-family: 'Space Grotesk', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #888;
+  margin-top: 12px;
+}
+
+.intent-form-card {
+  background: #0a0a0a;
+  border: 1px solid #1e1e1e;
+  border-radius: 20px;
+  padding: 32px 36px 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.intent-form-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #FFD400, #E6BF00);
+}
+
+.intent-form-header {
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #1a1a1a;
+}
+
+.intent-form-title {
+  font-family: 'Space Grotesk', monospace;
+  font-size: 22px;
+  font-weight: 800;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 8px;
+}
+
+.intent-form-sub {
+  font-size: 13px;
+  color: #666;
+  margin: 0;
+  line-height: 1.6;
+}
+
+.form-question-block {
+  padding: 24px 0;
+  border-bottom: 1px solid #161616;
+}
+
+.form-question-block:last-of-type {
+  border-bottom: none;
+}
+
+.form-question-block.invalid {
+  background: rgba(255, 68, 68, 0.04);
+  margin: 0 -20px;
+  padding: 24px 20px;
+  border-radius: 12px;
+  border-bottom-color: rgba(255, 68, 68, 0.2);
+}
+
+.form-question-text {
+  font-size: 17px !important;
+  margin-bottom: 18px !important;
+}
+
+.intent-form-actions {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #1a1a1a;
+}
+
+.intent-form-actions .btn-next {
+  width: 100%;
+  max-width: 360px;
+}
+
+#intent-question-area {
+  max-height: none;
+}
+
+/* ── Question Card ─────────────────────────────────────────*/
+.question-card {
+  background: #0a0a0a;
+  border: 1px solid #1e1e1e;
+  border-radius: 20px;
+  padding: 40px;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s ease;
+  animation: questionSlide 0.4s ease;
+}
+
+@keyframes questionSlide {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.question-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #FFD400, #E6BF00);
+}
+
+.question-num {
+  font-family: 'Space Grotesk', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #FFD400;
+  margin-bottom: 16px;
+}
+
+.question-text {
+  font-family: 'Space Grotesk', monospace;
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.35;
+  margin-bottom: 32px;
+}
+
+/* ── Answer Inputs ─────────────────────────────────────────*/
+.answer-input-text {
+  width: 100%;
+  background: #111;
+  border: 1.5px solid #2a2a2a;
+  border-radius: 12px;
+  color: #fff;
+  font-size: 16px;
+  font-family: 'Inter', sans-serif;
+  padding: 16px 20px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
+}
+
+.answer-input-text:focus {
+  border-color: rgba(255,212,0,0.5);
+  box-shadow: 0 0 0 3px rgba(255,212,0,0.08);
+}
+
+.answer-input-text::placeholder { color: #333; }
+
+.answer-options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 10px;
+}
+
+.answer-option {
+  background: #111;
+  border: 1.5px solid #222;
+  border-radius: 10px;
+  padding: 14px 16px;
+  color: #aaa;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.answer-option:hover {
+  border-color: rgba(255,212,0,0.4);
+  color: #fff;
+  background: #141414;
+}
+
+.answer-option.selected {
+  border-color: #FFD400;
+  background: rgba(255,212,0,0.08);
+  color: #FFD400;
+  font-weight: 600;
+}
+
+.answer-option.selected::before {
+  content: '✓ ';
+}
+
+.answer-option.disabled,
+.answer-option:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+  pointer-events: none;
+  border-color: #1a1a1a;
+  color: #555;
+  background: #0d0d0d;
+}
+
+.answer-option.disabled:hover,
+.answer-option:disabled:hover {
+  border-color: #1a1a1a;
+  color: #555;
+  background: #0d0d0d;
+}
+
+.quality-budget-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 22px 0 14px;
+  color: #666;
+  font-size: 11px;
+  font-family: 'Space Grotesk', monospace;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.quality-budget-divider::before,
+.quality-budget-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #2a2a2a;
+}
+
+.manual-budget-wrap {
+  margin-top: 4px;
+}
+
+.manual-budget-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #aaa;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: 'Space Grotesk', monospace;
+}
+
+.manual-budget-wrap .answer-input-text.disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+  pointer-events: none;
+  background: #0d0d0d;
+  border-color: #1a1a1a;
+}
+
+.manual-budget-wrap .answer-input-text.active {
+  border-color: rgba(255, 212, 0, 0.55);
+  box-shadow: 0 0 0 3px rgba(255, 212, 0, 0.08);
+}
+
+/* Multiselect option hint */
+.multiselect-hint {
+  font-size: 11px;
+  color: #444;
+  font-family: 'Space Grotesk', monospace;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+/* ── Question Nav Buttons ──────────────────────────────────*/
+.question-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 32px;
+  align-items: center;
+}
+
+.btn-next {
+  background: #FFD400;
+  color: #000;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 14px 28px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-next:hover {
+  background: #e6c200;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(255,212,0,0.25);
+}
+
+.btn-next:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-prev {
+  background: transparent;
+  color: #555;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 13px;
+  font-weight: 600;
+  border: 1px solid #222;
+  border-radius: 10px;
+  padding: 14px 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-prev:hover { color: #fff; border-color: #444; }
+
+.btn-skip-opt {
+  background: none;
+  color: #333;
+  font-size: 12px;
+  font-family: 'Space Grotesk', monospace;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  margin-left: auto;
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+
+.btn-skip-opt:hover { color: #666; }
+
+/* ── Summary Panel (right sidebar) ────────────────────────*/
+.summary-panel {
+  background: #080808;
+  border: 1px solid #1a1a1a;
+  border-radius: 16px;
+  padding: 28px;
+  position: sticky;
+  top: 100px;
+}
+
+.summary-panel-title {
+  font-family: 'Space Grotesk', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #FFD400;
+  margin-bottom: 20px;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #111;
+  font-size: 12px;
+}
+
+.summary-item-key {
+  color: #444;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  flex-shrink: 0;
+  width: 100px;
+}
+
+.summary-item-val {
+  color: #fff;
+  font-weight: 500;
+  text-align: right;
+  word-break: break-word;
+}
+
+.summary-empty {
+  text-align: center;
+  padding: 24px 0;
+  color: #333;
+  font-size: 13px;
+}
+
+/* ── Completion State ──────────────────────────────────────*/
+.completion-card {
+  background: #0a0a0a;
+  border: 1px solid rgba(255,212,0,0.2);
+  border-radius: 20px;
+  padding: 48px;
+  text-align: center;
+  animation: questionSlide 0.5s ease;
+}
+
+.completion-icon { font-size: 56px; margin-bottom: 20px; }
+
+.completion-title {
+  font-family: 'Space Grotesk', monospace;
+  font-size: 28px;
+  font-weight: 800;
+  color: #fff;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.completion-sub { color: #666; font-size: 15px; margin-bottom: 36px; line-height: 1.5; }
+
+.completion-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-create-project {
+  background: #FFD400;
+  color: #000;
+  font-family: 'Space Grotesk', monospace;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 18px 36px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-create-project:hover {
+  background: #e6c200;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(255,212,0,0.3);
+}
+
+/* ── Creating state overlay ────────────────────────────────*/
+.creating-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.9);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.creating-spinner {
+  width: 56px;
+  height: 56px;
+  border: 3px solid #1a1a1a;
+  border-top-color: #FFD400;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.creating-text {
+  font-family: 'Space Grotesk', monospace;
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.creating-sub { font-size: 13px; color: #555; }

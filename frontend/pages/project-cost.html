@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cost Estimate — OH I SEE</title>
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/project-workspace.css">
+  <link rel="icon" href="/images/logo.png" type="image/png">
+</head>
+<body class="pw-body">
+  <header class="pw-header"><div class="container pw-header-inner"><a href="index.html" class="pw-back">← OH I SEE</a><div><div class="pw-project-id" id="pw-header-id">—</div><div class="pw-project-name" id="pw-header-name">Loading…</div></div></div></header>
+  <div class="pw-shell"><aside class="pw-sidebar" id="pw-nav"></aside><main class="pw-main"><div class="pw-topbar" id="pw-topbar"></div><div class="pw-content" id="pw-content"></div></main></div>
+  <script src="../js/utils/helpers.js"></script><script src="../js/components/notifications.js"></script><script src="../js/api/api-core.js"></script><script src="../js/api/projects.js"></script><script src="../js/bim/api/bim.js"></script><script src="../js/bim/project-workspace.js"></script>
+  <script>
+    async function init() {
+      const projectId = ProjectWorkspace.getProjectId();
+      if (!projectId || !ProjectWorkspace.requireAuth(projectId)) return;
+      const project = await ProjectWorkspace.loadProject(projectId);
+      if (!project) return;
+      document.getElementById('pw-header-id').textContent = project.project_id;
+      document.getElementById('pw-header-name').textContent = project.project_name;
+      ProjectWorkspace.renderNav('cost', projectId);
+      let status = 'none';
+      try { status = (await BimAPI.getModel(projectId)).data?.status || 'none'; } catch (e) {}
+      ProjectWorkspace.renderTopbar(project, 'Cost Estimate', status);
+      ProjectWorkspace.wireBimActions(projectId, init);
+      const est = project.estimated_cost || project.budget;
+      document.getElementById('pw-content').innerHTML = `<div class="pw-grid-3"><div class="pw-stat-card"><div class="pw-stat-label">Project Budget</div><div class="pw-stat-value">${project.budget ? '₹' + Number(project.budget).toLocaleString('en-IN') : '—'}</div></div><div class="pw-stat-card"><div class="pw-stat-label">AI Estimate</div><div class="pw-stat-value">${est ? '₹' + Number(est).toLocaleString('en-IN') : '—'}</div></div><div class="pw-stat-card"><div class="pw-stat-label">Quality</div><div class="pw-stat-value">${project.quality_level || 'Standard'}</div></div></div><p style="margin-top:20px;color:#666;font-size:13px;">Detailed cost engine from BIM quantities is planned for Phase 11.</p>`;
+    }
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>

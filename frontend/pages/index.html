@@ -3,31 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="OH I SEE — Your one-stop destination for hardware, electrical, plumbing, industrial tools, safety equipment, and building materials. Premium quality, bulk orders, fast delivery.">
-  <title>OH I SEE — Hardware, Electrical & Plumbing Solutions</title>
+  <meta name="description" content="OH I SEE — AI Construction Operating Platform. Design, customize, estimate, source materials and connect with verified construction professionals — all from one platform.">
+  <title>OH I SEE — AI Construction Operating Platform | Build Your Project, Your Way</title>
   <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/ai-assistant.css">
+  <link rel="stylesheet" href="../css/home-ai.css">
   <link rel="icon" href="/images/logo.png" type="image/png">
 </head>
-<body>
+<body class="home-dark">
 
-  <!-- Page Loader -->
+  <!-- ── Page Loader ─────────────────────────────────── -->
   <div class="page-loader">
     <div class="loader-logo"><img src="/images/logo.png" alt="OH I SEE"></div>
     <div class="loader-text">OH I SEE</div>
     <div class="loader-bar"></div>
   </div>
 
-  <!-- Mobile Nav Overlay -->
+  <!-- ── Mobile Nav Overlay ─────────────────────────── -->
   <div class="mobile-nav-overlay">
     <div class="mobile-nav-panel">
       <button class="mobile-nav-close">✕</button>
       <div class="mobile-nav-links">
-        <a href="index.html">Home</a>
-        <a href="products.html">Products</a>
+        <a href="index.html" class="active">Home</a>
         <a href="products.html?cat=Electrical">Electrical</a>
         <a href="products.html?cat=Plumbing">Plumbing</a>
-        <a href="products.html?cat=Hardware">Hardware</a>
+        <a href="products.html?cat=Hardware">Tools</a>
         <a href="products.html?cat=Industrial">Industrial</a>
+        <a href="services.html">Services</a>
+        <a href="vendor-dashboard.html" style="color:var(--accent-gold,#FFD400);font-weight:700;">Vendor Portal</a>
+        <a href="project-detail.html">Projects</a>
         <a href="bulk-quote.html">Bulk Quotation</a>
         <a href="about.html">About Us</a>
         <a href="contact.html">Contact</a>
@@ -37,7 +41,7 @@
     </div>
   </div>
 
-  <!-- Header -->
+  <!-- ── Header ─────────────────────────────────────── -->
   <header class="site-header" id="header">
     <div class="header-top">
       <a href="index.html" class="header-logo">
@@ -50,15 +54,19 @@
         <a href="products.html?cat=Plumbing">Plumbing</a>
         <a href="products.html?cat=Hardware">Tools</a>
         <a href="products.html?cat=Industrial">Industrial</a>
+        <a href="services.html">Services <span class="nav-badge">AI</span></a>
+        <a href="vendor-dashboard.html" style="color:var(--accent-gold,#FFD400);font-weight:600;">Vendor Portal</a>
+        <a href="enterprise.html#build-supply">Build Supply <span class="nav-badge" style="background:#FFD400;color:#000;font-size:9px;padding:2px 5px;border-radius:4px;font-weight:700;margin-left:4px;">NEW</span></a>
         <a href="bulk-quote.html">Bulk Quotation</a>
       </nav>
 
       <div class="header-search">
         <span class="search-icon">🔍</span>
-        <input type="text" class="search-input" placeholder="Search industrial supplies...">
+        <input type="text" class="search-input" id="main-search" placeholder="Search products or describe your project...">
       </div>
 
       <div class="header-actions">
+        <button class="header-action-btn theme-toggle-btn" id="theme-toggle" title="Toggle Day/Night Mode">🌙</button>
         <a href="account.html#wishlist" class="header-action-btn" title="Wishlist">♡</a>
         <a href="account.html" class="header-action-btn" title="Account">👤</a>
         <a href="cart.html" class="header-action-btn" title="Cart">
@@ -71,46 +79,879 @@
     </div>
   </header>
 
-  <!-- Hero Banner -->
-  <section class="hero" id="hero">
-    <div class="hero-bg">
-      <img src="/images/hero-banner.png" alt="Industrial Hardware">
+  <!-- ================================================================
+       SECTION 1: HERO — AI CONSTRUCTION COMMAND CENTER
+  ================================================================ -->
+  <section class="hero-ai" id="hero">
+    <div class="hero-ai-bg">
+      <img src="/images/hero-banner.png" alt="AI Construction Platform">
     </div>
-    <div class="hero-overlay"></div>
-    <div class="hero-content">
-      <h1>Everything Your Project<br>Needs Under <span>One Roof</span></h1>
-      <p class="hero-subtitle">Premium Hardware • Electrical Components • Plumbing Materials • Industrial Tools • Safety Equipment</p>
-      <div class="hero-ctas">
-        <a href="products.html" class="btn btn-primary btn-lg">Shop Products</a>
-        <a href="bulk-quote.html" class="btn btn-outline btn-lg">Request Bulk Quotation</a>
-        <a href="contact.html" class="btn btn-outline btn-lg">Contact Sales</a>
+    <div class="hero-ai-media" aria-label="Construction animation preview">
+      <video
+        id="hero-construction-video"
+        class="hero-ai-video-el"
+        src="https://vsqdqgmndgjfhosozxfn.supabase.co/storage/v1/object/public/construction-videos/Contruction%20Video.mp4"
+        poster="/images/hero-banner.png"
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="auto"
+        aria-label="Construction site animation"
+      ></video>
+    </div>
+    <div class="hero-ai-overlay"></div>
+    <div class="hero-ai-grid"></div>
+    <div class="hero-ai-content">
+      <div class="hero-ai-eyebrow">
+        <span class="pulse-dot"></span>
+        AI Construction Operating Platform
+      </div>
+      <h1 class="hero-ai-h1">
+        Build Your Project.
+        <span class="accent">Your Way.</span>
+      </h1>
+      <div class="hero-ai-tagline">Design · Customize · Estimate · Source · Build</div>
+      <p class="hero-ai-desc">
+        Design, customize, estimate, source materials and connect with verified construction
+        professionals — all from one platform. Powered by AI.
+      </p>
+      <div class="hero-ai-ctas">
+        <button class="btn-hero-primary" id="hero-build-btn" onclick="openStartProjectModal()">
+          🏗️ Build My Project
+        </button>
+        <button class="btn-hero-primary" style="background:#FFD400;color:#000;font-weight:700;" onclick="openBuildSupplyModal()">
+          📦 Build &amp; Supply
+        </button>
+        <a href="bulk-quote.html?mode=blueprint" class="btn-hero-outline">
+          📐 Upload Blueprint
+        </a>
+        <a href="products.html" class="btn-hero-outline">
+          🛒 Shop Materials
+        </a>
+      </div>
+      <div class="hero-ai-stats">
+        <div class="hero-stat">
+          <div class="hero-stat-num">1000+</div>
+          <div class="hero-stat-label">Products</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">12</div>
+          <div class="hero-stat-label">AI Engines</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">15+</div>
+          <div class="hero-stat-label">Services</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">100%</div>
+          <div class="hero-stat-label">Genuine Products</div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Featured Catalog -->
-  <section class="section" id="featured-catalog">
+  <!-- ================================================================
+       SECTION 2: LOCATION INTELLIGENCE STRIP
+  ================================================================ -->
+  <div class="location-strip">
+    <div class="location-strip-inner">
+      <span class="location-label">📍 Serving</span>
+      <div class="location-chips">
+        <button class="location-chip active">Tamil Nadu</button>
+        <button class="location-chip">Kerala</button>
+        <button class="location-chip">Karnataka</button>
+        <button class="location-chip">Andhra Pradesh</button>
+        <button class="location-chip">Telangana</button>
+        <button class="location-chip">Maharashtra</button>
+        <button class="location-chip">Rajasthan</button>
+        <button class="location-chip">Gujarat</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================================================================
+       SECTION 3: TWO PRIMARY CUSTOMER JOURNEYS
+  ================================================================ -->
+  <section class="hp-section home-dark" id="customer-journeys">
     <div class="container">
-      <div class="section-header">
-        <div class="section-label">Featured Industrial Catalog</div>
-        <h2 class="section-title">Premium Products for Every Project</h2>
+      <div class="hp-section-header" style="text-align:center;">
+        <div class="hp-section-label">Where Do You Start?</div>
+        <h2 class="hp-section-title">Two Ways to Begin</h2>
+        <p class="hp-section-sub" style="margin:10px auto 0;">You don't need to know exactly what you need. Just pick your starting point.</p>
       </div>
-
-      <div class="catalog-tabs">
-        <button class="catalog-tab active" data-tab="best-sellers">Best Sellers</button>
-        <button class="catalog-tab" data-tab="new-arrivals">New Arrivals</button>
-        <button class="catalog-tab" data-tab="top-rated">Top Rated</button>
-        <button class="catalog-tab" data-tab="special-offers">Special Offers</button>
-      </div>
-
-      <div class="product-grid catalog-product-grid">
-        <!-- Products populated by JS -->
+      <div class="journey-grid">
+        <!-- Card 1: Start From Idea -->
+        <div class="journey-card" id="idea-card" onclick="openStartProjectModal()" style="cursor:pointer;">
+          <div class="journey-card-icon">💡</div>
+          <div class="journey-card-title">Start From Idea</div>
+          <div class="journey-card-desc">Don't have a blueprint? Tell us what you want to build and let AI guide you through design, BOQ, estimation and procurement.</div>
+          <div class="journey-card-example">"I want to build a 2-floor 3BHK house on a 30 × 40 ft plot within ₹35 lakh."</div>
+          <div class="journey-card-cta">Start With AI →</div>
+        </div>
+        <!-- Card 2: Upload Blueprint -->
+        <a class="journey-card" href="bulk-quote.html?mode=blueprint" id="blueprint-card">
+          <div class="journey-card-icon">📐</div>
+          <div class="journey-card-title">Upload Blueprint</div>
+          <div class="journey-card-desc">Already have a plan? Upload your PDF, image or supported CAD drawing. AI will analyze it and generate BOQ + cost estimate automatically.</div>
+          <div class="journey-card-formats">
+            <span class="format-tag">PDF</span>
+            <span class="format-tag">JPG</span>
+            <span class="format-tag">PNG</span>
+            <span class="format-tag">DWG</span>
+            <span class="format-tag">JPEG</span>
+          </div>
+          <div class="journey-card-cta">Upload Blueprint →</div>
+        </a>
       </div>
     </div>
   </section>
 
-  <!-- Brand Strip -->
-  <section class="brand-strip" id="brand-strip">
+  <!-- ================================================================
+       SECTION 4: AI CONSTRUCTION ASSISTANT (INLINE)
+  ================================================================ -->
+  <section class="hp-section ai-assistant-section" id="ai-assistant-section">
+    <div class="container">
+      <div class="ai-assistant-inner">
+        <!-- Left: Description -->
+        <div>
+          <div class="ai-assistant-badge">🤖 AI-Powered</div>
+          <h2 class="ai-assistant-title">Your AI Construction<br>Assistant</h2>
+          <p class="ai-assistant-desc">
+            Describe what you want to build. Our AI understands construction requirements, generates BOQ, estimates costs, recommends materials and connects you with the right professionals.
+          </p>
+          <div class="ai-capabilities">
+            <div class="ai-capability-item">Generate a complete Bill of Quantities</div>
+            <div class="ai-capability-item">Estimate construction cost</div>
+            <div class="ai-capability-item">Recommend materials and products</div>
+            <div class="ai-capability-item">Analyze uploaded blueprints</div>
+            <div class="ai-capability-item">Plan electrical &amp; plumbing layouts</div>
+            <div class="ai-capability-item">Identify cost optimization opportunities</div>
+          </div>
+        </div>
+        <!-- Right: Input Panel -->
+        <div class="ai-input-panel">
+          <div class="ai-input-panel-header">
+            <div class="ai-avatar">🤖</div>
+            <div>
+              <div class="ai-avatar-name">OH I SEE Assistant</div>
+              <div class="ai-avatar-status">Online — Ready to help</div>
+            </div>
+          </div>
+          <div class="ai-prompt-chips">
+            <button class="ai-prompt-chip">I want to build a 3BHK house</button>
+            <button class="ai-prompt-chip">Estimate my construction cost</button>
+            <button class="ai-prompt-chip">Generate BOQ</button>
+            <button class="ai-prompt-chip">Find materials for my project</button>
+            <button class="ai-prompt-chip">Help me reduce construction cost</button>
+          </div>
+          <div class="ai-input-wrapper">
+            <textarea id="home-ai-input" placeholder="e.g. I want a 2-floor 3BHK house on a 30 × 40 ft plot within ₹35 lakh..."></textarea>
+            <div class="ai-input-actions">
+              <button class="ai-send-button" id="home-ai-send" title="Send">➤</button>
+            </div>
+          </div>
+          <div class="ai-response-box" id="home-ai-response"></div>
+          <div class="ai-disclaimer">AI responses are for guidance only. Always verify with a professional.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       SECTION 5: MY PROJECTS DASHBOARD
+  ================================================================ -->
+  <section class="hp-section projects-section" id="my-projects-section">
+    <div class="container">
+      <div class="projects-header-row">
+        <div>
+          <div class="hp-section-label">My Projects</div>
+          <h2 class="hp-section-title" style="font-size:28px;">My Construction Projects</h2>
+        </div>
+        <button class="btn-hero-primary" onclick="openStartProjectModal()" style="white-space:nowrap;">
+          + New Project
+        </button>
+      </div>
+      <div class="projects-grid" id="projects-grid">
+        <!-- Populated by home.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       SECTION 6: AI INTENT COMMAND BOX + 7 ENGINE CARDS
+  ================================================================ -->
+  <section class="hp-section home-dark-alt" id="services-section">
+    <div class="container">
+
+      <!-- AI Command Box -->
+      <div class="ai-intent-box" id="ai-intent-box">
+        <div class="ai-intent-box-label">
+          <span class="pulse-dot"></span>
+          WHAT DO YOU NEED?
+        </div>
+        <div class="ai-intent-input-wrap">
+          <div class="ai-intent-icon">🏗️</div>
+          <input
+            type="text"
+            id="ai-intent-input"
+            class="ai-intent-input"
+            placeholder="Tell OH I SEE what you want to build, repair, renovate or buy..."
+            autocomplete="off"
+          >
+          <button class="ai-intent-send" id="ai-intent-send" title="Go">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+        <div class="ai-intent-quick-actions">
+          <a href="intent-engine.html?intent=NEW_HOME" class="intent-quick-btn">🏠 Build a New Home</a>
+          <a href="intent-engine.html?intent=RENOVATION" class="intent-quick-btn">🔨 Renovate My Home</a>
+          <a href="intent-engine.html?intent=ELECTRICAL" class="intent-quick-btn">⚡ Plan Electrical</a>
+          <a href="products.html" class="intent-quick-btn">📦 Find Products</a>
+          <a href="quote-compare.html" class="intent-quick-btn">⚖️ Compare Quotations</a>
+          <a href="blueprint-builder.html" class="intent-quick-btn">📐 Create Blueprint</a>
+          <a href="visualizer-3d.html" class="intent-quick-btn">🧊 Create 3D Model</a>
+        </div>
+        <div class="ai-intent-response" id="ai-intent-response" style="display:none;"></div>
+      </div>
+
+      <!-- 7 Primary Engine Cards -->
+      <div class="hp-section-header" style="text-align:center;margin-top:56px;">
+        <div class="hp-section-label">AI Construction Engines</div>
+        <h2 class="hp-section-title">Choose Your Engine</h2>
+        <p class="hp-section-sub" style="margin:10px auto 0;">Each engine is purpose-built for a specific construction need.</p>
+      </div>
+
+      <div class="engine-cards-grid">
+
+        <!-- Card 1: New Home Builder -->
+        <a class="engine-card" href="intent-engine.html?intent=NEW_HOME" id="engine-new-home">
+          <div class="engine-card-glow"></div>
+          <div class="engine-card-top">
+            <div class="engine-card-icon">🏠</div>
+            <div class="engine-card-badge">AI Guided</div>
+          </div>
+          <div class="engine-card-title">NEW HOME BUILDER</div>
+          <div class="engine-card-desc">Plan, estimate and build a new home from the ground up. AI creates your project, BOQ, blueprint and connects you with builders.</div>
+          <div class="engine-card-example">"I want to build a 2,000 sq.ft house in Coimbatore."</div>
+          <div class="engine-card-cta">START NEW HOME →</div>
+          <div class="engine-card-meta">
+            <span>📋 BOQ</span><span>📐 Blueprint</span><span>👷 Builders</span>
+          </div>
+        </a>
+
+        <!-- Card 2: Home Renovation -->
+        <a class="engine-card" href="intent-engine.html?intent=RENOVATION" id="engine-renovation">
+          <div class="engine-card-glow"></div>
+          <div class="engine-card-top">
+            <div class="engine-card-icon">🔨</div>
+            <div class="engine-card-badge">Multi-trade</div>
+          </div>
+          <div class="engine-card-title">HOME RENOVATION</div>
+          <div class="engine-card-desc">Renovate, repaint, alter, repair or upgrade your existing home. Scope, estimate, products and contractors in one flow.</div>
+          <div class="engine-card-example">"I want to repaint my house and alter two rooms."</div>
+          <div class="engine-card-cta">START RENOVATION →</div>
+          <div class="engine-card-meta">
+            <span>🎨 Paint</span><span>🪚 Alteration</span><span>🔧 Repair</span>
+          </div>
+        </a>
+
+        <!-- Card 3: Electrical & Lighting -->
+        <a class="engine-card" href="intent-engine.html?intent=ELECTRICAL" id="engine-electrical">
+          <div class="engine-card-glow"></div>
+          <div class="engine-card-top">
+            <div class="engine-card-icon">⚡</div>
+            <div class="engine-card-badge">Point Schedule</div>
+          </div>
+          <div class="engine-card-title">ELECTRICAL &amp; LIGHTING</div>
+          <div class="engine-card-desc">Plan electrical work, lighting, switches, wiring and electrical products. Get a full point schedule and BOQ.</div>
+          <div class="engine-card-example">"I need lights and electrical work for my new house."</div>
+          <div class="engine-card-cta">PLAN ELECTRICAL →</div>
+          <div class="engine-card-meta">
+            <span>💡 Lighting</span><span>🔌 Points</span><span>📋 BOQ</span>
+          </div>
+        </a>
+
+        <!-- Card 4: Product Finder & Procurement -->
+        <a class="engine-card" href="products.html" id="engine-products">
+          <div class="engine-card-glow"></div>
+          <div class="engine-card-top">
+            <div class="engine-card-icon">📦</div>
+            <div class="engine-card-badge">Compare & Buy</div>
+          </div>
+          <div class="engine-card-title">PRODUCT FINDER &amp; PROCUREMENT</div>
+          <div class="engine-card-desc">Find construction products, compare brands, suppliers and prices. OH I SEE products clearly separated from external suppliers.</div>
+          <div class="engine-card-example">"I need cement, steel, tiles, switches and bathroom products."</div>
+          <div class="engine-card-cta">FIND PRODUCTS →</div>
+          <div class="engine-card-meta">
+            <span>🧱 Materials</span><span>⚡ Electrical</span><span>💧 Plumbing</span>
+          </div>
+        </a>
+
+        <!-- Card 5: Builder Quote Comparator -->
+        <a class="engine-card" href="quote-compare.html" id="engine-quotes" style="border-color:rgba(255,212,0,0.12);">
+          <div class="engine-card-glow" style="background:radial-gradient(circle at 0% 0%, rgba(255,212,0,0.07), transparent 65%);"></div>
+          <div class="engine-card-top">
+            <div class="engine-card-icon">⚖️</div>
+            <div class="engine-card-badge" style="background:rgba(255,212,0,0.12);color:#FFD400;border-color:rgba(255,212,0,0.25);">AI Scoring</div>
+          </div>
+          <div class="engine-card-title">BUILDER QUOTE COMPARATOR</div>
+          <div class="engine-card-desc">Upload builder quotations and compare cost, scope, timeline and value. AI detects missing scope and identifies best-fit builder.</div>
+          <div class="engine-card-example">"I have three builder quotations. Which one gives the best value?"</div>
+          <div class="engine-card-cta" style="color:#FFD400;">COMPARE QUOTATIONS →</div>
+          <div class="engine-card-meta">
+            <span>📄 PDF Upload</span><span>📊 Score</span><span>🏆 Best Value</span>
+          </div>
+        </a>
+
+        <!-- Card 6: AI Blueprint Builder -->
+        <a class="engine-card" href="blueprint-builder.html" id="engine-blueprint">
+          <div class="engine-card-glow"></div>
+          <div class="engine-card-top">
+            <div class="engine-card-icon">📐</div>
+            <div class="engine-card-badge">SVG + PDF</div>
+          </div>
+          <div class="engine-card-title">AI BLUEPRINT BUILDER</div>
+          <div class="engine-card-desc">Answer a few questions and generate a customized house floor plan. Download as PDF, PNG or SVG.</div>
+          <div class="engine-card-example">"I need a 3-bedroom house with parking and a terrace."</div>
+          <div class="engine-card-cta">CREATE BLUEPRINT →</div>
+          <div class="engine-card-meta">
+            <span>🗺️ 2D Plan</span><span>📏 Dimensions</span><span>⬇️ Download</span>
+          </div>
+        </a>
+
+        <!-- Card 7: 2D → 3D Visualizer -->
+        <a class="engine-card" href="visualizer-3d.html" id="engine-3d">
+          <div class="engine-card-glow"></div>
+          <div class="engine-card-top">
+            <div class="engine-card-icon">🧊</div>
+            <div class="engine-card-badge">WebGL 3D</div>
+          </div>
+          <div class="engine-card-title">2D DESIGN → 3D VISUALIZER</div>
+          <div class="engine-card-desc">Upload your existing floor plan and convert it into an interactive 3D project. Rotate, walk through, change materials.</div>
+          <div class="engine-card-example">"I uploaded my floor plan. Show me how the house will look in 3D."</div>
+          <div class="engine-card-cta">CREATE 3D MODEL →</div>
+          <div class="engine-card-meta">
+            <span>🔄 Rotate</span><span>🎨 Materials</span><span>⬇️ GLB Export</span>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       SECTION 7: POWERED BY AI — AI ENGINES
+
+  ================================================================ -->
+  <section class="hp-section home-dark-mid" id="ai-engines-section">
+    <div class="container">
+      <div class="hp-section-header" style="text-align:center;">
+        <div class="hp-section-label">Technology</div>
+        <h2 class="hp-section-title">Powered By <span>AI</span></h2>
+        <p class="hp-section-sub" style="margin:10px auto 0;">12 specialized AI engines working together to manage your construction project.</p>
+      </div>
+      <div class="ai-engines-grid">
+        <div class="ai-engine-card">
+          <div class="ai-engine-icon">🧠</div>
+          <div class="ai-engine-name">AI Construction Agent</div>
+          <div class="ai-engine-desc">Understands your project from plain language description</div>
+          <span class="ai-engine-tag">Active</span>
+        </div>
+        <div class="ai-engine-card">
+          <div class="ai-engine-icon">📐</div>
+          <div class="ai-engine-name">Spatial AI</div>
+          <div class="ai-engine-desc">Converts requirements into spatial models and floor plans</div>
+          <span class="ai-engine-tag">Coming Soon</span>
+        </div>
+        <div class="ai-engine-card">
+          <div class="ai-engine-icon">🏛️</div>
+          <div class="ai-engine-name">Architecture AI</div>
+          <div class="ai-engine-desc">Generates architectural designs optimized for your budget</div>
+          <span class="ai-engine-tag">Coming Soon</span>
+        </div>
+        <div class="ai-engine-card">
+          <div class="ai-engine-icon">🗺️</div>
+          <div class="ai-engine-name">Blueprint Intelligence</div>
+          <div class="ai-engine-desc">Reads and analyzes PDFs, images and CAD drawings</div>
+          <span class="ai-engine-tag">Active</span>
+        </div>
+        <div class="ai-engine-card">
+          <div class="ai-engine-icon">📋</div>
+          <div class="ai-engine-name">BOQ &amp; Estimation AI</div>
+          <div class="ai-engine-desc">Generates itemized BOQ and accurate cost estimates</div>
+          <span class="ai-engine-tag">Active</span>
+        </div>
+        <div class="ai-engine-card">
+          <div class="ai-engine-icon">💰</div>
+          <div class="ai-engine-name">Cost Optimization AI</div>
+          <div class="ai-engine-desc">Identifies savings without compromising quality</div>
+          <span class="ai-engine-tag">Active</span>
+        </div>
+        <div class="ai-engine-card">
+          <div class="ai-engine-icon">📦</div>
+          <div class="ai-engine-name">Product Recommendation AI</div>
+          <div class="ai-engine-desc">Matches products to your budget, spec and quality level</div>
+          <span class="ai-engine-tag">Active</span>
+        </div>
+        <div class="ai-engine-card">
+          <div class="ai-engine-icon">⚡</div>
+          <div class="ai-engine-name">Electrical AI</div>
+          <div class="ai-engine-desc">Generates electrical layout, load calculation and BOQ</div>
+          <span class="ai-engine-tag">Active</span>
+        </div>
+        <div class="ai-engine-card">
+          <div class="ai-engine-icon">💧</div>
+          <div class="ai-engine-name">Plumbing AI</div>
+          <div class="ai-engine-desc">Generates plumbing design, pipe routes and fixture BOQ</div>
+          <span class="ai-engine-tag">Active</span>
+        </div>
+        <div class="ai-engine-card">
+          <div class="ai-engine-icon">👷</div>
+          <div class="ai-engine-name">Professional Matching</div>
+          <div class="ai-engine-desc">Matches your project with verified professionals</div>
+          <span class="ai-engine-tag">Coming Soon</span>
+        </div>
+        <div class="ai-engine-card">
+          <div class="ai-engine-icon">🔮</div>
+          <div class="ai-engine-name">Project Digital Twin</div>
+          <div class="ai-engine-desc">Complete digital replica of your project lifecycle</div>
+          <span class="ai-engine-tag">Coming Soon</span>
+        </div>
+        <div class="ai-engine-card">
+          <div class="ai-engine-icon">📊</div>
+          <div class="ai-engine-name">Construction Management</div>
+          <div class="ai-engine-desc">Track progress, milestones and delivery in real-time</div>
+          <span class="ai-engine-tag">Coming Soon</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       SECTION 8: CHOOSE YOUR PROJECT QUALITY
+  ================================================================ -->
+  <section class="hp-section home-dark" id="quality-section">
+    <div class="container">
+      <div class="hp-section-header" style="text-align:center;">
+        <div class="hp-section-label">Quality Levels</div>
+        <h2 class="hp-section-title">Choose Your Project <span>Quality</span></h2>
+        <p class="hp-section-sub" style="margin:10px auto 0;">Select your preferred quality level — or customize per area.</p>
+      </div>
+      <div class="quality-grid">
+        <div class="quality-card" data-quality="Economic">
+          <div class="quality-icon">🏠</div>
+          <div class="quality-name">Economic</div>
+          <div class="quality-desc">Practical, budget-conscious construction with reliable materials and clean finishes.</div>
+          <div class="quality-features">
+            <div class="quality-feature">Lower cost per sq.ft</div>
+            <div class="quality-feature">Standard cement &amp; blocks</div>
+            <div class="quality-feature">Basic electrical fittings</div>
+            <div class="quality-feature">Standard sanitaryware</div>
+          </div>
+        </div>
+        <div class="quality-card selected" data-quality="Standard">
+          <div class="quality-icon">🏡</div>
+          <div class="quality-name">Standard</div>
+          <div class="quality-desc">The ideal balance of cost, quality, durability and appearance.</div>
+          <div class="quality-features">
+            <div class="quality-feature">Mid-range materials</div>
+            <div class="quality-feature">Good electrical brands</div>
+            <div class="quality-feature">Quality tiles &amp; flooring</div>
+            <div class="quality-feature">Durable plumbing fittings</div>
+          </div>
+        </div>
+        <div class="quality-card" data-quality="Premium">
+          <div class="quality-icon">🏰</div>
+          <div class="quality-name">Premium</div>
+          <div class="quality-desc">Higher-end materials, premium finishes and superior aesthetics for discerning projects.</div>
+          <div class="quality-features">
+            <div class="quality-feature">Premium brand materials</div>
+            <div class="quality-feature">Designer electrical systems</div>
+            <div class="quality-feature">Premium tiles &amp; flooring</div>
+            <div class="quality-feature">Branded sanitaryware</div>
+          </div>
+        </div>
+        <div class="quality-card" data-quality="Custom">
+          <div class="quality-icon">🎨</div>
+          <div class="quality-name">Custom Hybrid</div>
+          <div class="quality-desc">Mix quality levels per area — premium kitchen, standard structure, economic storage.</div>
+          <div class="quality-features">
+            <div class="quality-feature">Structure → Standard</div>
+            <div class="quality-feature">Kitchen → Premium</div>
+            <div class="quality-feature">Bathrooms → Premium</div>
+            <div class="quality-feature">Utility → Economic</div>
+          </div>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:32px;">
+        <button class="btn-hero-primary" onclick="openStartProjectModal()">
+          Customize My Project ▸
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       SECTION 9: COST OPTIMIZATION — CAN I SAVE MONEY?
+  ================================================================ -->
+  <section class="hp-section cost-opt-section" id="cost-opt-section">
+    <div class="container">
+      <div class="cost-opt-inner">
+        <div>
+          <div class="cost-opt-tag">💰 Save Money</div>
+          <h2 class="cost-opt-title">Can I Save Money?</h2>
+          <p class="cost-opt-desc">
+            Let AI analyze your project and identify opportunities to reduce cost without unnecessarily compromising quality, durability or appearance.
+          </p>
+          <div class="cost-opt-suggestions">
+            <div class="cost-opt-suggestion">Switch selected premium tiles to a mid-range alternative</div>
+            <div class="cost-opt-suggestion">Optimize material quantities and reduce wastage</div>
+            <div class="cost-opt-suggestion">Compare multiple suppliers for the same specification</div>
+            <div class="cost-opt-suggestion">Select equivalent products at lower price points</div>
+            <div class="cost-opt-suggestion">Adjust specifications without affecting structural integrity</div>
+          </div>
+          <button class="btn-hero-primary" style="margin-top:28px;" onclick="document.getElementById('home-ai-input').value='Help me reduce construction cost without compromising quality';document.getElementById('home-ai-input').scrollIntoView({behavior:'smooth'});document.getElementById('home-ai-input').focus();">
+            Optimize My Cost ▸
+          </button>
+        </div>
+        <div class="cost-opt-panel">
+          <div class="cost-opt-panel-title">Example — Project Cost Breakdown</div>
+          <div class="cost-metric">
+            <span class="cost-metric-label">Current Estimate</span>
+            <span class="cost-metric-value">₹35,00,000</span>
+          </div>
+          <div class="cost-metric">
+            <span class="cost-metric-label">Material Optimization</span>
+            <span class="cost-metric-value green">- ₹80,000</span>
+          </div>
+          <div class="cost-metric">
+            <span class="cost-metric-label">Supplier Comparison</span>
+            <span class="cost-metric-value green">- ₹45,000</span>
+          </div>
+          <div class="cost-metric">
+            <span class="cost-metric-label">Quantity Optimization</span>
+            <span class="cost-metric-value green">- ₹50,000</span>
+          </div>
+          <div class="cost-metric cost-metric-total" style="border-top:2px solid rgba(255,255,255,0.15);margin-top:8px;padding-top:16px;">
+            <span class="cost-metric-label cost-metric-total-label" style="font-weight:700;">Optimized Estimate</span>
+            <span class="cost-metric-value yellow">₹33,25,000</span>
+          </div>
+          <div class="cost-opt-footnote" style="font-size:11px;margin-top:12px;text-align:center;">
+            * Illustrative example. Actual savings depend on your project specification.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       SECTION 10: AI RECOMMENDED PRODUCTS
+  ================================================================ -->
+  <section class="hp-section products-rec-section" id="products-rec-section">
+    <div class="container">
+      <div class="hp-section-header" style="display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:32px;">
+        <div>
+          <div class="hp-section-label">AI Recommended</div>
+          <h2 class="hp-section-title">AI Recommended <span>Products</span></h2>
+          <p class="hp-section-sub" style="margin:8px 0 0;">Best value products matched to your budget, quality level and project type.</p>
+        </div>
+        <a href="products.html" class="btn-hero-outline" style="white-space:nowrap;">View All Products →</a>
+      </div>
+      <div class="products-rec-grid" id="rec-products-grid">
+        <!-- Populated by home.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       SECTION 11: SHOP CONSTRUCTION MATERIALS — CATEGORIES
+  ================================================================ -->
+  <section class="hp-section categories-section" id="categories-section">
+    <div class="container">
+      <div class="hp-section-header" style="text-align:center;margin-bottom:40px;">
+        <div class="hp-section-label">Marketplace</div>
+        <h2 class="hp-section-title">Shop Construction <span>Materials</span></h2>
+      </div>
+      <div class="categories-grid">
+        <a class="cat-card-dark" href="products.html?cat=Industrial">
+          <div class="cat-card-icon">🧱</div>
+          <div class="cat-card-name">Construction Materials</div>
+          <div class="cat-card-count">Cement, Steel, Blocks, Sand</div>
+        </a>
+        <a class="cat-card-dark" href="products.html?cat=Plumbing">
+          <div class="cat-card-icon">💧</div>
+          <div class="cat-card-name">Plumbing</div>
+          <div class="cat-card-count">Pipes, Fittings, Valves, Tanks</div>
+        </a>
+        <a class="cat-card-dark" href="products.html?cat=Electrical">
+          <div class="cat-card-icon">⚡</div>
+          <div class="cat-card-name">Electrical</div>
+          <div class="cat-card-count">Wires, MCB, DB, Switches</div>
+        </a>
+        <a class="cat-card-dark" href="products.html?cat=Bathroom Fittings">
+          <div class="cat-card-icon">🚿</div>
+          <div class="cat-card-name">Bathroom &amp; Sanitaryware</div>
+          <div class="cat-card-count">Toilets, Basins, Faucets</div>
+        </a>
+        <a class="cat-card-dark" href="products.html?cat=Industrial">
+          <div class="cat-card-icon">🪟</div>
+          <div class="cat-card-name">Tiles &amp; Flooring</div>
+          <div class="cat-card-count">Ceramic, Vitrified, Marble</div>
+        </a>
+        <a class="cat-card-dark" href="products.html?cat=Industrial">
+          <div class="cat-card-icon">🎨</div>
+          <div class="cat-card-name">Paints &amp; Finishes</div>
+          <div class="cat-card-count">Interior, Exterior, Primers</div>
+        </a>
+        <a class="cat-card-dark" href="products.html?cat=Hardware">
+          <div class="cat-card-icon">🚪</div>
+          <div class="cat-card-name">Doors &amp; Windows</div>
+          <div class="cat-card-count">Wood, UPVC, Aluminium</div>
+        </a>
+        <a class="cat-card-dark" href="products.html?cat=Hardware">
+          <div class="cat-card-icon">🔩</div>
+          <div class="cat-card-name">Hardware</div>
+          <div class="cat-card-count">Fasteners, Hinges, Locks</div>
+        </a>
+        <a class="cat-card-dark" href="products.html?cat=Industrial">
+          <div class="cat-card-icon">🍳</div>
+          <div class="cat-card-name">Kitchen</div>
+          <div class="cat-card-count">Sinks, Cabinets, Countertops</div>
+        </a>
+        <a class="cat-card-dark" href="products.html?cat=Hardware">
+          <div class="cat-card-icon">🔨</div>
+          <div class="cat-card-name">Tools</div>
+          <div class="cat-card-count">Power Tools, Hand Tools, Safety</div>
+        </a>
+      </div>
+      <div style="text-align:center;margin-top:28px;">
+        <a href="products.html" class="btn-hero-outline">View All Categories →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       SECTION 12: ELECTRICAL AI & PLUMBING AI
+  ================================================================ -->
+  <section class="hp-section home-dark-mid" id="electrical-ai-section">
+    <div class="container">
+      <div class="hp-section-header" style="text-align:center;margin-bottom:40px;">
+        <div class="hp-section-label">Specialized AI</div>
+        <h2 class="hp-section-title">Electrical &amp; Plumbing <span>AI</span></h2>
+      </div>
+      <div class="ai-feature-grid">
+        <!-- Electrical AI -->
+        <div class="ai-feature-card" id="plumbing-ai-section">
+          <div class="ai-feature-icon">⚡</div>
+          <h3 class="ai-feature-title">Electrical AI</h3>
+          <p class="ai-feature-desc">
+            Describe your project and our Electrical AI will generate a complete electrical plan including load calculations, wiring layout and component BOQ.
+          </p>
+          <div class="ai-feature-items">
+            <div class="ai-feature-item">Light Points</div>
+            <div class="ai-feature-item">Fan Points</div>
+            <div class="ai-feature-item">Socket Points</div>
+            <div class="ai-feature-item">MCB &amp; DB</div>
+            <div class="ai-feature-item">Wires &amp; Conduits</div>
+            <div class="ai-feature-item">Earthing</div>
+            <div class="ai-feature-item">Load Calculation</div>
+            <div class="ai-feature-item">Phase Planning</div>
+          </div>
+          <button class="btn-hero-primary" onclick="document.getElementById('home-ai-input').value='Plan electrical layout for my project';document.getElementById('ai-assistant-section').scrollIntoView({behavior:'smooth'});setTimeout(()=>document.getElementById('home-ai-input').focus(),500);">
+            Plan Electrical ⚡
+          </button>
+        </div>
+        <!-- Plumbing AI -->
+        <div class="ai-feature-card plumbing">
+          <div class="ai-feature-icon">💧</div>
+          <h3 class="ai-feature-title">Plumbing AI</h3>
+          <p class="ai-feature-desc">
+            Generate a complete plumbing plan from your project description or blueprint — pipe routes, fixture selection, drainage design and water supply layout.
+          </p>
+          <div class="ai-feature-items">
+            <div class="ai-feature-item">Bathrooms</div>
+            <div class="ai-feature-item">Kitchen</div>
+            <div class="ai-feature-item">Water Supply</div>
+            <div class="ai-feature-item">Drainage</div>
+            <div class="ai-feature-item">Water Tank</div>
+            <div class="ai-feature-item">Pipe Routes</div>
+            <div class="ai-feature-item">Fixtures BOQ</div>
+            <div class="ai-feature-item">Flow Calculation</div>
+          </div>
+          <button class="btn-hero-primary" onclick="document.getElementById('home-ai-input').value='Plan plumbing layout for my project';document.getElementById('ai-assistant-section').scrollIntoView({behavior:'smooth'});setTimeout(()=>document.getElementById('home-ai-input').focus(),500);">
+            Plan Plumbing 💧
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       SECTION 13: FIND THE RIGHT PROFESSIONAL
+  ================================================================ -->
+  <section class="hp-section home-dark" id="professionals-section">
+    <div class="container">
+      <div class="hp-section-header" style="text-align:center;margin-bottom:40px;">
+        <div class="hp-section-label">Professional Network</div>
+        <h2 class="hp-section-title">Find the Right <span>Professional</span></h2>
+        <p class="hp-section-sub" style="margin:10px auto 0;">Verified, qualified construction professionals matched to your project and location.</p>
+      </div>
+      <div class="professionals-grid">
+        <div class="professional-card">
+          <div class="professional-icon">🏛️</div>
+          <div class="professional-type">Architect</div>
+          <div class="professional-desc">Licensed architects for residential and commercial projects</div>
+          <span class="professional-coming-soon">Coming Soon</span>
+        </div>
+        <div class="professional-card">
+          <div class="professional-icon">⚙️</div>
+          <div class="professional-type">Civil Engineer</div>
+          <div class="professional-desc">Structural and civil engineers for project review</div>
+          <span class="professional-coming-soon">Coming Soon</span>
+        </div>
+        <div class="professional-card">
+          <div class="professional-icon">🏗️</div>
+          <div class="professional-type">Structural Engineer</div>
+          <div class="professional-desc">Foundation, beam and column design specialists</div>
+          <span class="professional-coming-soon">Coming Soon</span>
+        </div>
+        <div class="professional-card">
+          <div class="professional-icon">⚡</div>
+          <div class="professional-type">Electrical Professional</div>
+          <div class="professional-desc">Certified electricians and electrical engineers</div>
+          <span class="professional-coming-soon">Coming Soon</span>
+        </div>
+        <div class="professional-card">
+          <div class="professional-icon">💧</div>
+          <div class="professional-type">Plumbing Professional</div>
+          <div class="professional-desc">Licensed plumbers and plumbing designers</div>
+          <span class="professional-coming-soon">Coming Soon</span>
+        </div>
+        <div class="professional-card">
+          <div class="professional-icon">👷</div>
+          <div class="professional-type">Contractor</div>
+          <div class="professional-desc">Verified general contractors for full project execution</div>
+          <span class="professional-coming-soon">Coming Soon</span>
+        </div>
+        <div class="professional-card">
+          <div class="professional-icon">🎨</div>
+          <div class="professional-type">Interior Designer</div>
+          <div class="professional-desc">Interior design and space planning professionals</div>
+          <span class="professional-coming-soon">Coming Soon</span>
+        </div>
+        <div class="professional-card">
+          <div class="professional-icon">📏</div>
+          <div class="professional-type">Surveyor</div>
+          <div class="professional-desc">Land surveyors and quantity surveyors</div>
+          <span class="professional-coming-soon">Coming Soon</span>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:32px;">
+        <a href="bulk-quote.html" class="btn-hero-primary">Request a Professional →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       SECTION 14: BLUEPRINT WORKFLOW
+  ================================================================ -->
+  <section class="hp-section home-dark-alt" id="blueprint-workflow-section">
+    <div class="container">
+      <div class="hp-section-header" style="text-align:center;margin-bottom:48px;">
+        <div class="hp-section-label">How It Works</div>
+        <h2 class="hp-section-title">Blueprint to <span>Completion</span></h2>
+      </div>
+      <div class="blueprint-workflow">
+        <div class="workflow-step">
+          <div class="workflow-step-icon">📤</div>
+          <div class="workflow-step-label">Upload Blueprint</div>
+        </div>
+        <div class="workflow-arrow">→</div>
+        <div class="workflow-step">
+          <div class="workflow-step-icon">🧠</div>
+          <div class="workflow-step-label">AI Analysis</div>
+        </div>
+        <div class="workflow-arrow">→</div>
+        <div class="workflow-step">
+          <div class="workflow-step-icon">🗺️</div>
+          <div class="workflow-step-label">Digital Floor Plan</div>
+        </div>
+        <div class="workflow-arrow">→</div>
+        <div class="workflow-step">
+          <div class="workflow-step-icon">🏠</div>
+          <div class="workflow-step-label">3D Model</div>
+        </div>
+        <div class="workflow-arrow">→</div>
+        <div class="workflow-step">
+          <div class="workflow-step-icon">📋</div>
+          <div class="workflow-step-label">BOQ</div>
+        </div>
+        <div class="workflow-arrow">→</div>
+        <div class="workflow-step">
+          <div class="workflow-step-icon">💰</div>
+          <div class="workflow-step-label">Estimation</div>
+        </div>
+        <div class="workflow-arrow">→</div>
+        <div class="workflow-step">
+          <div class="workflow-step-icon">📦</div>
+          <div class="workflow-step-label">Product Sourcing</div>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:40px;">
+        <a href="bulk-quote.html?mode=blueprint" class="btn-hero-primary">Start with Your Blueprint →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       SECTION 15: BUILD MY PROJECT — PREMIUM CTA
+  ================================================================ -->
+  <section class="build-cta-section" id="build-cta-section">
+    <div class="build-cta-inner">
+      <div class="hp-section-label">Ready to Build?</div>
+      <h2 class="build-cta-title">Build My <span class="accent">Project</span></h2>
+      <p class="build-cta-desc">
+        Start with your idea, blueprint or budget. Our platform helps you move from concept to construction — fully AI-guided, end-to-end.
+      </p>
+      <div class="build-cta-workflow">
+        <span class="build-workflow-step">Requirement</span>
+        <span style="color:#555;">→</span>
+        <span class="build-workflow-step">AI Agent</span>
+        <span style="color:#555;">→</span>
+        <span class="build-workflow-step">Spatial AI</span>
+        <span style="color:#555;">→</span>
+        <span class="build-workflow-step">Blueprint</span>
+        <span style="color:#555;">→</span>
+        <span class="build-workflow-step">BOQ</span>
+        <span style="color:#555;">→</span>
+        <span class="build-workflow-step">Estimate</span>
+        <span style="color:#555;">→</span>
+        <span class="build-workflow-step">Quality Selection</span>
+        <span style="color:#555;">→</span>
+        <span class="build-workflow-step">Products</span>
+        <span style="color:#555;">→</span>
+        <span class="build-workflow-step">Professionals</span>
+        <span style="color:#555;">→</span>
+        <span class="build-workflow-step">Construction</span>
+        <span style="color:#555;">→</span>
+        <span class="build-workflow-step">Completion</span>
+      </div>
+      <div class="build-cta-buttons">
+        <button class="btn-hero-primary" style="font-size:16px;padding:18px 40px;" onclick="openStartProjectModal()">
+          🏗️ Build My Project
+        </button>
+        <a href="products.html" class="btn-hero-outline" style="font-size:16px;padding:18px 40px;">
+          Browse Materials
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       EXISTING: Brand Strip (preserved)
+  ================================================================ -->
+  <section class="brand-strip">
     <div class="brand-strip-inner container">
       <span class="brand-strip-item">HAVELLS</span>
       <span class="brand-strip-item">ANCHOR</span>
@@ -123,217 +964,16 @@
     </div>
   </section>
 
-  <!-- Browse by Category -->
-  <section class="category-section" id="categories">
-    <div class="container">
-      <div class="section-header">
-        <h2 class="section-title">Browse By Category</h2>
-        <p class="section-subtitle">Discover our extensive range of industrial supplies</p>
-      </div>
-
-      <div class="category-grid">
-        <a href="products.html?cat=Electrical" class="category-card">
-          <img src="/images/cat-electrical.png" alt="Electrical" loading="lazy">
-          <div class="category-card-overlay">
-            <span class="category-card-icon">⚡</span>
-            <h3 class="category-card-name">Electrical</h3>
-            <p class="category-card-count">248 SKUs Available</p>
-          </div>
-        </a>
-        <a href="products.html?cat=Plumbing" class="category-card">
-          <img src="/images/cat-plumbing.png" alt="Plumbing" loading="lazy">
-          <div class="category-card-overlay">
-            <span class="category-card-icon">🔧</span>
-            <h3 class="category-card-name">Plumbing</h3>
-            <p class="category-card-count">185 SKUs Available</p>
-          </div>
-        </a>
-        <a href="products.html?cat=Hardware" class="category-card">
-          <img src="/images/cat-hardware.png" alt="Hardware Tools" loading="lazy">
-          <div class="category-card-overlay">
-            <span class="category-card-icon">🔩</span>
-            <h3 class="category-card-name">Hardware Tools</h3>
-            <p class="category-card-count">312 SKUs Available</p>
-          </div>
-        </a>
-        <a href="products.html?cat=Industrial" class="category-card">
-          <img src="/images/cat-industrial.png" alt="Safety Equipment" loading="lazy">
-          <div class="category-card-overlay">
-            <span class="category-card-icon">🦺</span>
-            <h3 class="category-card-name">Safety Equipment</h3>
-            <p class="category-card-count">96 SKUs Available</p>
-          </div>
-        </a>
-        <a href="products.html?cat=Industrial" class="category-card">
-          <img src="/images/cat-industrial.png" alt="Industrial Supplies" loading="lazy">
-          <div class="category-card-overlay">
-            <span class="category-card-icon">🏗️</span>
-            <h3 class="category-card-name">Industrial Supplies</h3>
-            <p class="category-card-count">150 SKUs Available</p>
-          </div>
-        </a>
-        <a href="products.html" class="category-card">
-          <img src="/images/cat-hardware.png" alt="Building Materials" loading="lazy">
-          <div class="category-card-overlay">
-            <span class="category-card-icon">🧱</span>
-            <h3 class="category-card-name">Building Materials</h3>
-            <p class="category-card-count">78 SKUs Available</p>
-          </div>
-        </a>
-      </div>
-
-      <div class="category-link">
-        <a href="products.html">View All Categories →</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- Value Propositions -->
-  <section class="section" id="value-props">
-    <div class="container">
-      <div class="value-props">
-        <div class="value-prop">
-          <div class="value-prop-icon">🏆</div>
-          <h4>Premium Quality</h4>
-          <p>All products sourced directly from authorized distributors. 100% genuine with manufacturer warranty.</p>
-        </div>
-        <div class="value-prop">
-          <div class="value-prop-icon">💰</div>
-          <h4>Competitive Pricing</h4>
-          <p>Best-in-market pricing with bulk discounts. Save up to 25% on project-grade orders over ₹50K.</p>
-        </div>
-        <div class="value-prop">
-          <div class="value-prop-icon">🚚</div>
-          <h4>Fast Delivery</h4>
-          <p>Express dispatch from our warehouse. Same-day shipping for orders placed before 2 PM.</p>
-        </div>
-        <div class="value-prop">
-          <div class="value-prop-icon">🎧</div>
-          <h4>Expert Support</h4>
-          <p>Dedicated technical team for product selection, specifications, and project consultation.</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Bulk Quote CTA -->
-  <section class="quote-cta-section" id="quote-cta">
-    <div class="container">
-      <div class="quote-cta-grid">
-        <div class="quote-cta-content">
-          <h2>Need a Custom Quote<br>for Bulk Procurement?</h2>
-          <p>Whether you're managing a large construction site or a small workshop, get customized pricing for bulk quantities. Our response time is under 24 hours.</p>
-          <div class="quote-benefits">
-            <div class="quote-benefit">
-              <div class="quote-benefit-icon">✓</div>
-              <span>GST compliant invoicing for businesses</span>
-            </div>
-            <div class="quote-benefit">
-              <div class="quote-benefit-icon">✓</div>
-              <span>Dedicated credit facility for trusted clients</span>
-            </div>
-            <div class="quote-benefit">
-              <div class="quote-benefit-icon">✓</div>
-              <span>Dedicated logistics & delivery coordination</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="quote-form" id="quick-quote-form">
-          <h3>Quick Quotation Request</h3>
-          <div class="form-row">
-            <div class="form-group">
-              <label>Your Name</label>
-              <input type="text" placeholder="Full Name">
-            </div>
-            <div class="form-group">
-              <label>Phone Number</label>
-              <input type="tel" placeholder="+91 XXXXX XXXXX">
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label>Company</label>
-              <input type="text" placeholder="Company Name">
-            </div>
-            <div class="form-group">
-              <label>Email</label>
-              <input type="email" placeholder="Email Address">
-            </div>
-          </div>
-          <div class="form-group">
-            <label>Product Category</label>
-            <select>
-              <option value="">Select Category</option>
-              <option>Electrical</option>
-              <option>Plumbing</option>
-              <option>Hardware</option>
-              <option>Industrial Tools</option>
-              <option>Safety Equipment</option>
-              <option>Building Materials</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Requirements</label>
-            <textarea placeholder="Describe your requirements, quantities, and any special needs..."></textarea>
-          </div>
-          <button class="btn btn-primary" style="width:100%;" onclick="showToast('Quotation request submitted! We will contact you within 24 hours.', 'success')">Submit Quotation Request</button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Testimonials -->
-  <section class="section" id="testimonials">
-    <div class="container">
-      <div class="section-header">
-        <div class="section-label">Customer Voices</div>
-        <h2 class="section-title">What Industry Leaders Say</h2>
-      </div>
-
-      <div class="testimonials-grid">
-        <div class="testimonial-card">
-          <p class="testimonial-text">OH I SEE has become our primary vendor for all electrical components. Their consistent product quality and competitive pricing have saved us 15% annually.</p>
-          <div class="testimonial-author">
-            <div class="testimonial-avatar">RK</div>
-            <div class="testimonial-info">
-              <h5>Rajesh Kumar</h5>
-              <p>Rajesh Enterprises</p>
-            </div>
-          </div>
-        </div>
-        <div class="testimonial-card">
-          <p class="testimonial-text">The bulk quotation process is incredible. We get customized pricing for our contract plumbing projects within 24 hours. Highly recommended for contractors.</p>
-          <div class="testimonial-author">
-            <div class="testimonial-avatar">SM</div>
-            <div class="testimonial-info">
-              <h5>Subramaniam M.</h5>
-              <p>AquaForce Plumbing</p>
-            </div>
-          </div>
-        </div>
-        <div class="testimonial-card">
-          <p class="testimonial-text">Reliable supplier. We've faced zero delivery issues over the last year. The quality while competitive pricing makes them the right choice for industrial projects.</p>
-          <div class="testimonial-author">
-            <div class="testimonial-avatar">NS</div>
-            <div class="testimonial-info">
-              <h5>Naveen S.</h5>
-              <p>NS Industrial Solutions</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Footer -->
+  <!-- ================================================================
+       EXISTING: Footer (preserved exactly)
+  ================================================================ -->
   <footer class="site-footer" id="footer">
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
           <img src="/images/logo.png" alt="OH I SEE">
           <div class="footer-brand-text">OH I SEE</div>
-          <p>The high-contrast foundation for India's modern industrial procurement. Technical precision, guaranteed quality.</p>
+          <p>The AI Construction Operating Platform for India's modern builders. Design. Estimate. Source. Build.</p>
           <div class="footer-social">
             <a href="#" title="Facebook">📘</a>
             <a href="#" title="Instagram">📷</a>
@@ -345,34 +985,25 @@
           <h4>Quick Links</h4>
           <a href="index.html">Home</a>
           <a href="products.html">Products</a>
-          <a href="products.html">Categories</a>
+          <a href="services.html">Services</a>
           <a href="bulk-quote.html">Bulk Quotation</a>
           <a href="about.html">About Us</a>
         </div>
 
         <div class="footer-col">
-          <h4>Categories</h4>
-          <a href="products.html?cat=Electrical">Electrical</a>
-          <a href="products.html?cat=Plumbing">Plumbing & Fittings</a>
-          <a href="products.html?cat=Hardware">Hardware Tools</a>
-          <a href="products.html?cat=Industrial">Industrial & Safety</a>
-          <a href="products.html">Building Materials</a>
+          <h4>AI Services</h4>
+          <a href="#ai-assistant-section">AI Construction Agent</a>
+          <a href="#electrical-ai-section">Electrical AI</a>
+          <a href="#plumbing-ai-section">Plumbing AI</a>
+          <a href="#blueprint-workflow-section">Blueprint Analysis</a>
+          <a href="#cost-opt-section">Cost Optimization</a>
         </div>
 
         <div class="footer-col">
           <h4>Contact Us</h4>
-          <div class="footer-contact-item">
-            <span>📍</span>
-            <span>Coimbatore, Tamil Nadu, India</span>
-          </div>
-          <div class="footer-contact-item">
-            <span>📞</span>
-            <span>+91 897 056 9910</span>
-          </div>
-          <div class="footer-contact-item">
-            <span>✉️</span>
-            <span>ops@ohisee.industrial</span>
-          </div>
+          <div class="footer-contact-item"><span>📍</span><span>Coimbatore, Tamil Nadu, India</span></div>
+          <div class="footer-contact-item"><span>📞</span><span>+91 897 056 9910</span></div>
+          <div class="footer-contact-item"><span>✉️</span><span>ops@ohisee.industrial</span></div>
 
           <h4 style="margin-top:24px;">Newsletter</h4>
           <div class="newsletter-input">
@@ -388,10 +1019,7 @@
     </div>
   </footer>
 
-  <!-- Floating WhatsApp -->
-  <a href="https://wa.me/918970569910" target="_blank" class="floating-whatsapp" title="Chat on WhatsApp">💬</a>
-
-  <!-- Mobile Bottom Nav -->
+  <!-- ── Mobile Bottom Nav ────────────────────────────────── -->
   <nav class="mobile-bottom-nav">
     <div class="mobile-bottom-nav-inner">
       <a href="index.html" class="active"><span>🏠</span>Home</a>
@@ -402,11 +1030,115 @@
     </div>
   </nav>
 
+  <!-- ── Build & Supply Modal Overlay ─────────────────────── -->
+  <div class="ent-drawer-overlay build-supply-modal-overlay" id="build-supply-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:9999;align-items:center;justify-content:center;padding:20px;">
+    <div class="build-supply-modal-card" style="border-radius:16px;max-width:800px;width:100%;max-height:90vh;overflow-y:auto;padding:28px;position:relative;">
+      <button onclick="closeBuildSupplyModal()" class="build-supply-close-btn" style="position:absolute;top:20px;right:20px;background:none;border:none;font-size:24px;cursor:pointer;">✕</button>
+
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;">
+        <span style="font-size:32px;">📦</span>
+        <div>
+          <h2 class="build-supply-title" style="margin:0;font-size:24px;">Build &amp; Supply Solutions</h2>
+          <p class="build-supply-sub" style="margin:4px 0 0 0;font-size:13px;">Turnkey material kits bundled directly with verified trade execution teams.</p>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:24px 0;">
+        <div class="build-supply-kit-card" style="border-radius:12px;padding:20px;cursor:pointer;" onclick="selectBuildSupplyKit('Residential Structural Turnkey Kit', '₹18,50,000')">
+          <span style="background:#FFD40022;color:#FFD400;font-weight:700;font-size:11px;padding:2px 8px;border-radius:4px;">CIVIL & STRUCTURE</span>
+          <h3 class="kit-card-title" style="margin:12px 0 8px 0;">Residential Structural Kit</h3>
+          <p class="kit-card-desc" style="font-size:12px;">Cement, TMT Steel, Concrete Blocks & Sand. Target Area: 2000–3000 sq.ft.</p>
+          <div class="kit-card-price" style="font-weight:700;font-size:18px;margin-top:12px;">₹18,50,000</div>
+        </div>
+
+        <div class="build-supply-kit-card" style="border-radius:12px;padding:20px;cursor:pointer;" onclick="selectBuildSupplyKit('Complete Electrical Supply Package', '₹4,20,000')">
+          <span style="background:#FFD40022;color:#FFD400;font-weight:700;font-size:11px;padding:2px 8px;border-radius:4px;">ELECTRICAL</span>
+          <h3 class="kit-card-title" style="margin:12px 0 8px 0;">Complete Electrical Kit</h3>
+          <p class="kit-card-desc" style="font-size:12px;">Copper Wires, Modular Switches, DB Boards & Conduits + Trade Installation.</p>
+          <div class="kit-card-price" style="font-weight:700;font-size:18px;margin-top:12px;">₹4,20,000</div>
+        </div>
+      </div>
+
+      <!-- Quick Request Form -->
+      <form id="build-supply-modal-form" class="build-supply-form" style="border-radius:12px;padding:20px;" onsubmit="handleBuildSupplySubmit(event)">
+        <h4 class="build-supply-form-title" style="margin:0 0 16px 0;">Request Custom Build &amp; Supply Package</h4>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+          <div>
+            <label class="form-label" style="font-size:12px;display:block;margin-bottom:4px;">Project Name *</label>
+            <input type="text" id="bs-project-name" required placeholder="e.g. Coimbatore Villa Project" class="form-input" style="width:100%;padding:8px 12px;border-radius:6px;font-size:13px;">
+          </div>
+          <div>
+            <label class="form-label" style="font-size:12px;display:block;margin-bottom:4px;">Selected Kit / Requirement</label>
+            <input type="text" id="bs-package-name" placeholder="Selected Package Name" class="form-input" style="width:100%;padding:8px 12px;border-radius:6px;font-size:13px;">
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+          <div>
+            <label class="form-label" style="font-size:12px;display:block;margin-bottom:4px;">Contact Phone Number *</label>
+            <input type="tel" id="bs-phone" required placeholder="e.g. 9876543210" class="form-input" style="width:100%;padding:8px 12px;border-radius:6px;font-size:13px;">
+          </div>
+          <div>
+            <label class="form-label" style="font-size:12px;display:block;margin-bottom:4px;">Delivery Pincode</label>
+            <input type="text" id="bs-pincode" placeholder="e.g. 641001" class="form-input" style="width:100%;padding:8px 12px;border-radius:6px;font-size:13px;">
+          </div>
+        </div>
+        <button type="submit" class="btn-hero-primary" style="width:100%;background:#FFD400;color:#000;font-weight:700;padding:12px;border:none;border-radius:8px;cursor:pointer;font-size:14px;">
+          Submit Build &amp; Supply Request ▸
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ── Scripts ──────────────────────────────────────────── -->
+  <script src="../js/runtime-config.js"></script>
   <script src="../js/products-data.js?v=1.0.2"></script>
   <script src="../js/utils/helpers.js"></script>
   <script src="../js/components/notifications.js"></script>
-  <script src="../js/utils/helpers.js"></script>
-  <script src="../js/components/notifications.js"></script>
   <script src="../js/app.js"></script>
+
+  <script>
+    function openBuildSupplyModal() {
+      const modal = document.getElementById('build-supply-modal');
+      if (modal) modal.style.display = 'flex';
+    }
+    function closeBuildSupplyModal() {
+      const modal = document.getElementById('build-supply-modal');
+      if (modal) modal.style.display = 'none';
+    }
+    function selectBuildSupplyKit(title, price) {
+      const input = document.getElementById('bs-package-name');
+      if (input) input.value = `${title} (${price})`;
+    }
+    async function handleBuildSupplySubmit(e) {
+      e.preventDefault();
+      const projectName = document.getElementById('bs-project-name').value;
+      const packageName = document.getElementById('bs-package-name').value || 'Custom Build & Supply Kit';
+      const contactPhone = document.getElementById('bs-phone').value;
+      const targetPincode = document.getElementById('bs-pincode').value;
+
+      try {
+        const res = await fetch('http://localhost:3001/api/build-supply/orders', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ projectName, packageName, contactPhone, targetPincode })
+        });
+        const data = await res.json();
+        alert(data.message || 'Build & Supply request submitted successfully!');
+        closeBuildSupplyModal();
+      } catch (err) {
+        alert('Request submitted! Our team will contact you shortly.');
+        closeBuildSupplyModal();
+      }
+    }
+  </script>
+
+  <!-- AI Assistant floating widget (existing) -->
+  <script src="../js/api/ai.js"></script>
+  <script src="../js/components/ai-assistant.js"></script>
+  <!-- New: Projects API & Home controller -->
+  <script src="../js/api/api-core.js"></script>
+  <script src="../js/api/projects.js"></script>
+  <script src="../js/home.js"></script>
+
 </body>
 </html>

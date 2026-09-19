@@ -1,0 +1,70 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://ohisee.com/schemas/building-requirements.json",
+  "title": "OH I SEE Structured Building Requirements",
+  "type": "object",
+  "required": ["schemaVersion", "projectName", "site", "building", "storeys"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "type": "integer", "const": 1 },
+    "projectName": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "description": { "type": "string", "maxLength": 4000 },
+    "site": {
+      "type": "object",
+      "required": ["plotLengthFt", "plotWidthFt"],
+      "properties": {
+        "location": { "type": "string" },
+        "city": { "type": "string" },
+        "state": { "type": "string" },
+        "plotLengthFt": { "type": "number", "exclusiveMinimum": 0 },
+        "plotWidthFt": { "type": "number", "exclusiveMinimum": 0 },
+        "roadFacing": { "type": "string", "enum": ["North", "South", "East", "West", "Corner"] }
+      }
+    },
+    "building": {
+      "type": "object",
+      "required": ["floors", "bedrooms", "bathrooms"],
+      "properties": {
+        "floors": { "type": "integer", "minimum": 1, "maximum": 4 },
+        "bedrooms": { "type": "integer", "minimum": 1, "maximum": 10 },
+        "bathrooms": { "type": "integer", "minimum": 1, "maximum": 10 },
+        "parking": { "type": "integer", "minimum": 0, "maximum": 6 },
+        "architecturalStyle": { "type": "string" },
+        "qualityLevel": { "type": "string", "enum": ["Economic", "Standard", "Premium", "Custom"] },
+        "budgetInr": { "type": "number", "minimum": 0 },
+        "hasPooja": { "type": "boolean" },
+        "hasOffice": { "type": "boolean" },
+        "hasTerrace": { "type": "boolean" },
+        "vastu": { "type": "string", "enum": ["Yes", "No", "Partly", ""] }
+      }
+    },
+    "rooms": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "type"],
+        "properties": {
+          "name": { "type": "string" },
+          "type": { "type": "string" },
+          "storeyIndex": { "type": "integer", "minimum": 0 },
+          "lengthFt": { "type": "number", "exclusiveMinimum": 0 },
+          "widthFt": { "type": "number", "exclusiveMinimum": 0 }
+        }
+      }
+    },
+    "storeys": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["index", "name", "elevationM"],
+        "properties": {
+          "index": { "type": "integer", "minimum": 0 },
+          "name": { "type": "string" },
+          "elevationM": { "type": "number", "minimum": 0 },
+          "clearHeightM": { "type": "number", "exclusiveMinimum": 0 }
+        }
+      }
+    }
+  }
+}

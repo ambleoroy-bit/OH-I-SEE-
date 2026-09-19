@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Browse OH I SEE's complete catalog of industrial hardware, electrical components, plumbing materials, and safety equipment.">
+  <title>Products — OH I SEE Industrial Solutions</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="images/logo.png" type="image/png">
+</head>
+<body>
+  <div class="page-loader"><div class="loader-logo"><img src="images/logo.png" alt="OH I SEE"></div><div class="loader-text">OH I SEE</div><div class="loader-bar"></div></div>
+  <div class="mobile-nav-overlay"><div class="mobile-nav-panel"><button class="mobile-nav-close">✕</button><div class="mobile-nav-links"><a href="index.html">Home</a><a href="products.html">Products</a><a href="products.html?cat=Electrical">Electrical</a><a href="products.html?cat=Plumbing">Plumbing</a><a href="products.html?cat=Hardware">Hardware</a><a href="products.html?cat=Industrial">Industrial</a><a href="bulk-quote.html">Bulk Quotation</a><a href="about.html">About Us</a><a href="contact.html">Contact</a><a href="login.html">Login / Register</a></div></div></div>
+
+  <header class="site-header"><div class="header-top"><a href="index.html" class="header-logo"><img src="images/logo.png" alt="OH I SEE"><span class="header-logo-text">OH I SEE</span></a><nav class="header-nav"><a href="products.html?cat=Electrical" class="active">Electrical</a><a href="products.html?cat=Plumbing">Plumbing</a><a href="products.html?cat=Hardware">Tools</a><a href="products.html?cat=Industrial">Industrial</a><a href="bulk-quote.html">Bulk Quotation</a></nav><div class="header-search"><span class="search-icon">🔍</span><input type="text" class="search-input" placeholder="Search industrial supplies..."></div><div class="header-actions"><a href="account.html" class="header-action-btn">♡</a><a href="account.html" class="header-action-btn">👤</a><a href="cart.html" class="header-action-btn">🛒<span class="badge cart-count" style="display:none;">0</span></a><a href="bulk-quote.html" class="btn-request-quote">Get Quote</a></div><button class="mobile-menu-toggle">☰</button></div></header>
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="container">
+      <h1 id="listing-title">Electrical Hardware</h1>
+      <p class="page-header-subtitle" id="listing-subtitle">Industrial Grid · <span id="result-count">248</span> SKU Results</p>
+    </div>
+  </div>
+
+  <!-- Listing Layout -->
+  <div class="container">
+    <div class="listing-layout">
+      <!-- Sidebar Filters -->
+      <aside class="filter-sidebar" id="filter-sidebar">
+        <div class="filter-header">
+          <h3>Filters</h3>
+          <span class="filter-clear" onclick="clearFilters()">Clear</span>
+        </div>
+
+        <div class="filter-group">
+          <h4>⬛ Categories</h4>
+          <div id="category-filter-list" style="display: flex; flex-direction: column; gap: 8px; max-height: 250px; overflow-y: auto; padding-right: 4px;">
+            <!-- Loaded dynamically by JS -->
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <h4>💰 Price (₹)</h4>
+          <div class="filter-price-inputs">
+            <input type="number" id="price-min" placeholder="Min" onchange="applyFilters()">
+            <input type="number" id="price-max" placeholder="Max" onchange="applyFilters()">
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <h4>📦 Availability</h4>
+          <div class="filter-toggle">
+            <span style="font-size:14px;font-weight:600;">In-Stock Only</span>
+            <div class="toggle-switch active" id="stock-toggle"></div>
+          </div>
+        </div>
+
+        <div class="filter-promo">
+          <p style="font-size:11px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Pro B2B Only</p>
+          <h4>Bulk Pricing</h4>
+          <p>Save 10% on orders over ₹50K. Register now.</p>
+          <a href="login.html" class="btn btn-dark btn-sm" style="width:100%;margin-top:8px;">Unlock Discounts</a>
+        </div>
+      </aside>
+
+      <!-- Product Content -->
+      <main>
+        <div class="listing-toolbar">
+          <div class="listing-sort">
+            <span style="font-size:14px;color:#999;">Sort</span>
+            <select id="sort-select" onchange="applyFilters()">
+              <option value="featured">Primary Match</option>
+              <option value="price-low">Price: Low to High</option>
+              <option value="price-high">Price: High to Low</option>
+              <option value="name">Name: A to Z</option>
+            </select>
+          </div>
+          <div class="view-toggle">
+            <button class="view-grid active" title="Grid View">▦</button>
+            <button class="view-list" title="List View">☰</button>
+          </div>
+        </div>
+
+        <div class="product-grid" id="product-listing-grid">
+          <!-- Products populated by JS -->
+        </div>
+
+        <div class="pagination-info">Displaying <span id="display-count">12</span> of <span id="total-count">248</span> units</div>
+        <div class="pagination">
+          <button>‹</button>
+          <button class="active">1</button>
+          <button>2</button>
+          <button>3</button>
+          <span>…</span>
+          <button>21</button>
+          <button>›</button>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Comparison Stack -->
+  <div class="comparison-stack" id="comparison-stack">
+    <div style="display:flex;align-items:center;gap:16px;">
+      <span style="font-family:'Space Grotesk',monospace;font-weight:700;text-transform:uppercase;font-size:14px;">Comparison Stack</span>
+      <span style="font-size:13px;">2 Industrial Items Staged</span>
+    </div>
+    <div class="comparison-items">
+      <div class="comparison-item">IC900 Breaker ✕</div>
+      <div class="comparison-item">JRT3 Contactor ✕</div>
+    </div>
+    <div class="comparison-actions">
+      <button class="btn btn-sm btn-outline-dark" style="color:white;border-color:rgba(255,255,255,0.3);">Clear Stack</button>
+      <button class="btn btn-sm btn-dark" style="background:#FFD400;color:#000;">Execute Analysis</button>
+    </div>
+  </div>
+
+  <footer class="site-footer"><div class="container"><div class="footer-grid"><div class="footer-brand"><img src="images/logo.png" alt="OH I SEE"><div class="footer-brand-text">OH I SEE</div><p>Infrastructure and heavy-duty industrial logistics provider since 1994. Quality at scale.</p><div class="footer-social"><a href="#">📘</a><a href="#">📷</a><a href="#">💼</a></div></div><div class="footer-col"><h4>Industrial Lines</h4><a href="products.html?cat=Electrical">High Voltage Grids</a><a href="products.html?cat=Hardware">Load Control</a><a href="products.html?cat=Industrial">Armor & Safety</a><a href="products.html?cat=Plumbing">Hydraulic Valves</a></div><div class="footer-col"><h4>Corporate</h4><a href="about.html">Operations</a><a href="about.html">Engineering</a><a href="contact.html">Logistics</a><a href="contact.html">Contact Center</a></div><div class="footer-col"><h4>Grid Updates</h4><p style="font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:12px;">Subscribe to SKU availability and tech bulletins.</p><div class="newsletter-input"><input type="email" placeholder="Email Address"><button>→</button></div></div></div><div class="footer-bottom">© 2024 OH I SEE Industrial Hardware. Coimbatore, India. ISO 9001:2015 Certified. &nbsp; Privacy Protocol &nbsp; Terms of Engagement &nbsp; Logistics Policy</div></div></footer>
+
+  <a href="https://wa.me/918970569910" target="_blank" class="floating-whatsapp">💬</a>
+  <nav class="mobile-bottom-nav"><div class="mobile-bottom-nav-inner"><a href="index.html"><span>🏠</span>Home</a><a href="products.html" class="active"><span>📦</span>Products</a><a href="cart.html"><span>🛒</span>Cart</a><a href="bulk-quote.html"><span>📋</span>Quote</a><a href="account.html"><span>👤</span>Account</a></div></nav>
+
+  <script src="products-data.js?v=1.0.2"></script>
+  <script src="app.js?v=1.0.2"></script>
+  <script>
+    // Product listing page logic
+    function getFilteredProducts() {
+      let products = [...PRODUCTS];
+      
+      // Get all checked categories from our dynamic list
+      const checkedBoxes = document.querySelectorAll('#category-filter-list input:checked');
+      const checkedCats = Array.from(checkedBoxes).map(cb => cb.value);
+      
+      if (checkedCats.length > 0) {
+        products = products.filter(p => checkedCats.includes(p.category));
+        if (checkedCats.length === 1) {
+          document.getElementById('listing-title').textContent = checkedCats[0] + ' Hardware';
+        } else {
+          document.getElementById('listing-title').textContent = 'Filtered Catalog';
+        }
+      } else {
+        const catParam = getUrlParam('cat');
+        if (catParam) {
+          products = products.filter(p => p.category === catParam);
+          document.getElementById('listing-title').textContent = catParam + ' Hardware';
+        } else {
+          document.getElementById('listing-title').textContent = 'All Industrial Supplies';
+        }
+      }
+      return products;
+    }
+
+    function applyFilters() {
+      let products = getFilteredProducts();
+      const sortVal = document.getElementById('sort-select').value;
+      if (sortVal === 'price-low') products.sort((a, b) => a.price - b.price);
+      else if (sortVal === 'price-high') products.sort((a, b) => b.price - a.price);
+      else if (sortVal === 'name') products.sort((a, b) => a.name.localeCompare(b.name));
+
+      const priceMin = parseInt(document.getElementById('price-min').value) || 0;
+      const priceMax = parseInt(document.getElementById('price-max').value) || Infinity;
+      products = products.filter(p => p.price >= priceMin && p.price <= priceMax);
+
+      const stockToggle = document.getElementById('stock-toggle');
+      if (stockToggle && stockToggle.classList.contains('active')) {
+        products = products.filter(p => p.stock === 'instock' || p.stock === 'limited' || p.stock === 'active');
+      }
+
+      const grid = document.getElementById('product-listing-grid');
+      grid.innerHTML = products.map(renderProductCard).join('');
+      document.getElementById('result-count').textContent = products.length;
+      document.getElementById('display-count').textContent = Math.min(12, products.length);
+      document.getElementById('total-count').textContent = products.length;
+      document.getElementById('listing-subtitle').querySelector('span').textContent = products.length;
+    }
+
+    function clearFilters() {
+      document.querySelectorAll('#category-filter-list input').forEach(cb => cb.checked = false);
+      document.getElementById('price-min').value = '';
+      document.getElementById('price-max').value = '';
+      
+      // Clear URL parameter without page refresh
+      const url = new URL(window.location);
+      url.searchParams.delete('cat');
+      window.history.pushState({}, '', url);
+      
+      applyFilters();
+    }
+
+    // Set active category from URL
+    document.addEventListener('DOMContentLoaded', () => {
+      const catParam = getUrlParam('cat');
+      
+      // Render checkboxes dynamically
+      const catList = document.getElementById('category-filter-list');
+      if (catList && typeof CATEGORIES !== 'undefined') {
+        catList.innerHTML = CATEGORIES.map(c => {
+          const isChecked = catParam === c.name ? 'checked' : '';
+          return `
+            <label class="filter-option" style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13px;">
+              <input type="checkbox" value="${c.name}" ${isChecked} onchange="applyFilters()" style="width: 15px; height: 15px; accent-color: var(--primary);">
+              <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${c.name}</span>
+            </label>
+          `;
+        }).join('');
+      }
+
+      if (catParam) {
+        document.getElementById('listing-title').textContent = catParam + ' Hardware';
+        document.querySelectorAll('.header-nav a').forEach(a => {
+          a.classList.remove('active');
+          if (a.textContent.includes(catParam) || a.href.includes(catParam)) a.classList.add('active');
+        });
+      }
+      applyFilters();
+
+      // Mobile filter toggle
+      const filterBtn = document.createElement('button');
+      filterBtn.className = 'btn btn-outline-dark btn-sm';
+      filterBtn.textContent = '☰ Filters';
+      filterBtn.style.cssText = 'display:none;margin-bottom:16px;';
+      filterBtn.onclick = () => document.getElementById('filter-sidebar').classList.toggle('active');
+      if (window.innerWidth <= 992) {
+        filterBtn.style.display = 'inline-flex';
+        document.querySelector('main').prepend(filterBtn);
+      }
+    });
+  </script>
+</body>
+</html>

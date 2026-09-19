@@ -2,28 +2,83 @@
 // Users Controller
 // ============================================================
 const supabase = require('../config/supabase');
+const { setUserExtras, mergeUserProfile } = require('../services/userProfileStore');
+
+const MAX_PROFILE_IMAGE_LENGTH = 7_000_000;
+
+function formatUserProfile(user) {
+  const merged = mergeUserProfile(user);
+  const gstin = String(merged?.gstin || merged?.gst || '').trim();
+  return { ...merged, gstin };
+}
 
 // GET /api/users/me
 async function getMe(req, res) {
-  res.json({ user: req.user });
+  res.json({ user: formatUserProfile(req.user) });
 }
 
 // PUT /api/users/me — Update own profile
 async function updateMe(req, res) {
   try {
-    const allowedFields = ['name', 'phone', 'company', 'gstin', 'city', 'address', 'state', 'pincode'];
+    const allowedFields = ['name', 'phone', 'company', 'gstin', 'city', 'address', 'state', 'pincode', 'profile_image'];
     const updates = {};
-    allowedFields.forEach(f => { if (req.body[f] !== undefined) updates[f] = req.body[f]; });
+    allowedFields.forEach((field) => {
+      if (req.body[field] !== undefined) updates[field] = req.body[field];
+    });
+    if (updates.gstin !== undefined) {
+      updates.gstin = String(updates.gstin || '').trim().toUpperCase();
+      updates.gst = updates.gstin;
+    }
 
-    const { data, error } = await supabase
-      .from('users')
-      .update(updates)
-      .eq('id', req.user.id)
-      .select()
-      .single();
+    if (updates.profile_image !== undefined) {
+      const image = String(updates.profile_image || '').trim();
+      if (image && image.length > MAX_PROFILE_IMAGE_LENGTH) {
+        return res.status(400).json({ error: 'Profile image is too large. Please use an image under 2 MB.' });
+      }
+      if (image && !image.startsWith('data:image/')) {
+        return res.status(400).json({ error: 'Profile image must be a valid image file.' });
+      }
+      setUserExtras(req.user.id, { profile_image: image });
+      updates.profile_image = image;
+    }
 
-    if (error) throw error;
-    res.json({ message: 'Profile updated', user: data });
+    let data = mergeUserProfile({ ...req.user, ...updates });
+    const dbUpdates = { ...updates };
+    if (Object.keys(dbUpdates).length) {
+      let updated = null;
+      let error = null;
+      ({ data: updated, error } = await supabase
+        .from('users')
+        .update(dbUpdates)
+        .eq('id', req.user.id)
+        .select()
+        .single());
+
+      if (error && dbUpdates.profile_image) {
+        const fallback = { ...dbUpdates };
+        delete fallback.profile_image;
+        ({ data: updated, error } = await supabase
+          .from('users')
+          .update(fallback)
+          .eq('id', req.user.id)
+          .select()
+          .single());
+      }
+
+      if (error) throw error;
+      data = mergeUserProfile({ ...updated, profile_image: updates.profile_image ?? updated.profile_image });
+    }
+
+    if (updates.city && ['Partner'].includes(data.role)) {
+      await supabase
+        .from('construction_professionals')
+        .update({ city: updates.city, updated_at: new Date().toISOString() })
+        .eq('id', req.user.id)
+        .then(() => {})
+        .catch(() => {});
+    }
+
+    res.json({ message: 'Profile updated', user: formatUserProfile(data) });
   } catch (err) {
     res.status(500).json({ error: 'Failed to update profile' });
   }

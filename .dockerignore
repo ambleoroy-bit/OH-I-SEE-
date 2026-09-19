@@ -1,0 +1,46 @@
+# Git & IDE
+.git
+.gitignore
+.history
+.cursor
+.vscode
+.idea
+
+# Dependencies (installed in container)
+**/node_modules
+node_modules
+
+# Build output (rebuilt in container)
+frontend/dist
+**/dist
+
+# Secrets & local env
+.env
+.env.*
+!.env.example
+
+# Local data & test artifacts
+backend/.data
+output
+.playwright-cli
+**/*.log
+
+# Legacy / unused deploy paths
+src
+backend/src_old
+frontend/static_html
+frontend/react_vite
+frontend/vanilla_vite
+
+# Docs & assets not needed in images
+docs
+*.md
+!README.md
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Kubernetes / Docker dev files (not needed inside images)
+k8s
+docker-compose*.yml

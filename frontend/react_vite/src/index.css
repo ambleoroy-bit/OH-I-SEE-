@@ -1,0 +1,7 @@
+@import "tailwindcss";
+@layer base {
+  :root {
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+  }
+}

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Floor Plan — OH I SEE</title>
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/project-workspace.css">
+  <link rel="icon" href="/images/logo.png" type="image/png">
+</head>
+<body class="pw-body">
+  <header class="pw-header">
+    <div class="container pw-header-inner">
+      <a href="index.html" class="pw-back">← OH I SEE</a>
+      <div>
+        <div class="pw-project-id" id="pw-header-id">—</div>
+        <div class="pw-project-name" id="pw-header-name">Loading…</div>
+      </div>
+    </div>
+  </header>
+  <div class="pw-shell">
+    <aside class="pw-sidebar" id="pw-nav"></aside>
+    <main class="pw-main">
+      <div class="pw-topbar" id="pw-topbar"></div>
+      <div class="pw-content" id="pw-content"><div class="pw-loading">Loading floor plan…</div></div>
+    </main>
+  </div>
+  <script src="../js/utils/helpers.js"></script>
+
+  <script src="../js/api/api-core.js"></script>
+  <script src="../js/api/projects.js"></script>
+  <script src="../js/bim/api/bim.js"></script>
+  <script src="../js/bim/project-workspace.js"></script>
+  <script type="module">
+    import { FloorPlanViewer } from '../js/bim/floor-plan-viewer.js';
+    import { mountBimPromptBar } from '../js/bim/bim-prompt-bar.js';
+
+    let project = null;
+    let viewer = null;
+    let bimData = null;
+
+    async function loadBim(projectId) {
+      try {
+        const res = await BimAPI.getModel(projectId);
+        bimData = res.data;
+      } catch (e) {
+        bimData = { status: 'none', model: null };
+      }
+      const cached = BimAPI.getCachedBim(projectId);
+      if (!bimData?.model && cached?.model) {
+        bimData = { ...bimData, model: cached.model, status: 'ready' };
+      }
+      return bimData;
+    }
+
+    function renderProps(el) {
+      const panel = document.getElementById('fp-props-body');
+      if (!panel) return;
+      if (!el) {
+        panel.innerHTML = '<p class="fp-props-empty">Click a wall, door, window, or room to inspect properties.</p>';
+        return;
+      }
+      const rows = [['Type', el.type]];
+      if (el.name && !/^Wall:|^Window \d/i.test(el.name)) rows.push(['Name', el.name]);
+      if (el.storeyId) rows.push(['Storey', el.storeyId.replace(/^STRY-/, 'Floor ')]);
+      if (el.dimensions) {
+        Object.entries(el.dimensions).forEach(([k, v]) => {
+          const label = k.replace(/M$/, '').replace(/([A-Z])/g, ' $1').trim();
+          const val = k.endsWith('M') ? (viewer?.formatLength(v) || v) : v;
+          rows.push([label, val]);
+        });
+      }
+      if (el.quantity?.areaM2) rows.push(['Area', viewer?.formatArea(el.quantity.areaM2)]);
+      if (el.materialId) rows.push(['Material', el.materialId.replace(/^MAT-/, '').replace(/-/g, ' ')]);
+      panel.innerHTML = rows.map(([k, v]) => `
+        <div class="bim-prop-row"><span class="bim-prop-key">${k}</span><span class="bim-prop-val">${v}</span></div>`).join('');
+    }
+
+    function wireControls() {
+      document.getElementById('btn-fit')?.addEventListener('click', () => viewer?.fitToScreen() && viewer.draw());
+      document.getElementById('btn-zoom-in')?.addEventListener('click', () => viewer?.zoomIn());
+      document.getElementById('btn-zoom-out')?.addEventListener('click', () => viewer?.zoomOut());
+      document.getElementById('btn-reset')?.addEventListener('click', () => viewer?.resetView());
+      document.getElementById('btn-export-png')?.addEventListener('click', () => viewer?.exportPng(`${project.project_id}-floor-plan.png`));
+      document.getElementById('btn-export-pdf')?.addEventListener('click', () => viewer?.exportPdf());
+
+      document.querySelectorAll('[data-layer]').forEach((cb) => {
+        cb.addEventListener('change', () => viewer?.setLayer(cb.dataset.layer, cb.checked));
+      });
+
+      const floorSel = document.getElementById('fp-floor-select');
+      if (floorSel && viewer) {
+        floorSel.addEventListener('change', () => {
+          viewer.setStorey(floorSel.value);
+          renderProps(null);
+        });
+      }
+
+      const unitSel = document.getElementById('fp-units-select');
+      if (unitSel && viewer) {
+        unitSel.addEventListener('change', () => {
+          viewer.options.units = unitSel.value;
+          viewer.draw();
+        });
+      }
+    }
+
+    function renderPlan() {
+      const model = bimData?.model;
+      if (!model) {
+        document.getElementById('pw-content').innerHTML = `
+          <div id="bim-prompt-mount"></div><div class="pw-stat-card">
+            <p style="color:#888;">No BIM model yet. Generate BIM first to create the 2D floor plan.</p>
+            <a class="pw-btn pw-btn-primary" href="project-bim.html?projectId=${encodeURIComponent(project.project_id)}">Go to BIM & Technical →</a>
+          </div>`;
+        mountBimPromptBar(document.getElementById('bim-prompt-mount'),project.project_id,res=>refreshBim(res),{project});
+        return;
+      }
+
+      const storeys = (model.elements || []).filter((e) => e.type === 'BuildingStorey')
+        .sort((a, b) => (a.properties?.index ?? 0) - (b.properties?.index ?? 0));
+      const floorOptions = storeys.map((s) => `<option value="${s.id}">${s.name}</option>`).join('');
+      const dateStr = new Date().toLocaleDateString('en-GB');
+
+      document.getElementById('pw-content').innerHTML = `
+        <div id="bim-prompt-mount"></div>
+        <div class="fp-header">
+          <div class="fp-header-left">
+            <div class="fp-header-brand">OH I SEE</div>
+            <div class="fp-header-title">Residential Floor Plan</div>
+          </div>
+          <div class="fp-header-meta">
+            <span><strong>Project:</strong> ${project.project_id}</span>
+            <span><strong>Date:</strong> ${dateStr}</span>
+            <span>
+              <strong>Units:</strong>
+              <select id="fp-units-select" class="fp-select-sm">
+                <option value="imperial">Feet / Inches</option>
+                <option value="metric">Meters</option>
+              </select>
+            </span>
+          </div>
+        </div>
+        <div class="fp-layout">
+          <div class="fp-main">
+            <div class="fp-toolbar">
+              <button type="button" class="pw-btn pw-btn-primary" id="btn-fit" title="Fit to screen">⊞ Fit</button>
+              <button type="button" class="pw-btn" id="btn-zoom-in">+</button>
+              <button type="button" class="pw-btn" id="btn-zoom-out">−</button>
+              <button type="button" class="pw-btn" id="btn-reset">Reset</button>
+              <span class="fp-toolbar-sep"></span>
+              ${storeys.length > 1 ? `<select id="fp-floor-select" class="fp-select">${floorOptions}</select>` : `<span class="fp-floor-label">${storeys[0]?.name || 'Ground Floor'}</span>`}
+              <span class="fp-toolbar-sep"></span>
+              <button type="button" class="pw-btn" id="btn-export-png">PNG</button>
+              <button type="button" class="pw-btn" id="btn-export-pdf">PDF</button>
+              <a class="pw-btn" href="project-3d.html?projectId=${encodeURIComponent(project.project_id)}">3D Home →</a>
+            </div>
+            <div class="fp-layers">
+              <label><input type="checkbox" data-layer="walls" checked> Walls</label>
+              <label><input type="checkbox" data-layer="rooms" checked> Rooms</label>
+              <label><input type="checkbox" data-layer="doors" checked> Doors</label>
+              <label><input type="checkbox" data-layer="windows" checked> Windows</label>
+              <label><input type="checkbox" data-layer="stairs" checked> Stairs</label>
+              <label><input type="checkbox" data-layer="dimensions" checked> Dimensions</label>
+              <label><input type="checkbox" data-layer="landscape" checked> Landscape</label>
+              <label><input type="checkbox" data-layer="furniture"> Furniture</label>
+              <label><input type="checkbox" data-layer="grid"> Grid</label>
+            </div>
+            <div class="floor-plan-wrap fp-blueprint" id="floor-plan-viewer"></div>
+            <div class="fp-hint">Scroll to zoom · Drag to pan · Click element for properties</div>
+          </div>
+          <aside class="fp-props bim-props">
+            <h3>Element Properties</h3>
+            <div id="fp-props-body"><p class="fp-props-empty">Click a wall, door, window, or room.</p></div>
+          </aside>
+        </div>`;
+
+      mountBimPromptBar(document.getElementById('bim-prompt-mount'), project.project_id, (res) => {
+        refreshBim(res);
+      }, { project });
+
+      if (viewer) viewer.dispose();
+      viewer = new FloorPlanViewer(document.getElementById('floor-plan-viewer'), {
+        projectId: project.project_id,
+        projectName: project.project_name,
+        units: 'imperial',
+        onSelect: (el) => renderProps(el),
+      });
+      viewer.loadModel(model);
+      wireControls();
+    }
+
+    async function refreshBim(generateRes) {
+      const projectId = project.project_id;
+      if (generateRes) {
+        const applied = BimAPI.applyGenerateResult(projectId, generateRes);
+        if (applied) { bimData = applied; renderPlan(); ProjectWorkspace.renderTopbar(project, 'Floor Plan', 'ready'); ProjectWorkspace.wireBimActions(projectId, refreshBim); return; }
+      }
+      await loadBim(projectId);
+      renderPlan();
+      ProjectWorkspace.renderTopbar(project, 'Floor Plan', bimData?.status || 'none');
+      ProjectWorkspace.wireBimActions(projectId, refreshBim);
+    }
+
+    async function init() {
+      const projectId = ProjectWorkspace.getProjectId();
+      if (!projectId || !ProjectWorkspace.requireAuth(projectId)) return;
+      project = await ProjectWorkspace.loadProject(projectId);
+      if (!project) return;
+      document.getElementById('pw-header-id').textContent = project.project_id;
+      document.getElementById('pw-header-name').textContent = project.project_name;
+      ProjectWorkspace.renderNav('floor-plan', projectId);
+      await loadBim(projectId);
+      ProjectWorkspace.renderTopbar(project, 'Floor Plan', bimData?.status || 'none');
+      ProjectWorkspace.wireBimActions(projectId, refreshBim);
+      renderPlan();
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>

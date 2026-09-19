@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Portal — OH I SEE</title>
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/project-setup.css?v=4">
+  <link rel="stylesheet" href="../css/dream-home-wizard.css?v=7">
+  <link rel="stylesheet" href="../css/customer-portal.css?v=layout-4">
+  <link rel="stylesheet" href="../css/requirements-design.css?v=7">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <link rel="icon" href="/images/logo.png" type="image/png">
+<link rel="stylesheet" href="../css/marketplace.css?v=multi-request-4">
+</head>
+<body class="cp-body">
+
+  <header class="cp-header">
+    <div class="cp-header-inner">
+      <button type="button" class="cp-sidebar-toggle" id="cp-sidebar-toggle" aria-label="Open menu">Menu</button>
+      <a href="index.html" class="cp-logo">
+        <img src="/images/logo.png" alt="OH I SEE">
+        <span>OH I SEE</span>
+      </a>
+      <nav class="cp-topnav" aria-label="Main">
+        <a href="index.html">Home</a>
+        <a href="products.html">Products</a>
+        <a href="customer-portal.html?view=projects">Projects</a>
+        <a href="quote-compare.html">Compare Quotes</a>
+        <a href="services.html">Resources</a>
+      </nav>
+      <div class="cp-header-actions">
+        <span id="cp-save-status" class="cp-save-status" aria-live="polite"></span>
+        <button type="button" class="cp-btn" id="cp-save-draft">Save as Draft</button>
+        <div class="cp-user">
+          <div class="cp-user-avatar" id="cp-user-avatar">C</div>
+          <span class="cp-user-name" id="cp-user-name">Customer</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="cp-layout">
+    <aside class="cp-sidebar" id="cp-sidebar">
+      <div class="cp-sidebar-brand">Customer Portal</div>
+      <div class="cp-sidebar-user">
+        <div class="cp-user-avatar" id="cp-sidebar-avatar">C</div>
+        <div>
+          <strong id="cp-sidebar-name">Customer</strong>
+          <small>Homeowner</small>
+        </div>
+      </div>
+      <nav class="cp-nav" id="cp-nav" aria-label="Customer portal"></nav>
+      <div class="cp-sidebar-footer">
+        <p class="cp-sidebar-quote">"A home is not just a place, it's a better tomorrow."</p>
+      </div>
+    </aside>
+
+    <div class="cp-main-wrap">
+      <div id="cp-stepper-wrap" hidden>
+        <div id="cp-stepper"></div>
+      </div>
+      <main class="cp-main" id="cp-main">
+        <div class="cp-loading">Loading portal...</div>
+      </main>
+    </div>
+
+    <aside class="cp-summary-panel" aria-label="Project summary">
+      <div id="cp-summary">
+        <p class="cp-hint">Loading project summary...</p>
+      </div>
+    </aside>
+  </div>
+
+  <script src="../js/utils/helpers.js"></script>
+  <script src="../js/api/api-core.js"></script>
+  <script src="../js/api/session-restore.js"></script>
+  <script src="../js/api/auth.js"></script>
+  <script src="../js/components/auth-prompt.js"></script>
+  <script src="../js/api/users.js"></script>
+  <script src="../js/api/projects.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="../js/searchable-select.js"></script>
+  <script src="../js/project-setup-model.js"></script>
+  <script src="../js/project-setup-form.js"></script>
+  <script src="../js/land-site-model.js"></script>
+  <script src="../js/land-site-form.js"></script>
+  <script src="../js/requirements-step-model.js?v=room-auto-4"></script>
+  <script src="../js/requirements-icons.js"></script>
+  <script src="../js/requirements-step.js?v=room-auto-4"></script>
+  <script src="../js/design-engineering-step.js?v=2"></script>
+  <script src="../js/design-workspace.js?v=4"></script>
+  <script src="../js/customer-portal/constants.js"></script>
+  <script src="../js/customer-portal/portal-completion.js?v=2"></script>
+  <script src="../js/customer-portal/portal-api.js"></script>
+  <script src="../js/customer-portal/portal-project-context.js"></script>
+  <script src="../js/roadmap.js?v=1"></script>
+<script src="../js/marketplace.js?v=roadmap-1"></script>
+  <script src="../js/customer-portal/portal-modules.js?v=roadmap-1"></script>
+  <script src="../js/customer-portal/portal-summary.js?v=3"></script>
+  <script src="../js/customer-portal/portal-workflow.js?v=3"></script>
+  <script src="../js/customer-portal/portal-sections.js?v=roadmap-2"></script>
+  <script src="../js/customer-portal/portal-app.js?v=4"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const user = typeof UserCache !== 'undefined' ? UserCache.get() : null;
+      const n = user?.name || user?.email || 'C';
+      const el = document.getElementById('cp-sidebar-avatar');
+      if (el) el.textContent = n.slice(0, 1).toUpperCase();
+      const sn = document.getElementById('cp-sidebar-name');
+      if (sn) sn.textContent = user?.name || user?.email || 'Customer';
+    });
+  </script>
+</body>
+</html>

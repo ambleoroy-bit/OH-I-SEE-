@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Overview — OH I SEE</title>
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/project-workspace.css">
+  <link rel="icon" href="/images/logo.png" type="image/png">
+</head>
+<body class="pw-body">
+  <header class="pw-header">
+    <div class="container pw-header-inner">
+      <a href="index.html" class="pw-back">← OH I SEE</a>
+      <div>
+        <div class="pw-project-id" id="pw-header-id">—</div>
+        <div class="pw-project-name" id="pw-header-name">Loading…</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="pw-shell">
+    <aside class="pw-sidebar" id="pw-nav"></aside>
+    <main class="pw-main">
+      <div class="pw-topbar" id="pw-topbar"></div>
+      <div class="pw-content" id="pw-content">
+        <div class="pw-loading">Loading project workspace…</div>
+      </div>
+    </main>
+  </div>
+
+  <script src="../js/utils/helpers.js"></script>
+  <script src="../js/components/notifications.js"></script>
+  <script src="../js/api/api-core.js"></script>
+  <script src="../js/api/projects.js"></script>
+  <script src="../js/bim/api/bim.js"></script>
+  <script src="../js/bim/project-workspace.js"></script>
+  <script>
+    let project = null;
+    let bimData = null;
+
+    async function init() {
+      const projectId = ProjectWorkspace.getProjectId();
+      if (!projectId || !ProjectWorkspace.requireAuth(projectId)) return;
+
+      project = await ProjectWorkspace.loadProject(projectId);
+      if (!project) {
+        document.getElementById('pw-content').innerHTML = '<div class="pw-error">Project not found.</div>';
+        return;
+      }
+
+      document.getElementById('pw-header-id').textContent = project.project_id;
+      document.getElementById('pw-header-name').textContent = project.project_name;
+      document.title = `${project.project_id} — Overview | OH I SEE`;
+
+      ProjectWorkspace.renderNav('overview', projectId);
+
+      try {
+        const res = await BimAPI.getModel(projectId);
+        bimData = res.data;
+      } catch (e) {
+        bimData = { status: 'none', model: null };
+      }
+
+      const status = bimData?.status || 'none';
+      ProjectWorkspace.renderTopbar(project, 'Overview', status);
+      ProjectWorkspace.wireBimActions(projectId, init);
+      renderOverview();
+    }
+
+    function renderOverview() {
+      const q = bimData?.quantities;
+      const elCount = bimData?.model?.elements?.length || 0;
+      const valid = bimData?.validation?.valid;
+      const version = bimData?.version?.version_number;
+
+      document.getElementById('pw-content').innerHTML = `
+        <div class="pw-grid-3" style="margin-bottom:24px;">
+          <div class="pw-stat-card">
+            <div class="pw-stat-label">BIM Elements</div>
+            <div class="pw-stat-value">${elCount || '—'}</div>
+          </div>
+          <div class="pw-stat-card">
+            <div class="pw-stat-label">Model Version</div>
+            <div class="pw-stat-value">${version ? `v${version}` : '—'}</div>
+          </div>
+          <div class="pw-stat-card">
+            <div class="pw-stat-label">Validation</div>
+            <div class="pw-stat-value">${valid === true ? '✓ Passed' : valid === false ? 'Issues' : '—'}</div>
+          </div>
+        </div>
+
+        <div class="pw-stat-card" style="margin-bottom:16px;">
+          <div class="pw-stat-label">Project Details</div>
+          <div style="font-size:13px;color:#aaa;line-height:1.8;margin-top:8px;">
+            <div><strong>Type:</strong> ${project.project_type || 'Residential'}</div>
+            <div><strong>Location:</strong> ${project.city || project.location || '—'}, ${project.state || ''}</div>
+            <div><strong>Plot:</strong> ${project.plot_size || (project.plot_length && project.plot_width ? `${project.plot_length} × ${project.plot_width} ft` : '—')}</div>
+            <div><strong>Budget:</strong> ${project.budget ? '₹' + Number(project.budget).toLocaleString('en-IN') : '—'}</div>
+            <div><strong>Stage:</strong> ${project.current_stage || 'Requirement'}</div>
+          </div>
+        </div>
+
+        ${q ? `
+        <div class="pw-stat-card">
+          <div class="pw-stat-label">Quantity Summary</div>
+          <table class="pw-table" style="margin-top:12px;">
+            <thead><tr><th>Item</th><th>Value</th><th>Unit</th></tr></thead>
+            <tbody>
+              ${(q.lines || []).slice(0, 8).map((line) => `
+                <tr>
+                  <td>${line.description || line.name}</td>
+                  <td>${line.value}</td>
+                  <td>${line.unit}</td>
+                </tr>`).join('')}
+            </tbody>
+          </table>
+          <p style="margin-top:12px;font-size:12px;color:#666;">
+            <a href="project-boq.html?projectId=${encodeURIComponent(project.project_id)}" style="color:#FFD400;">View full BOQ →</a>
+          </p>
+        </div>` : `
+        <div class="pw-stat-card">
+          <p style="color:#888;font-size:14px;">No BIM model yet. Click <strong>Generate BIM</strong> above to create your building model from project requirements.</p>
+        </div>`}
+
+        <div style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap;">
+          <a class="pw-btn pw-btn-primary" href="project-bim.html?projectId=${encodeURIComponent(project.project_id)}">Open BIM & Technical →</a>
+          <a class="pw-btn" href="project-3d.html?projectId=${encodeURIComponent(project.project_id)}">3D Home View</a>
+          <a class="pw-btn" href="project-floor-plan.html?projectId=${encodeURIComponent(project.project_id)}">Floor Plan</a>
+        </div>`;
+    }
+
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>

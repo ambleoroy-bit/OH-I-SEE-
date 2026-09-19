@@ -1,0 +1,21 @@
+# OH I SEE — Production Readiness Checklist
+
+- [ ] Docker builds successfully (`docker compose build`)
+- [ ] Containers run as non-root (backend user 1001)
+- [ ] No secrets in images or Git
+- [ ] `.env` / K8s Secrets configured
+- [ ] `GET /api/health` returns `status: ok`
+- [ ] `GET /api/ready` returns 200 when Supabase configured
+- [ ] Supabase migrations applied (`apply_projects_bim.sql`)
+- [ ] OpenAI/Gemini keys set on backend only
+- [ ] `FRONTEND_URL` matches production domain
+- [ ] Kubernetes manifests validate (`kubectl kustomize k8s/overlays/production`)
+- [ ] Ingress + TLS configured (cert-manager)
+- [ ] Resource limits set on Deployments
+- [ ] HPA enabled for API (production overlay)
+- [ ] PDB configured for API
+- [ ] Logging to stdout verified
+- [ ] Backup strategy for Supabase documented
+- [ ] Rollback tested (`kubectl rollout undo`)
+- [ ] Staging environment smoke tested
+- [ ] CI pipeline green

@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="OH I SEE AI Construction Engine — Answer a few questions and create your project with AI guidance.">
+  <title>AI Construction Engine — OH I SEE</title>
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/home-ai.css">
+  <link rel="stylesheet" href="../css/intent-engine.css?v=4">
+  <link rel="stylesheet" href="../css/dream-home-wizard.css?v=7">
+  <link rel="stylesheet" href="../css/project-setup.css?v=3">
+  <link rel="stylesheet" href="../css/requirements-design.css?v=6">
+  <link rel="stylesheet" href="../css/customer-portal.css?v=layout-4">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <link rel="icon" href="/images/logo.png" type="image/png">
+  <link rel="stylesheet" href="../css/design3d.css">
+</head>
+<body class="intent-page">
+
+  <!-- Full-page construction atmosphere (NEW_HOME) -->
+  <div class="dream-page-bg" id="dream-page-bg" hidden aria-hidden="true">
+    <div class="dream-page-bg__photo"></div>
+    <div class="dream-page-bg__warm"></div>
+    <div class="dream-page-bg__vignette"></div>
+    <div class="dream-page-bg__bottom"></div>
+  </div>
+
+  <!-- Page Loader -->
+  <div class="page-loader">
+    <div class="loader-logo"><img src="/images/logo.png" alt="OH I SEE"></div>
+    <div class="loader-text">OH I SEE</div>
+    <div class="loader-bar"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header" id="header">
+    <div class="header-top">
+      <a href="index.html" class="header-logo">
+        <img src="/images/logo.png" alt="OH I SEE">
+        <span class="header-logo-text">OH I SEE</span>
+      </a>
+      <nav class="header-nav">
+        <a href="index.html">Home</a>
+        <a href="products.html">Products</a>
+        <a href="account.html#projects">Projects</a>
+        <a href="quote-compare.html">Compare Quotes</a>
+        <a href="services.html">Resources</a>
+      </nav>
+      <div class="header-actions">
+        <a href="account.html" class="header-action-btn" title="Account">👤</a>
+        <a href="cart.html" class="header-action-btn" title="Cart">🛒<span class="badge cart-count" style="display:none;">0</span></a>
+      </div>
+      <button class="mobile-menu-toggle">☰</button>
+    </div>
+  </header>
+
+  <!-- Dream Home Hero (NEW_HOME wizard) -->
+  <section class="dream-hero" id="dream-hero" hidden>
+    <div class="container dream-hero-inner">
+      <div class="dream-hero-copy">
+        <h1 class="dream-hero-title">BUILD YOUR <span>DREAM HOME</span></h1>
+        <p class="dream-hero-sub">From your idea to a beautiful home — powered by AI. Smart design. Real construction. Trusted experts.</p>
+      </div>
+      <div class="dream-phase-panel" aria-label="Design journey">
+        <div class="dream-phase-item"><span class="dream-phase-icon">📐</span><span>PLAN</span></div>
+        <div class="dream-phase-item"><span class="dream-phase-icon">🏠</span><span>DESIGN</span></div>
+        <div class="dream-phase-item"><span class="dream-phase-icon">🧊</span><span>VISUALIZE</span></div>
+        <div class="dream-phase-item"><span class="dream-phase-icon">🔨</span><span>BUILD</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Classic Hero (Renovation / Electrical) -->
+  <div class="intent-hero" id="intent-hero-classic">
+    <div class="container">
+      <div class="intent-hero-badge">
+        <span id="intent-engine-icon">🏗️</span>
+        <span id="intent-engine-label">AI Construction Engine</span>
+      </div>
+      <div class="intent-hero-title">
+        <span id="intent-hero-title-text">BUILD YOUR <span>PROJECT</span></span>
+      </div>
+      <div class="intent-hero-sub" id="intent-hero-sub">
+        Answer a few questions and OH I SEE AI will create your project, estimate costs and connect you with the right professionals.
+      </div>
+      <div class="intent-form-meta" id="intent-progress-track"></div>
+    </div>
+  </div>
+
+  <!-- Main Body -->
+  <div class="intent-body" id="intent-body">
+    <div class="container dream-container">
+      <div class="intent-layout dream-wizard-grid" id="intent-layout">
+
+        <aside class="dream-sidebar dh-cp-sidebar-wrap" id="dream-home-sidebar" hidden aria-label="Customer portal navigation"></aside>
+
+        <div id="intent-question-area">
+          <div id="intent-loading" style="text-align:center;padding:60px 0;">
+            <div style="font-size:32px;margin-bottom:12px;">⚙️</div>
+            <div style="font-family:'Space Grotesk',monospace;font-size:18px;font-weight:700;color:#fff;text-transform:uppercase;">Loading Engine...</div>
+          </div>
+        </div>
+
+        <aside class="dream-sidebar dream-summary-sidebar" id="dream-project-summary" hidden aria-label="Project summary"></aside>
+
+        <div class="classic-summary-wrap" id="classic-summary-wrap">
+          <div class="summary-panel" id="summary-panel-classic">
+            <div class="summary-panel-title">📋 Your Answers So Far</div>
+            <div id="summary-items-classic">
+              <div class="summary-empty">Answers will appear here as you go.</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="draft-toast" id="draft-toast">Draft saved</div>
+
+  <section class="dream-trust" id="dream-trust" hidden>
+    <div class="container dream-trust-grid">
+      <div class="dream-trust-item"><span>✨</span><div><strong>AI Powered Design</strong><p>Smart layouts from your requirements</p></div></div>
+      <div class="dream-trust-item"><span>👷</span><div><strong>Verified Construction Experts</strong><p>Matched contractors in your city</p></div></div>
+      <div class="dream-trust-item"><span>🧊</span><div><strong>2D, 3D &amp; Realistic Renders</strong><p>See your home before you build</p></div></div>
+      <div class="dream-trust-item"><span>🛡️</span><div><strong>Trusted &amp; Transparent</strong><p>Clear estimates and BOQ</p></div></div>
+    </div>
+  </section>
+
+  <!-- Creating Overlay -->
+  <div class="creating-overlay" id="creating-overlay" style="display:none;">
+    <div class="creating-spinner"></div>
+    <div class="creating-text">Creating Your Project</div>
+    <div class="creating-sub">Setting up AI recommendations, BOQ and professional matching...</div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">© 2024 OH I SEE Industrial Solutions. Coimbatore, Tamil Nadu.</div>
+    </div>
+  </footer>
+
+  <script src="../js/utils/helpers.js"></script>
+  <script src="../js/components/notifications.js"></script>
+  <script src="../js/components/auth-prompt.js"></script>
+  <script src="../js/api/api-core.js"></script>
+  <script src="../js/api/projects.js"></script>
+  <script src="../js/app.js"></script>
+  <script>
+  // ============================================================
+  // OH I SEE — Intent Engine JavaScript
+  // Progressive questioning → Project creation
+  // ============================================================
+
+  // ── Question Banks (mirrors backend intentEngine.js) ────────
+  const QUESTION_BANKS = {
+    NEW_HOME: [
+      { key: 'location',    question: 'Which city or area will the house be built in?', type: 'text', placeholder: 'e.g. Coimbatore, Tamil Nadu' },
+      { key: 'plot_length', question: 'What is the length of your plot? (in feet)', type: 'number', placeholder: 'e.g. 40' },
+      { key: 'plot_width',  question: 'What is the width of your plot? (in feet)', type: 'number', placeholder: 'e.g. 60' },
+      { key: 'road_facing', question: 'Which side does the plot face the road?', type: 'select', options: ['East','West','North','South','Corner Plot'] },
+      { key: 'floors',      question: 'How many floors do you want to build?', type: 'select', options: ['Ground Floor Only','G + 1 Floor','G + 2 Floors','G + 3 Floors'] },
+      { key: 'bedrooms',    question: 'How many bedrooms do you need?', type: 'select', options: ['1 Bedroom','2 Bedrooms','3 Bedrooms','4 Bedrooms','5+ Bedrooms'] },
+      { key: 'bathrooms',   question: 'How many bathrooms / toilets?', type: 'select', options: ['1','2','3','4','5+'] },
+      { key: 'parking',     question: 'Do you need covered car parking?', type: 'select', options: ['No Parking','1 Car','2 Cars','3+ Cars'] },
+      { key: 'has_pooja',   question: 'Do you need a Pooja room?', type: 'select', options: ['Yes','No'] },
+      { key: 'has_office',  question: 'Do you need a home office or study room?', type: 'select', options: ['Yes','No'] },
+      { key: 'has_terrace', question: 'Do you want a terrace / rooftop space?', type: 'select', options: ['Yes','No'] },
+      { key: 'vastu',       question: 'Do you have a Vastu preference for the layout?', type: 'select', options: ['Yes — follow Vastu','No — just practical layout','Partly follow Vastu'] },
+      { key: 'arch_style',  question: 'What architectural style do you prefer?', type: 'select', options: ['Contemporary / Modern','Traditional','South Indian Traditional','Minimalist','Colonial','No Preference'] },
+      { key: 'quality',     question: 'What quality level are you looking for?', type: 'quality_budget', options: ['Economic — Budget-conscious','Standard — Balanced quality','Premium — Higher-end finishes'] },
+      { key: 'start_date',  question: 'When are you planning to start construction?', type: 'select', options: ['Within 1 month','1–3 months','3–6 months','6–12 months','Just planning'] },
+      { key: 'extras',      question: 'Any special requirements? (pool, solar, EV charging, lift, etc.)', type: 'text', placeholder: 'Optional — leave blank if none', optional: true },
+    ],
+    RENOVATION: [
+      { key: 'reno_type',     question: 'What type of renovation are you planning?', type: 'multiselect', options: ['Painting','Flooring','Wall Alteration','Room Extension','False Ceiling','Electrical','Plumbing','Bathroom Renovation','Kitchen Renovation','Doors & Windows','Interior Work','Complete Renovation'] },
+      { key: 'location',      question: 'Where is the property located?', type: 'text', placeholder: 'e.g. Coimbatore, Tamil Nadu' },
+      { key: 'property_type', question: 'What type of property is it?', type: 'select', options: ['Apartment','Independent House','Villa','Commercial Space','Office'] },
+      { key: 'area_sqft',     question: 'What is the approximate area to be renovated? (sq.ft)', type: 'number', placeholder: 'e.g. 1200' },
+      { key: 'condition',     question: 'What is the current condition of the space?', type: 'select', options: ['Good — minor updates needed','Average — needs moderate work','Poor — needs complete overhaul'] },
+      { key: 'budget',        question: 'What is your approximate budget for this renovation? (₹)', type: 'number', placeholder: 'e.g. 500000' },
+      { key: 'timeline',      question: 'When do you need the renovation completed by?', type: 'select', options: ['Within 2 weeks','Within 1 month','1–3 months','3–6 months','Flexible'] },
+    ],
+    ELECTRICAL: [
+      { key: 'location',        question: 'Which city is the property in?', type: 'text', placeholder: 'e.g. Chennai, Tamil Nadu' },
+      { key: 'property_type',   question: 'What type of property?', type: 'select', options: ['New House (under construction)','Existing House (rewiring)','Apartment','Commercial Space','Office'] },
+      { key: 'floors',          question: 'How many floors?', type: 'select', options: ['Ground Floor Only','G + 1','G + 2','G + 3+'] },
+      { key: 'rooms',           question: 'How many rooms in total? (bedrooms + living + dining + kitchen)', type: 'select', options: ['1–3 rooms','4–6 rooms','7–10 rooms','10+ rooms'] },
+      { key: 'lighting_style',  question: 'What type of lighting do you prefer?', type: 'multiselect', options: ['LED Downlights','Ceiling Fans + Lights','Designer / Decorative Lights','Smart Lighting','Basic Lighting'] },
+      { key: 'ac_points',       question: 'How many AC points do you need?', type: 'select', options: ['None','1–2','3–5','6–10','10+'] },
+      { key: 'special_needs',   question: 'Do you have any special electrical requirements?', type: 'multiselect', options: ['Solar / Inverter','EV Charging Point','Home Automation','CCTV','Doorbell / Video Door Phone','Generator Backup','None'] },
+      { key: 'budget',          question: 'What is your electrical work budget? (₹)', type: 'number', placeholder: 'e.g. 250000', optional: true },
+    ],
+  };
+
+  const INTENT_META = {
+    NEW_HOME:    { label: 'New Home Builder',         icon: '🏠', hero: 'BUILD YOUR DREAM HOME', sub: 'From your idea to a beautiful home — powered by AI.' },
+    RENOVATION:  { label: 'Home Renovation',          icon: '🔨', hero: 'RENOVATE YOUR HOME',  sub: 'Select renovation types and scope. AI estimates cost, products needed and connects contractors.' },
+    ELECTRICAL:  { label: 'Electrical & Lighting',    icon: '⚡', hero: 'PLAN YOUR ELECTRICAL', sub: 'Describe rooms and requirements. AI generates an electrical point schedule and product BOQ.' },
+  };
+
+  // ── State ────────────────────────────────────────────────────
+  let intentType = 'NEW_HOME';
+  let questions = [];
+  let answers = {};
+
+  function escAttr(value) {
+    return String(value || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+
+  // ── Init ────────────────────────────────────────────────────
+  function init() {
+    const params = new URLSearchParams(window.location.search);
+    intentType = params.get('intent') || 'NEW_HOME';
+    questions = QUESTION_BANKS[intentType] || QUESTION_BANKS.NEW_HOME;
+
+    const meta = INTENT_META[intentType] || INTENT_META.NEW_HOME;
+    document.getElementById('intent-engine-icon').textContent = meta.icon;
+    document.getElementById('intent-engine-label').textContent = meta.label;
+    document.getElementById('intent-hero-title-text').innerHTML = meta.hero.replace(/(\w+)$/, '<span>$1</span>');
+    document.getElementById('intent-hero-sub').textContent = meta.sub;
+    document.title = `${meta.label} — OH I SEE`;
+
+    const savedDraft = localStorage.getItem('ohisee_pending_project');
+    if (savedDraft) {
+      try {
+        const parsed = JSON.parse(savedDraft);
+        if (parsed.intentType === intentType && parsed.answers && Object.keys(parsed.answers).length > 0) {
+          answers = parsed.answers;
+          renderProgress();
+          renderCompletion();
+          return;
+        }
+      } catch (e) {}
+    }
+
+    const buildDraft = sessionStorage.getItem('ohisee_build_project_draft');
+    if (buildDraft) {
+      try {
+        const parsed = JSON.parse(buildDraft);
+        if (parsed.intentType) intentType = parsed.intentType;
+        if (parsed.answers) answers = { ...parsed.answers };
+        if (parsed.projectId) window._ohiseeLinkedProjectId = parsed.projectId;
+        if (parsed.project_name) window._ohiseeLinkedProjectName = parsed.project_name;
+        sessionStorage.removeItem('ohisee_build_project_draft');
+        const meta = INTENT_META[intentType] || INTENT_META.NEW_HOME;
+        document.getElementById('intent-engine-icon').textContent = meta.icon;
+        document.getElementById('intent-engine-label').textContent = meta.label;
+        document.getElementById('intent-hero-title-text').innerHTML = meta.hero.replace(/(\w+)$/, '<span>$1</span>');
+        document.getElementById('intent-hero-sub').textContent = meta.sub;
+      } catch (e) {}
+    }
+
+    window._intentAnswers = answers;
+    window._intentQuestions = questions;
+    window._intentType = intentType;
+
+    if (intentType === 'NEW_HOME') {
+      document.body.classList.add('dream-home-mode');
+      document.getElementById('dream-page-bg')?.removeAttribute('hidden');
+      document.getElementById('dream-hero')?.removeAttribute('hidden');
+      document.getElementById('dream-trust')?.removeAttribute('hidden');
+      document.getElementById('dream-home-sidebar')?.removeAttribute('hidden');
+      document.getElementById('dream-project-summary')?.removeAttribute('hidden');
+      document.getElementById('intent-hero-classic')?.setAttribute('hidden', '');
+      document.getElementById('classic-summary-wrap')?.setAttribute('hidden', '');
+      if (typeof IntentWizard !== 'undefined') IntentWizard.init();
+      else { renderProgress(); renderAllQuestions(); }
+      return;
+    }
+
+    renderProgress();
+    renderAllQuestions();
+  }
+
+  function renderProgress() {
+    const required = questions.filter(q => !q.optional);
+    const track = document.getElementById('intent-progress-track');
+    if (track) {
+      track.textContent = `All ${required.length} questions on one page — scroll down to fill every field`;
+    }
+  }
+
+  function getSummaryContainer() {
+    return document.getElementById(intentType === 'NEW_HOME' ? 'summary-items' : 'summary-items-classic');
+  }
+
+  function renderAllQuestions() {
+    const required = questions.filter(q => !q.optional);
+    const area = document.getElementById('intent-question-area');
+    area.innerHTML = `
+      <div class="intent-form-card">
+        <div class="intent-form-header">
+          <h2 class="intent-form-title">Project Requirements</h2>
+          <p class="intent-form-sub">All ${required.length} sections are listed below on this single page. Fill each field, then click Generate AI Report.</p>
+          ${window._ohiseeLinkedProjectName ? `<p class="intent-form-sub" style="color:#FFD400;margin-top:8px;">Continuing project: <strong>${escAttr(window._ohiseeLinkedProjectName)}</strong></p>` : ''}
+        </div>
+        ${questions.map((q) => {
+          const reqIdx = required.indexOf(q);
+          const numLabel = q.optional ? 'Optional' : `Question ${reqIdx + 1} of ${required.length}`;
+          return `
+            <section class="form-question-block" id="block-${q.key}" data-key="${q.key}">
+              <div class="question-num">${numLabel}</div>
+              <div class="question-text form-question-text">${q.question}</div>
+              ${renderAnswerInput(q)}
+            </section>`;
+        }).join('')}
+        <div class="question-actions intent-form-actions">
+          <button class="btn-next" id="btn-submit-all" type="button" onclick="submitAllQuestions()">Generate AI Report →</button>
+        </div>
+      </div>`;
+    updateSummary();
+  }
+
+  function renderAnswerInput(q) {
+    const key = q.key;
+    if (q.type === 'text' && key === 'extras') {
+      const val = escAttr(answers[key] || '');
+      return `<textarea
+        id="answer-input-${key}"
+        class="answer-input-text dh-req-textarea"
+        rows="4"
+        placeholder="${escAttr(q.placeholder || '')}"
+        oninput="onTextInput('${key}', this.value)"
+      >${val}</textarea>`;
+    }
+    if (q.type === 'text' || q.type === 'number') {
+      const val = escAttr(answers[key] || '');
+      return `<input
+        id="answer-input-${key}"
+        class="answer-input-text"
+        type="${q.type}"
+        placeholder="${escAttr(q.placeholder || '')}"
+        value="${val}"
+        oninput="onTextInput('${key}', this.value)"
+        min="${q.type === 'number' ? 0 : undefined}"
+      >`;
+    }
+
+    if (q.type === 'quality_budget') {
+      const mode = answers.budget_mode || (answers.quality ? 'quality' : (answers.budget ? 'manual' : ''));
+      const manualDisabled = mode === 'quality';
+      const qualityDisabled = mode === 'manual';
+      const budgetVal = escAttr(answers.budget || '');
+      return `
+        <div class="answer-options-grid" id="quality-grid-${key}">
+          ${q.options.map(opt => `
+            <button type="button" class="answer-option ${answers.quality === opt ? 'selected' : ''} ${qualityDisabled ? 'disabled' : ''}"
+              data-quality-opt="${escAttr(opt)}"
+              onclick="selectQualityOption('${key}', this.dataset.qualityOpt)">
+              ${opt}
+            </button>`).join('')}
+        </div>
+        <div class="quality-budget-divider">or enter budget manually</div>
+        <div class="manual-budget-wrap">
+          <label class="manual-budget-label" for="manual-budget-input-${key}">Project Budget (₹ INR)</label>
+          <input
+            id="manual-budget-input-${key}"
+            class="answer-input-text ${manualDisabled ? 'disabled' : ''} ${mode === 'manual' ? 'active' : ''}"
+            type="number"
+            placeholder="e.g. 4500000"
+            value="${budgetVal}"
+            min="0"
+            ${manualDisabled ? 'disabled' : ''}
+            oninput="onManualBudgetInput('${key}', this.value)"
+          >
+        </div>`;
+    }
+
+    if (q.type === 'select') {
+      const current = answers[key];
+      return `<div class="answer-options-grid" data-field="${key}">
+        ${q.options.map(opt => `
+          <button type="button" class="answer-option ${current === opt ? 'selected' : ''}" onclick="selectOption('${key}', '${opt.replace(/'/g, "\\'")}')">
+            ${opt}
+          </button>`).join('')}
+      </div>`;
+    }
+
+    if (q.type === 'multiselect') {
+      const selected = Array.isArray(answers[key]) ? answers[key] : [];
+      return `<div class="multiselect-hint">Select all that apply</div>
+        <div class="answer-options-grid" data-field="${key}">
+          ${q.options.map(opt => `
+            <button type="button" class="answer-option ${selected.includes(opt) ? 'selected' : ''}" onclick="toggleMulti('${key}', '${opt.replace(/'/g, "\\'")}')">
+              ${opt}
+            </button>`).join('')}
+        </div>`;
+    }
+
+    return '';
+  }
+
+  function syncAnswersFromForm() {
+    questions.forEach((q) => {
+      if (q.type === 'text' || q.type === 'number') {
+        const inp = document.getElementById(`answer-input-${q.key}`);
+        if (!inp) return;
+        const v = (inp.value || '').trim();
+        if (v) answers[q.key] = q.type === 'number' ? parseFloat(v) : v;
+        else if (!q.optional) delete answers[q.key];
+      }
+      if (q.type === 'quality_budget') {
+        const inp = document.getElementById(`manual-budget-input-${q.key}`);
+        if (answers.budget_mode === 'manual' && inp) {
+          const amount = parseFloat(inp.value);
+          if (Number.isFinite(amount) && amount > 0) answers.budget = amount;
+        }
+      }
+    });
+  }
+
+  function isQuestionAnswered(q) {
+    if (q.optional) return true;
+    if (q.type === 'quality_budget') {
+      if (answers.budget_mode === 'quality') return Boolean(answers.quality);
+      if (answers.budget_mode === 'manual') return Number.isFinite(parseFloat(answers.budget)) && parseFloat(answers.budget) > 0;
+      const inp = document.getElementById(`manual-budget-input-${q.key}`);
+      if (inp?.value) {
+        const amount = parseFloat(inp.value);
+        return Number.isFinite(amount) && amount > 0;
+      }
+      return false;
+    }
+    if (q.type === 'multiselect') {
+      const val = answers[q.key];
+      return Array.isArray(val) && val.length > 0;
+    }
+    if (q.type === 'text' || q.type === 'number') {
+      const inp = document.getElementById(`answer-input-${q.key}`);
+      const v = (inp?.value || answers[q.key] || '').toString().trim();
+      return v !== '';
+    }
+    return answers[q.key] !== undefined && answers[q.key] !== '';
+  }
+
+  function submitAllQuestions() {
+    syncAnswersFromForm();
+    document.querySelectorAll('.form-question-block').forEach((block) => block.classList.remove('invalid'));
+
+    const missing = questions.filter((q) => !q.optional && !isQuestionAnswered(q));
+    if (missing.length) {
+      const first = missing[0];
+      const err = document.getElementById('wizard-err');
+      if (err && intentType === 'NEW_HOME') {
+        err.textContent = `Please complete: ${first.question}`;
+        err.hidden = false;
+      }
+      if (intentType === 'NEW_HOME' && typeof IntentWizard !== 'undefined') IntentWizard.goToField(first.key);
+      const block = document.getElementById(`block-${first.key}`) || document.getElementById('block-plot_length');
+      if (block) {
+        block.classList.add('invalid');
+        block.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+      const inp = document.getElementById(`answer-input-${first.key}`) || document.getElementById(`manual-budget-input-${first.key}`);
+      if (inp) inp.style.borderColor = '#ff4444';
+      return;
+    }
+
+    updateSummary();
+    renderCompletion();
+  }
+
+  function onTextInput(key, value) {
+    answers[key] = value;
+    document.getElementById(`block-${key}`)?.classList.remove('invalid');
+    if (key === 'plot_length' || key === 'plot_width') document.getElementById('block-plot_length')?.classList.remove('invalid');
+    updateSummary();
+    if (typeof IntentWizard !== 'undefined') { IntentWizard.saveDraft(); IntentWizard.renderSidebar(); }
+  }
+
+  function selectOption(key, value) {
+    answers[key] = value;
+    const block = document.getElementById(`block-${key}`) || document.getElementById('block-plot_length');
+    block?.querySelectorAll('.answer-option').forEach((btn) => {
+      btn.classList.toggle('selected', btn.textContent.trim() === value || btn.dataset.qualityOpt === value);
+    });
+    block?.classList.remove('invalid');
+    updateSummary();
+    if (typeof IntentWizard !== 'undefined') { IntentWizard.renderSidebar(); IntentWizard.saveDraft(); }
+  }
+
+  function selectQualityOption(key, value) {
+    if (answers.budget_mode === 'manual') return;
+    answers.budget_mode = 'quality';
+    answers.quality = value;
+    delete answers.budget;
+    const block = document.getElementById(`block-${key}`);
+    block?.querySelectorAll(`#quality-grid-${key} .answer-option`).forEach((btn) => {
+      btn.classList.toggle('selected', btn.dataset.qualityOpt === value);
+    });
+    const budgetInput = document.getElementById(`manual-budget-input-${key}`);
+    if (budgetInput) {
+      budgetInput.value = '';
+      budgetInput.disabled = true;
+      budgetInput.classList.add('disabled');
+      budgetInput.classList.remove('active');
+    }
+    block?.querySelectorAll(`#quality-grid-${key} .answer-option`).forEach((btn) => btn.classList.remove('disabled'));
+    block?.classList.remove('invalid');
+    updateSummary();
+  }
+
+  function onManualBudgetInput(key, value) {
+    const raw = String(value || '').trim();
+    const budgetInput = document.getElementById(`manual-budget-input-${key}`);
+    const block = document.getElementById(`block-${key}`);
+    if (!raw) {
+      answers.budget_mode = '';
+      delete answers.budget;
+      delete answers.quality;
+      block?.querySelectorAll(`#quality-grid-${key} .answer-option`).forEach((btn) => {
+        btn.classList.remove('disabled', 'selected');
+      });
+      if (budgetInput) {
+        budgetInput.disabled = false;
+        budgetInput.classList.remove('disabled', 'active');
+      }
+      updateSummary();
+      return;
+    }
+
+    const amount = parseFloat(raw);
+    if (!Number.isFinite(amount) || amount <= 0) return;
+
+    answers.budget_mode = 'manual';
+    answers.budget = amount;
+    delete answers.quality;
+    block?.querySelectorAll(`#quality-grid-${key} .answer-option`).forEach((btn) => {
+      btn.classList.remove('selected');
+      btn.classList.add('disabled');
+    });
+    if (budgetInput) {
+      budgetInput.disabled = false;
+      budgetInput.classList.remove('disabled');
+      budgetInput.classList.add('active');
+    }
+    block?.classList.remove('invalid');
+    updateSummary();
+  }
+
+  function toggleMulti(key, value) {
+    const current = Array.isArray(answers[key]) ? [...answers[key]] : [];
+    const idx = current.indexOf(value);
+    if (idx >= 0) current.splice(idx, 1);
+    else current.push(value);
+    answers[key] = current;
+    const block = document.getElementById(`block-${key}`);
+    block?.querySelectorAll('.answer-option').forEach((btn) => {
+      btn.classList.toggle('selected', current.includes(btn.textContent.trim()));
+    });
+    block?.classList.remove('invalid');
+    updateSummary();
+  }
+
+  // ── AI Engine Calculations & Response Generation ─────────────
+  function computeAIInsights() {
+    const qualityRateMap = { 'Economic — Budget-conscious': 1850, 'Standard — Balanced quality': 2350, 'Premium — Higher-end finishes': 3100 };
+    const floorsMap  = { 'Ground Floor Only': 1, 'G + 1 Floor': 2, 'G + 2 Floors': 3, 'G + 3 Floors': 4, 'G + 1': 2, 'G + 2': 3, 'G + 3+': 4 };
+
+    if (intentType === 'NEW_HOME') {
+      const len = parseFloat(answers.plot_length) || 0;
+      const wid = parseFloat(answers.plot_width) || 0;
+      const flrs = floorsMap[answers.floors] || 1;
+      const manualBudget = answers.budget_mode === 'manual' ? parseFloat(answers.budget) : null;
+      const quality = answers.quality || 'Standard — Balanced quality';
+      const rate = qualityRateMap[quality] || 2350;
+
+      const landArea = len > 0 && wid > 0 ? Math.round(len * wid) : null;
+      const bua = landArea ? Math.round(landArea * 0.65 * flrs) : null;
+      const estimatedCost = manualBudget
+        ? Math.round(manualBudget)
+        : (bua ? Math.round(bua * rate) : (parseFloat(answers.budget) || null));
+
+      const cementBags = bua ? Math.round(bua * 0.4) : null;
+      const steelTons = bua ? (bua * 0.0035).toFixed(1) : null;
+      const timelineMonths = flrs ? (5 + flrs * 2) : 6;
+
+      return {
+        landArea,
+        bua,
+        estimatedCost,
+        rate,
+        cementBags,
+        steelTons,
+        timelineMonths,
+        style: answers.arch_style || 'Contemporary',
+        vastu: answers.vastu || 'Standard Layout'
+      };
+    }
+
+    if (intentType === 'RENOVATION') {
+      const area = parseFloat(answers.area_sqft) || 1000;
+      const condFactor = answers.condition === 'Poor — needs complete overhaul' ? 1.5 : (answers.condition === 'Average — needs moderate work' ? 1.25 : 1.0);
+      const estimatedCost = Math.round(area * 550 * condFactor);
+      const itemsCount = Array.isArray(answers.reno_type) ? answers.reno_type.length : 1;
+
+      return {
+        area,
+        estimatedCost,
+        itemsCount,
+        timelineWeeks: Math.max(2, Math.round(itemsCount * 1.5))
+      };
+    }
+
+    if (intentType === 'ELECTRICAL') {
+      const roomMap = { '1–3 rooms': 3, '4–6 rooms': 5, '7–10 rooms': 8, '10+ rooms': 12 };
+      const roomCount = roomMap[answers.rooms] || 5;
+      const totalPoints = roomCount * 14;
+      const acPoints = parseInt(answers.ac_points) || 2;
+      const estimatedCost = Math.round(totalPoints * 850 + acPoints * 2800);
+
+      return {
+        roomCount,
+        totalPoints,
+        acPoints,
+        estimatedCost,
+        timelineDays: Math.max(5, roomCount * 2)
+      };
+    }
+
+    return {};
+  }
+
+  // ── Summary Panel ────────────────────────────────────────────
+  function updateSummary() {
+    if (intentType === 'NEW_HOME' && typeof IntentWizard !== 'undefined') {
+      IntentWizard.renderSidebar();
+    }
+
+    const container = getSummaryContainer();
+    if (!container) return;
+    const hiddenKeys = new Set(['budget_mode', 'budget_range_label', 'build_type']);
+    const entries = Object.entries(answers).filter(([k, v]) => !hiddenKeys.has(k) && v !== undefined && v !== '');
+    
+    const labels = { location:'Location', plot_length:'Plot Length', plot_width:'Plot Width', road_facing:'Road Facing', floors:'Floors', bedrooms:'Bedrooms', bathrooms:'Bathrooms', parking:'Parking', has_pooja:'Pooja Room', has_office:'Home Office', has_terrace:'Terrace', vastu:'Vastu', arch_style:'Style', quality:'Quality', budget:'Budget (Manual)', start_date:'Start', extras:'Special', reno_type:'Renovation', property_type:'Property', area_sqft:'Area (sq.ft)', condition:'Condition', timeline:'Timeline', rooms:'Rooms', lighting_style:'Lighting', ac_points:'AC Points', special_needs:'Special' };
+
+    let summaryItemsHtml = '';
+    if (entries.length) {
+      summaryItemsHtml = entries.map(([k, v]) => {
+        const displayVal = k === 'budget' && typeof v === 'number'
+          ? `₹${v.toLocaleString('en-IN')}`
+          : (Array.isArray(v) ? v.join(', ') : v);
+        return `
+        <div class="summary-item">
+          <span class="summary-item-key">${labels[k] || k}</span>
+          <span class="summary-item-val">${displayVal}</span>
+        </div>`;
+      }).join('');
+    } else {
+      summaryItemsHtml = '<div class="summary-empty">Answers will appear here as you go.</div>';
+    }
+
+    // AI Engine Live Calculation Insights Card
+    const insights = computeAIInsights();
+    let aiCardHtml = '';
+
+    if (insights.estimatedCost || insights.bua) {
+      aiCardHtml = `
+        <div style="margin-top:20px; background:linear-gradient(145deg, #181818 0%, #0d0d0d 100%); border:1px solid rgba(255,212,0,0.3); border-radius:12px; padding:16px; box-shadow:0 8px 24px rgba(0,0,0,0.4);">
+          <div style="font-family:'Space Grotesk',sans-serif; font-size:11px; font-weight:700; color:#ffd400; text-transform:uppercase; letter-spacing:1px; margin-bottom:12px; display:flex; align-items:center; justify-content:space-between;">
+            <span>🤖 AI Live Estimate</span>
+            <span style="background:rgba(255,212,0,0.15); padding:2px 8px; border-radius:10px; font-size:10px;">ACTIVE</span>
+          </div>
+
+          ${insights.bua ? `
+            <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
+              <span style="color:#aaa;">Est. Built-up Area:</span>
+              <strong style="color:#fff; font-family:'Space Grotesk',monospace;">${insights.bua.toLocaleString('en-IN')} sq.ft</strong>
+            </div>
+          ` : ''}
+
+          ${insights.estimatedCost ? `
+            <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:13px;">
+              <span style="color:#aaa;">Est. Budget Range:</span>
+              <strong style="color:#ffd400; font-family:'Space Grotesk',monospace; font-size:15px;">₹${(insights.estimatedCost * 0.95).toLocaleString('en-IN')} – ₹${(insights.estimatedCost * 1.1).toLocaleString('en-IN')}</strong>
+            </div>
+          ` : ''}
+
+          ${insights.cementBags ? `
+            <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:12px; border-top:1px dashed #333; padding-top:8px;">
+              <span style="color:#888;">Est. Cement Required:</span>
+              <span style="color:#ccc;">~${insights.cementBags} Bags</span>
+            </div>
+          ` : ''}
+
+          ${insights.steelTons ? `
+            <div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:12px;">
+              <span style="color:#888;">Est. TMT Steel:</span>
+              <span style="color:#ccc;">~${insights.steelTons} MT</span>
+            </div>
+          ` : ''}
+
+          ${insights.timelineMonths ? `
+            <div style="display:flex; justify-content:space-between; font-size:12px;">
+              <span style="color:#888;">Est. Construction Time:</span>
+              <span style="color:#50e3c2; font-weight:600;">~${insights.timelineMonths} Months</span>
+            </div>
+          ` : ''}
+        </div>
+      `;
+    }
+
+    container.innerHTML = summaryItemsHtml + aiCardHtml;
+  }
+
+  // ── Completion Screen with AI Engine Output Response ─────────
+  function renderCompletion() {
+    updateSummary();
+    const meta = INTENT_META[intentType] || INTENT_META.NEW_HOME;
+    const insights = computeAIInsights();
+    const area = document.getElementById('intent-question-area');
+
+    const estCostFormatted = insights.estimatedCost ? `₹${(insights.estimatedCost * 0.95).toLocaleString('en-IN')} – ₹${(insights.estimatedCost * 1.1).toLocaleString('en-IN')}` : 'Custom Quotation';
+    const buaFormatted = insights.bua ? `${insights.bua.toLocaleString('en-IN')} sq.ft` : (answers.area_sqft ? `${answers.area_sqft} sq.ft` : 'Custom Scope');
+
+    area.innerHTML = `
+      <div class="completion-card" style="text-align:left; background:#121212; border:1px solid rgba(255,212,0,0.3); padding:32px; border-radius:16px;">
+        <div style="display:flex; align-items:center; gap:16px; margin-bottom:24px; border-bottom:1px solid #222; padding-bottom:20px;">
+          <div class="completion-icon" style="margin-bottom:0; font-size:42px;">⚡</div>
+          <div>
+            <div class="completion-title" style="font-size:24px; margin-bottom:4px; text-align:left;">AI Construction Engine Report Generated</div>
+            <div style="color:#aaa; font-size:14px;">Intent: <strong>${meta.label}</strong> • Location: <strong>${answers.location || 'Tamil Nadu'}</strong></div>
+          </div>
+        </div>
+
+        <div style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); display:grid; gap:16px; margin-bottom:24px;">
+          <div style="background:#1a1a1a; padding:16px; border-radius:10px; border-left:3px solid #ffd400;">
+            <div style="font-size:11px; text-transform:uppercase; color:#888; font-weight:700; margin-bottom:4px;">Built-Up Area / Scope</div>
+            <div style="font-family:'Space Grotesk',monospace; font-size:18px; color:#fff; font-weight:700;">${buaFormatted}</div>
+          </div>
+          <div style="background:#1a1a1a; padding:16px; border-radius:10px; border-left:3px solid #50e3c2;">
+            <div style="font-size:11px; text-transform:uppercase; color:#888; font-weight:700; margin-bottom:4px;">Est. Cost Range</div>
+            <div style="font-family:'Space Grotesk',monospace; font-size:18px; color:#ffd400; font-weight:700;">${estCostFormatted}</div>
+          </div>
+          <div style="background:#1a1a1a; padding:16px; border-radius:10px; border-left:3px solid #4a90e2;">
+            <div style="font-size:11px; text-transform:uppercase; color:#888; font-weight:700; margin-bottom:4px;">Project Timeline</div>
+            <div style="font-family:'Space Grotesk',monospace; font-size:18px; color:#fff; font-weight:700;">${insights.timelineMonths ? `~${insights.timelineMonths} Months` : (insights.timelineWeeks ? `~${insights.timelineWeeks} Weeks` : 'Flexible')}</div>
+          </div>
+        </div>
+
+        <!-- AI Engine Recommendation Breakdown -->
+        <div style="background:rgba(255,255,255,0.02); border:1px solid #282828; border-radius:12px; padding:20px; margin-bottom:28px;">
+          <h4 style="color:#ffd400; font-family:'Space Grotesk',sans-serif; margin-top:0; margin-bottom:12px; font-size:15px; text-transform:uppercase;">📊 AI Engine Analysis & BOQ Package Recommendation</h4>
+          <ul style="color:#ccc; font-size:13px; margin:0; padding-left:18px; line-height:1.8;">
+            ${intentType === 'NEW_HOME' ? `
+              <li><strong>Structural Standard:</strong> Heavy RCC Frame, Fe-550 TMT Steel grade recommended (~${insights.steelTons || 4.5} MT).</li>
+              <li><strong>Cement & Masonry:</strong> 53-grade OPC/PPC Cement (~${insights.cementBags || 600} bags) + Wire-cut red brick / AAC Blocks.</li>
+              <li><strong>Vastu & Layout Alignment:</strong> Plan configured for ${answers.vastu || 'standard practical layout'} with ${answers.road_facing || 'East'} road orientation.</li>
+              <li><strong>Vendor Match:</strong> 3 Verified General Contractors & Architects matched in ${answers.location || 'your region'}.</li>
+            ` : intentType === 'RENOVATION' ? `
+              <li><strong>Scope Analysis:</strong> ${Array.isArray(answers.reno_type) ? answers.reno_type.join(', ') : 'Renovation Work'}.</li>
+              <li><strong>Material Grade:</strong> High durability waterproof tiles & premium low-VOC emulsion paint.</li>
+              <li><strong>Contractor Bidding:</strong> 4 Specialist Renovation Contractors ready for site inspection.</li>
+            ` : `
+              <li><strong>Electrical Points Estimate:</strong> ~${insights.totalPoints || 45} total points across ${insights.roomCount || 4} rooms.</li>
+              <li><strong>Special Circuits:</strong> ${insights.acPoints || 2} Heavy-duty AC power lines + Inverter / EV provisions.</li>
+              <li><strong>Materials Suggested:</strong> Flame-retardant copper wiring (Polycab/Finolex) + Modular Switches.</li>
+            `}
+          </ul>
+        </div>
+
+        <div class="completion-actions" style="display:flex; gap:12px; flex-wrap:wrap;">
+          <button class="btn-create-project" onclick="createProject()" style="flex:2; min-width:240px;">
+            🚀 Save & Launch Project
+          </button>
+          <button class="btn-prev" onclick="editFromCompletion()" style="flex:1; min-width:140px; padding:18px 24px; text-align:center;">
+            ← Edit Inputs
+          </button>
+        </div>
+
+        <div style="margin-top:16px; font-size:12px; color:#777; text-align:center;">
+          Clicking "Save & Launch Project" creates your project record, generates downloadable BOQs and connects regional suppliers.
+        </div>
+      </div>`;
+  }
+
+  // ── Create Project ────────────────────────────────────────────
+  async function createProject() {
+    const token = (typeof TokenStore !== 'undefined' ? TokenStore.get() : null) || localStorage.getItem('ohisee_token') || sessionStorage.getItem('ohisee_token');
+    if (!token) {
+      // Save draft state so user can resume seamlessly after logging in or signing up
+      const saveDraft = () => {
+        try {
+          localStorage.setItem('ohisee_pending_project', JSON.stringify({ intentType, answers }));
+        } catch(e){}
+      };
+      saveDraft();
+      if (typeof AuthPrompt !== 'undefined') {
+        AuthPrompt.show({
+          redirectUrl: `intent-engine.html?intent=${intentType}`,
+          onBeforeRedirect: saveDraft,
+        });
+      } else {
+        window.location.href = `login.html?tab=register&reason=create_project&redirect=${encodeURIComponent(`intent-engine.html?intent=${intentType}`)}`;
+      }
+      return;
+    }
+
+    document.getElementById('creating-overlay').style.display = 'flex';
+
+    try {
+      const API = typeof resolveOhiseeApiBase === 'function'
+        ? resolveOhiseeApiBase()
+        : ((location.port === '3000' || location.port === '5173') ? '/api' : 'http://127.0.0.1:3001/api');
+
+      const payload = buildPayload();
+      payload.construction_context = {
+        requirementsPublished: true,
+        intentType,
+        intentAnswers: { ...answers },
+        aiInsights: typeof computeAIInsights === 'function' ? computeAIInsights() : {},
+      };
+      payload.intent_type = intentType;
+
+      const linkedId = window._ohiseeLinkedProjectId;
+      const url = linkedId ? `${API}/projects/${linkedId}` : `${API}/projects`;
+      const method = linkedId ? 'PUT' : 'POST';
+
+      const resp = await fetch(url, {
+        method,
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify(payload),
+      });
+
+      const raw = await resp.text();
+      let result = {};
+      if (raw && raw.trim()) {
+        try { result = JSON.parse(raw); } catch { throw new Error('Server returned an invalid response.'); }
+      }
+      if (!resp.ok) throw new Error(result.error || 'Failed to create project');
+
+      // Store the complete project in localStorage so account dashboard shows it immediately
+      const projectData = result.data || { ...payload, project_id: 'PRJ-' + Math.floor(10000 + Math.random() * 89999) };
+      localStorage.removeItem('ohisee_pending_project');
+      if (typeof ProjectsAPI !== 'undefined') {
+        ProjectsAPI.cacheLocally(projectData);
+      } else {
+        try {
+          localStorage.setItem('ohisee_recent_project', JSON.stringify(projectData));
+        } catch (e) {}
+      }
+
+      const projectId = projectData.project_id;
+      document.querySelector('.creating-text').textContent = '✅ Project Saved!';
+      document.querySelector('.creating-sub').textContent = 'Generating BIM model…';
+
+      try {
+        await fetch(`${API}/projects/${encodeURIComponent(projectId)}/bim/generate`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+          body: JSON.stringify({ label: 'Initial generation' }),
+        });
+      } catch (bimErr) {
+        console.warn('BIM generation skipped:', bimErr);
+      }
+
+      document.querySelector('.creating-sub').textContent = 'Opening project workspace…';
+      setTimeout(() => {
+        window.location.href = `project-overview.html?projectId=${encodeURIComponent(projectId)}`;
+      }, 1200);
+    } catch (err) {
+      document.getElementById('creating-overlay').style.display = 'none';
+      const area = document.getElementById('intent-question-area');
+      const errDiv = document.createElement('div');
+      errDiv.style.cssText = 'color:#ff4d4d;padding:16px;text-align:center;font-size:14px;background:#1a0000;border:1px solid #330000;border-radius:12px;margin-top:16px;';
+      errDiv.textContent = `Error: ${err.message}`;
+      area.appendChild(errDiv);
+    }
+  }
+
+  function editFromCompletion() {
+    if (intentType === 'NEW_HOME' && typeof IntentWizard !== 'undefined') {
+      IntentWizard.render();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+    renderAllQuestions();
+  }
+
+  window._intentRenderAnswerInput = renderAnswerInput;
+  window._intentSyncAnswersFromForm = syncAnswersFromForm;
+  window._intentIsQuestionAnswered = isQuestionAnswered;
+  window._intentSubmitAllQuestions = submitAllQuestions;
+  window._intentUpdateSummary = updateSummary;
+  window._intentComputeAIInsights = computeAIInsights;
+
+  function buildProjectDescription() {
+    if (answers.extras && String(answers.extras).trim()) return String(answers.extras).trim();
+    const parts = [
+      answers.location && `Location: ${answers.location}`,
+      answers.floors && `Floors: ${answers.floors}`,
+      answers.bedrooms && `Bedrooms: ${answers.bedrooms}`,
+      answers.bathrooms && `Bathrooms: ${answers.bathrooms}`,
+      answers.arch_style && `Style: ${answers.arch_style}`,
+      answers.plot_length && answers.plot_width && `Plot: ${answers.plot_length} x ${answers.plot_width} ft`,
+    ].filter(Boolean);
+    return parts.join('. ') || 'New home construction project created via OH I SEE AI Engine.';
+  }
+
+  function buildPayload() {
+    const qualityMap = { 'Economic — Budget-conscious': 'Economic', 'Standard — Balanced quality': 'Standard', 'Premium — Higher-end finishes': 'Premium' };
+    const floorsMap  = { 'Ground Floor Only': 1, 'G + 1 Floor': 2, 'G + 2 Floors': 3, 'G + 3 Floors': 4, 'G + 1': 2, 'G + 2': 3, 'G + 3+': 4, 'G + 4': 5, '5+ Floors': 5 };
+    const bedsMap    = { '1 Bedroom': 1, '2 Bedrooms': 2, '3 Bedrooms': 3, '4 Bedrooms': 4, '5+ Bedrooms': 5 };
+    const parkMap    = { 'No Parking': 0, '1 Car': 1, '2 Cars': 2, '3+ Cars': 3 };
+
+    if (intentType === 'NEW_HOME' && answers.projectSetup) {
+      const ps = answers.projectSetup;
+      const PM = typeof ProjectSetupModel !== 'undefined' ? ProjectSetupModel : null;
+      const payload = PM ? PM.toProjectPayload(ps, { intentType }) : {};
+      return {
+        ...payload,
+        road_facing: ps.facing_direction,
+        has_terrace: !!ps.features?.terrace,
+        parking_count: ps.features?.parking ? 1 : 0,
+        construction_context: {
+          projectSetup: ps,
+          setupCompleted: true,
+          intentType,
+          intentAnswers: { ...answers },
+        },
+      };
+    }
+
+    const manualBudget = answers.budget_mode === 'manual' ? parseFloat(answers.budget) : 0;
+    const base = {
+      intent_type: intentType,
+      city: answers.location || '',
+      budget: manualBudget || parseFloat(answers.budget) || 0,
+      quality_level: answers.budget_mode === 'manual'
+        ? 'Custom'
+        : (qualityMap[answers.quality] || 'Standard'),
+      current_stage: 'Requirement',
+      status: 'active',
+      acceptance_status: 'pending_vendor'
+    };
+
+    if (intentType === 'NEW_HOME') {
+      const loc = answers.location || 'New Home';
+      const beds = bedsMap[answers.bedrooms] || 3;
+      return { ...base, project_name: `${beds}BHK Home - ${loc}`, project_type: 'Residential', plot_length: parseFloat(answers.plot_length) || null, plot_width: parseFloat(answers.plot_width) || null, road_facing: answers.road_facing, floors: floorsMap[answers.floors] || 1, bedrooms: beds, bathrooms: parseInt(answers.bathrooms) || 0, parking_count: parkMap[answers.parking] || 0, has_pooja: answers.has_pooja === 'Yes', has_office: answers.has_office === 'Yes', has_terrace: answers.has_terrace === 'Yes', vastu_preference: answers.vastu === 'Yes — follow Vastu', architectural_style: answers.arch_style, description: buildProjectDescription() };
+    }
+    if (intentType === 'RENOVATION') {
+      const rTypes = Array.isArray(answers.reno_type) ? answers.reno_type.join(', ') : answers.reno_type;
+      return { ...base, project_name: `Renovation - ${answers.location || 'My Property'}`, project_type: 'Renovation', renovation_type: rTypes, description: `Property: ${answers.property_type || ''}, Area: ${answers.area_sqft || ''} sq.ft, Condition: ${answers.condition || ''}` };
+    }
+    if (intentType === 'ELECTRICAL') {
+      return { ...base, project_name: `Electrical Work - ${answers.location || 'My Property'}`, project_type: 'Electrical', electrical_points: { lighting_style: answers.lighting_style, ac_points: answers.ac_points, special_needs: answers.special_needs, rooms: answers.rooms, floors: answers.floors }, description: `${answers.property_type || ''}, ${answers.rooms || ''}, AC: ${answers.ac_points || 'None'}` };
+    }
+    return { ...base, project_name: `My Project - ${answers.location || ''}`, project_type: 'Residential' };
+  }
+
+  window.onTextInput = onTextInput;
+  window.selectOption = selectOption;
+  window.selectQualityOption = selectQualityOption;
+  window.onManualBudgetInput = onManualBudgetInput;
+  window.submitAllQuestions = submitAllQuestions;
+
+  document.addEventListener('DOMContentLoaded', init);
+  </script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="../js/searchable-select.js"></script>
+  <script src="../js/project-setup-model.js"></script>
+  <script src="../js/project-setup-form.js"></script>
+  <script src="../js/land-site-model.js"></script>
+  <script src="../js/land-site-form.js"></script>
+  <script src="../js/requirements-step-model.js?v=room-auto-4"></script>
+  <script src="../js/requirements-icons.js"></script>
+  <script src="../js/requirements-step.js?v=room-auto-4"></script>
+  <script src="../js/design-engineering-step.js?v=2"></script>
+  <script src="../js/customer-portal/portal-api.js"></script>
+  <script src="../js/design-workspace.js?v=4"></script>
+  <script src="../js/customer-portal/portal-summary.js"></script>
+  <script src="../js/intent-wizard.js?v=6"></script>
+  <script type="module" src="../js/design3d-loader.js"></script>
+  <script src="../js/design3d.js" defer></script>
+</body>
+</html>
+

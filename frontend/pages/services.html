@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="OH I SEE AI Construction Services — Design, BOQ, Estimation, Electrical Planning, Plumbing Planning and Professional Services.">
+  <title>Services — OH I SEE AI Construction Platform</title>
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/home-ai.css">
+  <link rel="stylesheet" href="../css/construction.css">
+  <link rel="icon" href="/images/logo.png" type="image/png">
+  <style>
+    body { background: #000; color: #fff; }
+  </style>
+</head>
+<body>
+  <div class="page-loader">
+    <div class="loader-logo"><img src="/images/logo.png" alt="OH I SEE"></div>
+    <div class="loader-text">OH I SEE</div>
+    <div class="loader-bar"></div>
+  </div>
+
+  <header class="site-header" id="header">
+    <div class="header-top">
+      <a href="index.html" class="header-logo">
+        <img src="/images/logo.png" alt="OH I SEE">
+        <span class="header-logo-text">OH I SEE</span>
+      </a>
+      <nav class="header-nav">
+        <a href="index.html">Home</a>
+        <a href="products.html">Products</a>
+        <a href="services.html" class="active">Services</a>
+        <a href="bulk-quote.html">Bulk Quotation</a>
+      </nav>
+      <div class="header-actions">
+        <a href="account.html#wishlist" class="header-action-btn" title="Wishlist">♡</a>
+        <a href="account.html" class="header-action-btn" title="Account">👤</a>
+        <a href="cart.html" class="header-action-btn" title="Cart">🛒<span class="badge cart-count" style="display:none;">0</span></a>
+        <a href="bulk-quote.html" class="btn-request-quote">Request Quote</a>
+      </div>
+      <button class="mobile-menu-toggle">☰</button>
+    </div>
+  </header>
+
+
+  <main id="construction-app" class="cw">
+    <section class="cw-hero">
+      <div><div class="cw-eyebrow">Construction services · Built around your project</div>
+      <h1>Your idea.<br>Your team.<br><span>Your future home.</span></h1>
+      <p>From “I want to build a house” to the day you move in.<br>Plan your project, find verified professionals, and follow every stage in one place.</p>
+      <div class="cw-actions"><button class="primary" data-tab="project">Create a construction project ↗</button><button data-tab="professionals">Find professionals</button></div>
+      <p class="cw-note">One project. Connected planning, people and progress.</p></div>
+      <div class="cw-hero-map"><div class="cw-eyebrow">Your construction journey</div>
+      <div class="cw-route"><span class="cw-dot">1</span><div><b>Tell us what you want to build</b><small>Location, space, budget and requirements</small></div></div>
+      <div class="cw-route"><span class="cw-dot">2</span><div><b>Plan it with the right people</b><small>BOQ, estimates and professional design review</small></div></div>
+      <div class="cw-route"><span class="cw-dot">3</span><div><b>Compare. Agree. Get started.</b><small>Verified professionals, quotes and contracts</small></div></div>
+      <div class="cw-route"><span class="cw-dot">4</span><div><b>See your home take shape</b><small>Execution, quality and a living project history</small></div></div></div>
+    </section>
+    <nav class="cw-tabs" aria-label="Construction workspace">
+      <button data-tab="project" aria-selected="true">01 · Your project</button>
+      <button data-tab="professionals">02 · Find professionals</button>
+      <button data-tab="workspace">03 · Quotes & construction</button>
+      <button data-tab="profile">For professionals</button>
+<button data-tab="leads">New home requests</button>
+      <button data-tab="notifications">Updates</button>
+      <button data-tab="verification" id="cw-admin-tab" hidden>Verification</button>
+    </nav>
+    <div id="cw-status" class="cw-status" role="status" aria-live="polite"></div>
+    <div id="cw-view"></div>
+  </main>
+  <dialog id="cw-dialog" class="cw-dialog"><div class="cw"><div id="cw-dialog-content"></div></div></dialog>
+
+  <!-- Existing services -->
+  <section class="hp-section home-dark-alt">
+    <div class="container">
+      <h2 class="hp-section-title">Explore all <span>services</span></h2><p class="hp-section-sub">Your existing design, planning and procurement tools.</p><h3 style="margin:32px 0 18px;color:#fff">AI & Design</h3><div class="services-grid"><a class="service-card" href="index.html#ai-assistant-section">
+          <span class="service-icon">🤖</span>
+          <div class="service-name">AI Design</div>
+          <div class="service-desc">Generate architectural design from your description</div>
+          <span class="service-card-cta">Start →</span>
+        </a>
+<a class="service-card" href="bulk-quote.html?mode=blueprint">
+          <span class="service-icon">📐</span>
+          <div class="service-name">Blueprint Analysis</div>
+          <div class="service-desc">Upload your plan and get AI analysis</div>
+          <span class="service-card-cta">Upload →</span>
+        </a>
+<a class="service-card" href="bulk-quote.html?mode=blueprint">
+          <span class="service-icon">✏️</span>
+          <div class="service-name">Blueprint Customization</div>
+          <div class="service-desc">Modify and optimize your existing plan</div>
+          <span class="service-card-cta">Customize →</span>
+        </a>
+<a class="service-card" href="index.html#ai-assistant-section">
+          <span class="service-icon">🏠</span>
+          <div class="service-name">3D Visualization</div>
+          <div class="service-desc">See your project before it's built</div>
+          <span class="service-card-cta">Visualize →</span>
+        </a></div>
+<h3 style="margin:32px 0 18px;color:#fff">Planning & Estimation</h3><div class="services-grid"><a class="service-card" href="index.html#ai-assistant-section">
+          <span class="service-icon">📋</span>
+          <div class="service-name">BOQ Generation</div>
+          <div class="service-desc">Complete Bill of Quantities from AI</div>
+          <span class="service-card-cta">Generate →</span>
+        </a>
+<a class="service-card" href="index.html#ai-assistant-section">
+          <span class="service-icon">💰</span>
+          <div class="service-name">Construction Estimation</div>
+          <div class="service-desc">Get accurate cost estimates instantly</div>
+          <span class="service-card-cta">Estimate →</span>
+        </a>
+<a class="service-card" href="index.html#electrical-ai-section">
+          <span class="service-icon">⚡</span>
+          <div class="service-name">Electrical Planning</div>
+          <div class="service-desc">AI-generated electrical layout and BOQ</div>
+          <span class="service-card-cta">Plan →</span>
+        </a>
+<a class="service-card" href="index.html#plumbing-ai-section">
+          <span class="service-icon">💧</span>
+          <div class="service-name">Plumbing Planning</div>
+          <div class="service-desc">AI-generated plumbing layout and BOQ</div>
+          <span class="service-card-cta">Plan →</span>
+        </a></div>
+<h3 style="margin:32px 0 18px;color:#fff">Professional Services</h3><div class="services-grid"><a class="service-card" href="#construction-app" data-profession="Architect">
+          <span class="service-icon">🏛️</span>
+          <div class="service-name">Architect Consultation</div>
+          <div class="service-desc">Connect with verified architects</div>
+          <span class="service-card-cta">Find →</span>
+        </a>
+<a class="service-card" href="#construction-app" data-profession="Civil Engineer">
+          <span class="service-icon">👷</span>
+          <div class="service-name">Engineer Consultation</div>
+          <div class="service-desc">Structural and civil engineers on demand</div>
+          <span class="service-card-cta">Find →</span>
+        </a>
+<a class="service-card" href="#construction-app" data-profession="Electrician">
+          <span class="service-icon">🔌</span>
+          <div class="service-name">Electrician Service</div>
+          <div class="service-desc">Verified electricians for your project</div>
+          <span class="service-card-cta">Book →</span>
+        </a>
+<a class="service-card" href="#construction-app" data-profession="Plumber">
+          <span class="service-icon">🔧</span>
+          <div class="service-name">Plumber Service</div>
+          <div class="service-desc">Certified plumbing professionals</div>
+          <span class="service-card-cta">Book →</span>
+        </a>
+<a class="service-card" href="#construction-app" data-profession="General Contractor">
+          <span class="service-icon">🏗️</span>
+          <div class="service-name">Contractor Service</div>
+          <div class="service-desc">Full construction execution teams</div>
+          <span class="service-card-cta">Find →</span>
+        </a></div>
+<h3 style="margin:32px 0 18px;color:#fff">Construction</h3><div class="services-grid"><a class="service-card" href="#construction-app" data-workflow="project">
+          <span class="service-icon">🌟</span>
+          <div class="service-name">Complete Construction</div>
+          <div class="service-desc">End-to-end project management with AI</div>
+          <span class="service-card-cta">Start →</span>
+        </a></div>
+<h3 style="margin:32px 0 18px;color:#fff">Procurement</h3><div class="services-grid"><a class="service-card" href="products.html">
+          <span class="service-icon">🧱</span>
+          <div class="service-name">Material Procurement</div>
+          <div class="service-desc">Source genuine materials at best prices</div>
+          <span class="service-card-cta">Shop →</span>
+        </a></div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">© 2024 OH I SEE Industrial Solutions. Coimbatore, Tamil Nadu.</div>
+    </div>
+  </footer>
+
+  <script src="../js/utils/helpers.js"></script>
+  <script type="module" src="../js/construction.js"></script>
+  <script src="../js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+'use strict';
+const express=require('express');
+const multer=require('multer');
+const {authenticate}=require('../middleware/auth');
+const service=require('../services/homeDesign');
+const router=express.Router({mergeParams:true});
+const wrap=fn=>async(req,res)=>{try{await fn(req,res);}catch(e){res.status(e.status||503).json({error:e.status?e.message:'The design service is unavailable. Please retry.'});}};
+router.use(authenticate);
+router.get('/',wrap(async(req,res)=>res.json(service.publicState(await service.owned(req.params.projectId,req.user.id)))));
+router.post('/reference', (req,res,next)=>multer({storage:multer.memoryStorage(),limits:{fileSize:10*1024*1024,files:1}}).single('image')(req,res,e=>e?res.status(400).json({error:'Choose one JPG, PNG or WEBP image up to 10 MB.'}):next()),wrap(async(req,res)=>res.status(201).json(await service.mutate(req.params.projectId,req.user.id,p=>service.reference(p,req.user.id,req.file)))));
+router.post('/',wrap(async(req,res)=>res.status(201).json(await service.mutate(req.params.projectId,req.user.id,p=>service.create(p,req.user.id,req.body)))));
+router.post('/:id/:action',wrap(async(req,res)=>res.json(await service.mutate(req.params.projectId,req.user.id,p=>service.action(p,req.user.id,req.params.id,req.params.action)))));
+router.get('/assets/:id/:kind',wrap(async(req,res)=>{const p=await service.owned(req.params.projectId,req.user.id);const a=await service.asset(p,req.params.id,req.params.kind);res.set('Cache-Control','private, no-store');res.set('X-Content-Type-Options','nosniff');res.type(a.type).sendFile(a.path);}));
+module.exports=router;

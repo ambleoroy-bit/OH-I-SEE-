@@ -2,6 +2,8 @@
 // AUTO-RESTORE SESSION on every page
 // ============================================================
 (async function autoRestoreSession() {
+  if (location.pathname.includes('login.html')) return;
+
   const cached = UserCache.get();
   if (cached) {
     window._ohiseeUser = cached;

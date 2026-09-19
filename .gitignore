@@ -1,4 +1,19 @@
 node_modules/
+__pycache__/
+*.pyc
 .env
+**/.git.bak/
+k8s/**/secrets.yaml
+!k8s/**/secrets.example.yaml
 dist/
 build/
+# Local construction workflow verification artifacts
+.playwright-cli/
+output/
+
+# Private generated 3D artifacts and worker state
+backend/.data/
+auth-debug.txt
+backend/src_old/
+backend/package_old.json
+backend/package-lock_old.json

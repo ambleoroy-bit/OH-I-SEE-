@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="OH I SEE 2D to 3D Visualizer — Convert your floor plan into an interactive 3D model.">
+  <title>2D → 3D Visualizer — OH I SEE</title>
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/home-ai.css">
+  <link rel="icon" href="/images/logo.png" type="image/png">
+  <!-- Three.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+  <style>
+    body { background: #000; color: #fff; font-family: 'Inter', sans-serif; }
+    .viz-hero { background: #060606; border-bottom: 1px solid #1a1a1a; padding: 40px 0 32px; }
+
+    /* Layout */
+    .viz-layout { display: grid; grid-template-columns: 1fr 280px; gap: 24px; padding: 32px 0 80px; align-items: start; }
+    @media (max-width: 900px) { .viz-layout { grid-template-columns: 1fr; } }
+
+    /* Canvas wrapper */
+    .viz-canvas-wrap {
+      background: #050505; border: 1px solid #1a1a1a; border-radius: 16px; overflow: hidden;
+      position: relative; aspect-ratio: 4/3; min-height: 400px;
+    }
+    #viz-canvas { width: 100% !important; height: 100% !important; display: block; }
+
+    .viz-overlay-controls {
+      position: absolute; bottom: 16px; left: 16px; display: flex; gap: 8px; flex-wrap: wrap;
+    }
+    .viz-ctrl-btn {
+      background: rgba(0,0,0,0.75); border: 1px solid #333; border-radius: 8px;
+      color: #aaa; font-family: 'Space Grotesk', monospace; font-size: 10px; font-weight: 700;
+      letter-spacing: 0.5px; text-transform: uppercase; padding: 7px 12px; cursor: pointer;
+      transition: all 0.2s ease; backdrop-filter: blur(8px);
+    }
+    .viz-ctrl-btn:hover { border-color: #FFD400; color: #FFD400; }
+    .viz-ctrl-btn.active { border-color: #FFD400; color: #FFD400; background: rgba(255,212,0,0.1); }
+
+    .viz-top-bar {
+      background: rgba(0,0,0,0.6); border-bottom: 1px solid #1a1a1a;
+      padding: 10px 16px; display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+      position: absolute; top: 0; left: 0; right: 0; z-index: 10; backdrop-filter: blur(8px);
+    }
+
+    .viz-empty-state {
+      position: absolute; inset: 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 12px; z-index: 5;
+    }
+    .viz-empty-icon { font-size: 48px; }
+    .viz-empty-title { font-family: 'Space Grotesk', monospace; font-size: 18px; font-weight: 700; color: #fff; text-transform: uppercase; }
+    .viz-empty-sub { font-size: 13px; color: #444; text-align: center; max-width: 280px; }
+
+    /* Right Panel */
+    .viz-panel { display: flex; flex-direction: column; gap: 16px; }
+
+    .viz-panel-card {
+      background: #0a0a0a; border: 1px solid #1a1a1a; border-radius: 14px; padding: 20px;
+    }
+
+    .viz-panel-title {
+      font-family: 'Space Grotesk', monospace; font-size: 10px; font-weight: 700;
+      letter-spacing: 2px; text-transform: uppercase; color: #FFD400; margin-bottom: 14px;
+    }
+
+    /* Entry form */
+    .viz-form-field { margin-bottom: 12px; }
+    .viz-form-field label { display: block; font-family: 'Space Grotesk', monospace; font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #555; margin-bottom: 5px; }
+    .viz-form-field input, .viz-form-field select {
+      width: 100%; background: #111; border: 1.5px solid #222; border-radius: 8px;
+      color: #fff; font-size: 12px; padding: 9px 11px; outline: none; box-sizing: border-box; transition: border-color 0.2s;
+    }
+    .viz-form-field input:focus, .viz-form-field select:focus { border-color: rgba(255,212,0,0.4); }
+
+    /* Room list */
+    .viz-room-item {
+      display: flex; align-items: center; gap: 8px; padding: 8px 10px;
+      background: #111; border: 1px solid #1e1e1e; border-radius: 8px; margin-bottom: 7px;
+      font-size: 11px; cursor: pointer; transition: all 0.2s;
+    }
+    .viz-room-item:hover { border-color: #333; }
+    .viz-room-item.active { border-color: #FFD400; background: rgba(255,212,0,0.05); }
+    .viz-room-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+    .viz-room-label { flex: 1; font-family: 'Space Grotesk', monospace; font-weight: 600; text-transform: uppercase; color: #aaa; letter-spacing: 0.5px; }
+
+    /* Color swatches */
+    .viz-swatch-row { display: flex; gap: 7px; flex-wrap: wrap; margin-bottom: 8px; }
+    .viz-swatch {
+      width: 28px; height: 28px; border-radius: 6px; cursor: pointer; transition: all 0.2s;
+      border: 2px solid transparent;
+    }
+    .viz-swatch:hover, .viz-swatch.active { border-color: #FFD400; transform: scale(1.1); }
+
+    /* Download */
+    .viz-download-btn {
+      width: 100%; background: #111; border: 1px solid #222; border-radius: 8px;
+      color: #aaa; font-family: 'Space Grotesk', monospace; font-size: 10px; font-weight: 700;
+      letter-spacing: 1px; text-transform: uppercase; padding: 10px; cursor: pointer;
+      transition: all 0.2s; display: flex; align-items: center; gap: 6px; justify-content: center;
+      margin-bottom: 8px;
+    }
+    .viz-download-btn:hover { border-color: #FFD400; color: #FFD400; }
+
+    /* Loading spinner */
+    .viz-loading {
+      position: absolute; inset: 0; background: rgba(0,0,0,0.8); z-index: 20;
+      display: none; align-items: center; justify-content: center; flex-direction: column; gap: 16px;
+    }
+    .viz-loading.show { display: flex; }
+    .viz-spinner { width: 48px; height: 48px; border: 3px solid #1a1a1a; border-top-color: #FFD400; border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+  <link rel="stylesheet" href="../css/design3d.css">
+</head>
+<body>
+
+  <!-- Page Loader -->
+  <div class="page-loader">
+    <div class="loader-logo"><img src="/images/logo.png" alt="OH I SEE"></div>
+    <div class="loader-text">OH I SEE</div>
+    <div class="loader-bar"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header" id="header">
+    <div class="header-top">
+      <a href="index.html" class="header-logo">
+        <img src="/images/logo.png" alt="OH I SEE">
+        <span class="header-logo-text">OH I SEE</span>
+      </a>
+      <nav class="header-nav">
+        <a href="index.html">Home</a>
+        <a href="blueprint-builder.html">Blueprint Builder</a>
+        <a href="project-detail.html">Projects</a>
+        <a href="visualizer-3d.html" class="active">3D Visualizer</a>
+      </nav>
+      <div class="header-actions">
+        <a href="account.html" class="header-action-btn">👤</a>
+      </div>
+      <button class="mobile-menu-toggle">☰</button>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <div class="viz-hero">
+    <div class="container">
+      <div class="hp-section-label">2D → 3D Visualizer</div>
+      <h1 style="font-family:'Space Grotesk',monospace;font-size:32px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:-0.5px;margin:8px 0;">
+        SEE YOUR HOME IN <span style="color:#FFD400;">3D</span>
+      </h1>
+      <p style="font-size:14px;color:#555;max-width:560px;">
+        Define your floor plan dimensions and rooms. OH I SEE generates an interactive 3D model you can rotate, zoom, and customize with wall colours and floor textures.
+      </p>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div class="container">
+    <div class="viz-layout">
+
+      <!-- Left: 3D Canvas -->
+      <div>
+        <div class="viz-canvas-wrap" id="viz-wrap">
+          <!-- Top bar -->
+          <div class="viz-top-bar" id="viz-top-bar" style="display:none;">
+            <span style="font-family:'Space Grotesk',monospace;font-size:11px;font-weight:700;color:#FFD400;text-transform:uppercase;">3D Floor Plan</span>
+            <button class="viz-ctrl-btn active" onclick="setView('perspective')" id="vbtn-persp">Perspective</button>
+            <button class="viz-ctrl-btn" onclick="setView('top')" id="vbtn-top">Top View</button>
+            <button class="viz-ctrl-btn" onclick="toggleAnimation()" id="vbtn-anim">⟳ Auto Rotate</button>
+            <span style="font-size:11px;color:#333;margin-left:auto;">Drag to rotate · Scroll to zoom</span>
+          </div>
+
+          <!-- Empty state -->
+          <div class="viz-empty-state" id="viz-empty">
+            <div class="viz-empty-icon">🧊</div>
+            <div class="viz-empty-title">3D View Ready</div>
+            <div class="viz-empty-sub">Configure your floor plan in the panel on the right, then click Preview layout in browser.</div>
+          </div>
+
+          <!-- Loading -->
+          <div class="viz-loading" id="viz-loading">
+            <div class="viz-spinner"></div>
+            <div style="font-family:'Space Grotesk',monospace;font-size:14px;font-weight:700;color:#fff;text-transform:uppercase;">Preparing layout preview...</div>
+          </div>
+
+          <!-- Canvas (Three.js renders here) -->
+          <canvas id="viz-canvas" style="display:none;"></canvas>
+
+          <!-- Controls overlay -->
+          <div class="viz-overlay-controls" id="viz-overlay" style="display:none;">
+            <button class="viz-ctrl-btn" onclick="resetCamera()">↺ Reset</button>
+            <button class="viz-ctrl-btn" onclick="downloadRender()">⬇️ PNG</button>
+          </div>
+        </div>
+
+        <div style="font-size:11px;color:#333;margin-top:10px;font-family:'Space Grotesk',monospace;">
+          Browser layout preview. Use Generate 3D Design above for a saved Blender model and rendered views.
+        </div>
+      </div>
+
+      <!-- Right Panel -->
+      <div class="viz-panel">
+
+        <!-- Floor Plan Config -->
+        <div class="viz-panel-card">
+          <div class="viz-panel-title">📐 Floor Plan Setup</div>
+          <div class="viz-form-field">
+            <label>Plot Length (ft)</label>
+            <input type="number" id="v-plot-l" value="40" min="10" max="200">
+          </div>
+          <div class="viz-form-field">
+            <label>Plot Width (ft)</label>
+            <input type="number" id="v-plot-w" value="60" min="10" max="200">
+          </div>
+          <div class="viz-form-field">
+            <label>Wall Height (ft)</label>
+            <input type="number" id="v-wall-h" value="10" min="8" max="20">
+          </div>
+          <div class="viz-form-field">
+            <label>Floors</label>
+            <select id="v-floors">
+              <option value="1">Ground Floor Only</option>
+              <option value="2">G + 1 Floor</option>
+            </select>
+          </div>
+          <div class="viz-form-field">
+            <label>Bedrooms</label>
+            <select id="v-bedrooms">
+              <option value="2">2 Bedrooms</option><option value="3" selected>3 Bedrooms</option>
+              <option value="4">4 Bedrooms</option><option value="5">5 Bedrooms</option>
+            </select>
+          </div>
+          <div style="margin-top:16px;">
+            <button class="btn-hero-primary" style="width:100%;justify-content:center;font-size:13px;" onclick="generateModel()">
+              Preview layout in browser
+            </button>
+          </div>
+        </div>
+
+        <!-- Wall Color -->
+        <div class="viz-panel-card">
+          <div class="viz-panel-title">🎨 Wall Color</div>
+          <div class="viz-swatch-row">
+            <div class="viz-swatch active" style="background:#f5f0ea;" onclick="setWallColor('#f5f0ea',this)" title="Off-White"></div>
+            <div class="viz-swatch" style="background:#d4c5b0;" onclick="setWallColor('#d4c5b0',this)" title="Sand"></div>
+            <div class="viz-swatch" style="background:#8fb5a8;" onclick="setWallColor('#8fb5a8',this)" title="Sage"></div>
+            <div class="viz-swatch" style="background:#c8b8a2;" onclick="setWallColor('#c8b8a2',this)" title="Warm Beige"></div>
+            <div class="viz-swatch" style="background:#b5c4d4;" onclick="setWallColor('#b5c4d4',this)" title="Steel Blue"></div>
+            <div class="viz-swatch" style="background:#2c2c2c;" onclick="setWallColor('#2c2c2c',this)" title="Charcoal"></div>
+            <div class="viz-swatch" style="background:#fff;" onclick="setWallColor('#ffffff',this)" title="White"></div>
+            <div class="viz-swatch" style="background:#f5d78e;" onclick="setWallColor('#f5d78e',this)" title="Warm Yellow"></div>
+          </div>
+        </div>
+
+        <!-- Floor Texture -->
+        <div class="viz-panel-card">
+          <div class="viz-panel-title">🪵 Floor Material</div>
+          <div class="viz-form-field">
+            <select id="v-floor-mat" onchange="setFloorMaterial(this.value)">
+              <option value="#d4c0a0">Marble (Cream)</option>
+              <option value="#8B6914">Wooden Flooring</option>
+              <option value="#888">Granite (Dark)</option>
+              <option value="#ccc">Vitrified (Light)</option>
+              <option value="#c88">Terracotta</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Room Legend -->
+        <div class="viz-panel-card" id="viz-legend-card" style="display:none;">
+          <div class="viz-panel-title">🗺️ Room Legend</div>
+          <div id="viz-legend"></div>
+        </div>
+
+        <!-- Downloads -->
+        <div class="viz-panel-card">
+          <div class="viz-panel-title">⬇️ Download</div>
+          <button class="viz-download-btn" onclick="downloadRender()">🖼️ Download PNG</button>
+          <button class="viz-download-btn" onclick="window.location.href='blueprint-builder.html'">📐 Back to Blueprint</button>
+          <button class="viz-download-btn" onclick="window.location.href='quote-compare.html'">⚖️ Compare Quotes</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">© 2024 OH I SEE Industrial Solutions. Coimbatore, Tamil Nadu.</div>
+    </div>
+  </footer>
+
+  <script src="../js/utils/helpers.js"></script>
+  <script src="../js/components/notifications.js"></script>
+  <script src="../js/app.js"></script>
+  <script>
+  // ============================================================
+  // OH I SEE — 3D Visualizer Engine (Three.js)
+  // ============================================================
+
+  let scene, camera, renderer, controls, animating = false, animFrame;
+  let wallMeshes = [];
+  let floorMeshes = [];
+  let wallColor = '#f5f0ea';
+  let floorColor = '#d4c0a0';
+  let currentView = 'perspective';
+
+  const ROOM_COLORS = {
+    living:   0xfff5d6, bedroom: 0xdde8f5, kitchen: 0xfce8d0,
+    bathroom: 0xd5eeee, dining:  0xf0eaf8, parking: 0xe8e8e8,
+    pooja:    0xffeedd, corridor:0xf5f5f5, staircase:0xf8f8e8,
+    outdoor:  0xe8f0e8,
+  };
+  const ROOM_LEGEND = {
+    living: 'Living Room', bedroom: 'Bedroom', kitchen: 'Kitchen',
+    bathroom: 'Bathroom', dining: 'Dining', parking: 'Parking',
+    pooja: 'Pooja Room', corridor: 'Corridor', staircase: 'Staircase',
+    outdoor: 'Open Area',
+  };
+
+  // ── Generate rooms layout ────────────────────────────────────
+  function generateRooms(plotL, plotW, bedrooms) {
+    const UNIT = 1; // 1 Three.js unit = 1 foot
+    const rooms = [];
+    const W = 0.5; // wall half-thickness
+    const inner = { x: 0, z: 0, w: plotL - 1, d: plotW - 1 };
+
+    // Parking (front)
+    let z = inner.z;
+    const pkW = Math.min(inner.w * 0.5, 20);
+    const pkD = Math.min(inner.d * 0.2, 12);
+    rooms.push({ type: 'parking', x: inner.x, z, w: pkW, d: pkD });
+    z += pkD + 1;
+
+    // Living
+    const lvD = Math.min(inner.d * 0.22, 18);
+    rooms.push({ type: 'living', x: inner.x, z, w: inner.w, d: lvD });
+    z += lvD + 1;
+
+    // Dining + Kitchen
+    const dkD = Math.min(inner.d * 0.18, 14);
+    const kitW = Math.round(inner.w * 0.38);
+    rooms.push({ type: 'dining', x: inner.x, z, w: inner.w - kitW - 1, d: dkD });
+    rooms.push({ type: 'kitchen', x: inner.x + inner.w - kitW, z, w: kitW, d: dkD });
+    z += dkD + 1;
+
+    // Staircase
+    const stairW = Math.min(12, inner.w * 0.22);
+    const stairD = Math.min(10, inner.d * 0.15);
+    rooms.push({ type: 'staircase', x: inner.x, z, w: stairW, d: stairD });
+    rooms.push({ type: 'corridor', x: inner.x + stairW + 1, z, w: inner.w - stairW - 1, d: stairD });
+    z += stairD + 1;
+
+    // Bedrooms
+    const bedsL = Math.min(bedrooms, 4);
+    const bedsPerRow = Math.min(bedsL, 2);
+    const bedW = Math.floor((inner.w - (bedsPerRow - 1)) / bedsPerRow);
+    const bedD = Math.min(inner.d * 0.2, 18);
+    for (let row = 0; row < Math.ceil(bedsL / bedsPerRow); row++) {
+      for (let col = 0; col < bedsPerRow && row * bedsPerRow + col < bedsL; col++) {
+        rooms.push({ type: 'bedroom', name: `Bed ${row * bedsPerRow + col + 1}`, x: inner.x + col * (bedW + 1), z: z + row * (bedD + 1), w: bedW, d: bedD });
+      }
+    }
+    z += Math.ceil(bedsL / bedsPerRow) * (bedD + 1);
+
+    // Bathrooms
+    const baths = Math.min(2, Math.ceil(bedrooms / 2));
+    const bathW = Math.min(10, Math.floor(inner.w / baths - 1));
+    const bathD = Math.min(9, inner.d * 0.12);
+    for (let i = 0; i < baths; i++) {
+      rooms.push({ type: 'bathroom', name: `Bath ${i + 1}`, x: inner.x + i * (bathW + 1), z, w: bathW, d: bathD });
+    }
+
+    return rooms;
+  }
+
+  // ── Three.js setup ───────────────────────────────────────────
+  function initThree() {
+    const canvas = document.getElementById('viz-canvas');
+    const wrap = document.getElementById('viz-wrap');
+    const W = wrap.clientWidth || 800;
+    const H = wrap.clientHeight || 500;
+
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x050505);
+    scene.fog = new THREE.FogExp2(0x050505, 0.006);
+
+    camera = new THREE.PerspectiveCamera(55, W / H, 0.1, 2000);
+    camera.position.set(40, 50, 80);
+    camera.lookAt(20, 0, 30);
+
+    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false });
+    renderer.setSize(W, H);
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    // Lighting
+    const ambient = new THREE.AmbientLight(0xffffff, 0.6);
+    scene.add(ambient);
+    const dirLight = new THREE.DirectionalLight(0xffd700, 0.8);
+    dirLight.position.set(60, 100, 60);
+    dirLight.castShadow = true;
+    dirLight.shadow.mapSize.width = 2048;
+    dirLight.shadow.mapSize.height = 2048;
+    scene.add(dirLight);
+    const fillLight = new THREE.DirectionalLight(0x8888ff, 0.3);
+    fillLight.position.set(-60, 40, -60);
+    scene.add(fillLight);
+
+    // Grid helper
+    const grid = new THREE.GridHelper(200, 40, 0x222222, 0x111111);
+    grid.position.y = -0.01;
+    scene.add(grid);
+
+    // Manual orbit controls (no import needed)
+    setupOrbitControls();
+  }
+
+  function setupOrbitControls() {
+    let isDragging = false, prevX, prevY;
+    const canvas = document.getElementById('viz-canvas');
+    const spherical = { theta: 0.5, phi: 0.7, radius: 100 };
+
+    function updateCamera() {
+      const target = new THREE.Vector3(20, 0, 30);
+      camera.position.set(
+        target.x + spherical.radius * Math.sin(spherical.phi) * Math.sin(spherical.theta),
+        spherical.radius * Math.cos(spherical.phi),
+        target.z + spherical.radius * Math.sin(spherical.phi) * Math.cos(spherical.theta)
+      );
+      camera.lookAt(target);
+    }
+
+    canvas.addEventListener('mousedown', e => { isDragging = true; prevX = e.clientX; prevY = e.clientY; });
+    window.addEventListener('mouseup', () => { isDragging = false; });
+    window.addEventListener('mousemove', e => {
+      if (!isDragging) return;
+      spherical.theta -= (e.clientX - prevX) * 0.005;
+      spherical.phi = Math.max(0.1, Math.min(Math.PI/2 - 0.1, spherical.phi + (e.clientY - prevY) * 0.005));
+      prevX = e.clientX; prevY = e.clientY;
+      if (currentView === 'perspective') updateCamera();
+    });
+    canvas.addEventListener('wheel', e => {
+      spherical.radius = Math.max(10, Math.min(300, spherical.radius + e.deltaY * 0.05));
+      updateCamera();
+    });
+    // Touch support
+    let lastTouch;
+    canvas.addEventListener('touchstart', e => { if (e.touches.length === 1) { prevX = e.touches[0].clientX; prevY = e.touches[0].clientY; isDragging = true; } });
+    canvas.addEventListener('touchmove', e => {
+      if (!isDragging || e.touches.length !== 1) return;
+      spherical.theta -= (e.touches[0].clientX - prevX) * 0.005;
+      spherical.phi = Math.max(0.1, Math.min(Math.PI/2 - 0.1, spherical.phi + (e.touches[0].clientY - prevY) * 0.005));
+      prevX = e.touches[0].clientX; prevY = e.touches[0].clientY;
+      updateCamera();
+    });
+    window.addEventListener('touchend', () => { isDragging = false; });
+
+    camera._spherical = spherical;
+    camera._updatePos = updateCamera;
+    updateCamera();
+  }
+
+  // ── Build 3D Geometry ────────────────────────────────────────
+  function buildGeometry(plotL, plotW, wallH, rooms) {
+    // Clear previous
+    while (scene.children.length > 3) scene.children.pop(); // keep lights + grid
+    wallMeshes = []; floorMeshes = [];
+    // Rebuild lights
+    const grid = new THREE.GridHelper(200, 40, 0x222222, 0x111111);
+    grid.position.y = -0.01;
+    scene.add(grid);
+    const ambient = new THREE.AmbientLight(0xffffff, 0.6); scene.add(ambient);
+    const dirLight = new THREE.DirectionalLight(0xffd700, 0.8); dirLight.position.set(60,100,60); dirLight.castShadow = true; scene.add(dirLight);
+    const fill = new THREE.DirectionalLight(0x8888ff, 0.3); fill.position.set(-60,40,-60); scene.add(fill);
+
+    const wC = new THREE.Color(wallColor);
+
+    // Outer perimeter walls
+    function makeWall(x, y, z, w, h, d, isWall) {
+      const geo = new THREE.BoxGeometry(w, h, d);
+      const mat = new THREE.MeshLambertMaterial({ color: isWall ? wC : new THREE.Color(0x888888), transparent: !isWall, opacity: isWall ? 1 : 0.15 });
+      const mesh = new THREE.Mesh(geo, mat);
+      mesh.position.set(x + w/2, y + h/2, z + d/2);
+      mesh.castShadow = true; mesh.receiveShadow = true;
+      scene.add(mesh);
+      if (isWall) wallMeshes.push(mesh);
+    }
+
+    const WT = 0.5; // wall thickness
+    makeWall(0, 0, 0, plotL, wallH, WT, true);           // front
+    makeWall(0, 0, plotW - WT, plotL, wallH, WT, true);   // back
+    makeWall(0, 0, 0, WT, wallH, plotW, true);             // left
+    makeWall(plotL - WT, 0, 0, WT, wallH, plotW, true);   // right
+
+    // Main floor slab
+    const floorGeo = new THREE.BoxGeometry(plotL, 0.3, plotW);
+    const floorMat = new THREE.MeshLambertMaterial({ color: new THREE.Color(floorColor) });
+    const floorMesh = new THREE.Mesh(floorGeo, floorMat);
+    floorMesh.position.set(plotL/2, -0.15, plotW/2);
+    floorMesh.receiveShadow = true;
+    scene.add(floorMesh);
+    floorMeshes.push(floorMesh);
+
+    // Room floors + interior walls
+    for (const room of rooms) {
+      const roomColor = ROOM_COLORS[room.type] || 0xeeeeee;
+      const rfloorGeo = new THREE.BoxGeometry(room.w - 0.5, 0.05, room.d - 0.5);
+      const rfloorMat = new THREE.MeshLambertMaterial({ color: roomColor });
+      const rfloor = new THREE.Mesh(rfloorGeo, rfloorMat);
+      rfloor.position.set(room.x + room.w/2, 0.03, room.z + room.d/2);
+      rfloor.receiveShadow = true;
+      scene.add(rfloor);
+      floorMeshes.push(rfloor);
+
+      // Interior walls (partial — back and left of each room)
+      const iwMat = new THREE.MeshLambertMaterial({ color: wC, transparent: true, opacity: 0.6 });
+      const bw = new THREE.Mesh(new THREE.BoxGeometry(room.w, wallH * 0.85, WT), iwMat);
+      bw.position.set(room.x + room.w/2, wallH * 0.85 / 2, room.z + room.d);
+      bw.castShadow = true; scene.add(bw); wallMeshes.push(bw);
+
+      const lw = new THREE.Mesh(new THREE.BoxGeometry(WT, wallH * 0.85, room.d), iwMat);
+      lw.position.set(room.x + room.w, wallH * 0.85 / 2, room.z + room.d/2);
+      lw.castShadow = true; scene.add(lw); wallMeshes.push(lw);
+
+      // Room label (billboard text via canvas texture)
+      addLabel(room.type === 'bedroom' && room.name ? room.name : (ROOM_LEGEND[room.type] || room.type),
+        new THREE.Vector3(room.x + room.w/2, wallH * 0.5, room.z + room.d/2));
+    }
+
+    // Roof slab (semi-transparent)
+    const roofGeo = new THREE.BoxGeometry(plotL, 0.4, plotW);
+    const roofMat = new THREE.MeshLambertMaterial({ color: wC, transparent: true, opacity: 0.3 });
+    const roofMesh = new THREE.Mesh(roofGeo, roofMat);
+    roofMesh.position.set(plotL/2, wallH + 0.2, plotW/2);
+    scene.add(roofMesh);
+  }
+
+  function addLabel(text, position) {
+    const canvas = document.createElement('canvas');
+    canvas.width = 256; canvas.height = 64;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = 'rgba(0,0,0,0.6)';
+    ctx.fillRect(0, 0, 256, 64);
+    ctx.fillStyle = '#ffffff';
+    ctx.font = 'bold 20px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText(text.toUpperCase(), 128, 40);
+
+    const tex = new THREE.CanvasTexture(canvas);
+    const plane = new THREE.Mesh(
+      new THREE.PlaneGeometry(6, 1.5),
+      new THREE.MeshBasicMaterial({ map: tex, transparent: true, side: THREE.DoubleSide })
+    );
+    plane.position.copy(position);
+    plane.rotation.y = Math.PI / 4;
+    scene.add(plane);
+  }
+
+  // ── Animation loop ───────────────────────────────────────────
+  function animate() {
+    animFrame = requestAnimationFrame(animate);
+    if (animating && camera._spherical) {
+      camera._spherical.theta += 0.003;
+      camera._updatePos();
+    }
+    renderer.render(scene, camera);
+  }
+
+  // ── Public controls ──────────────────────────────────────────
+  function generateModel() {
+    const plotL = parseFloat(document.getElementById('v-plot-l').value) || 40;
+    const plotW = parseFloat(document.getElementById('v-plot-w').value) || 60;
+    const wallH = parseFloat(document.getElementById('v-wall-h').value) || 10;
+    const bedrooms = parseInt(document.getElementById('v-bedrooms').value) || 3;
+
+    document.getElementById('viz-loading').classList.add('show');
+    document.getElementById('viz-empty').style.display = 'none';
+
+    setTimeout(() => {
+      const rooms = generateRooms(plotL, plotW, bedrooms);
+
+      if (!scene) {
+        document.getElementById('viz-canvas').style.display = 'block';
+        document.getElementById('viz-top-bar').style.display = 'flex';
+        document.getElementById('viz-overlay').style.display = 'flex';
+        initThree();
+        animate();
+      }
+
+      buildGeometry(plotL, plotW, wallH, rooms);
+      camera.position.set(plotL * 0.8, plotW * 0.7, plotW * 1.2);
+      camera.lookAt(plotL/2, 0, plotW/2);
+
+      // Legend
+      const unique = [...new Set(rooms.map(r => r.type))];
+      const legend = document.getElementById('viz-legend');
+      legend.innerHTML = unique.map(t => `
+        <div class="viz-room-item">
+          <div class="viz-room-dot" style="background:#${ROOM_COLORS[t]?.toString(16).padStart(6,'0') || 'aaaaaa'};"></div>
+          <span class="viz-room-label">${ROOM_LEGEND[t] || t}</span>
+        </div>`).join('');
+      document.getElementById('viz-legend-card').style.display = 'block';
+
+      document.getElementById('viz-loading').classList.remove('show');
+      document.getElementById('viz-canvas').style.display = 'block';
+      document.getElementById('viz-top-bar').style.display = 'flex';
+      document.getElementById('viz-overlay').style.display = 'flex';
+    }, 400);
+  }
+
+  function setView(view) {
+    currentView = view;
+    document.getElementById('vbtn-persp').classList.toggle('active', view === 'perspective');
+    document.getElementById('vbtn-top').classList.toggle('active', view === 'top');
+
+    const plotL = parseFloat(document.getElementById('v-plot-l').value) || 40;
+    const plotW = parseFloat(document.getElementById('v-plot-w').value) || 60;
+    const wallH = parseFloat(document.getElementById('v-wall-h').value) || 10;
+
+    if (view === 'top') {
+      camera.position.set(plotL/2, 120, plotW/2);
+      camera.lookAt(plotL/2, 0, plotW/2);
+    } else {
+      if (camera._spherical) camera._updatePos();
+      else { camera.position.set(plotL * 0.8, wallH * 5, plotW * 1.2); camera.lookAt(plotL/2, 0, plotW/2); }
+    }
+  }
+
+  function toggleAnimation() {
+    animating = !animating;
+    const btn = document.getElementById('vbtn-anim');
+    btn.classList.toggle('active', animating);
+    btn.textContent = animating ? '⏸ Auto Rotate' : '⟳ Auto Rotate';
+  }
+
+  function resetCamera() {
+    const plotL = parseFloat(document.getElementById('v-plot-l').value) || 40;
+    const plotW = parseFloat(document.getElementById('v-plot-w').value) || 60;
+    camera.position.set(plotL * 0.8, plotL * 0.7, plotW * 1.2);
+    camera.lookAt(plotL/2, 0, plotW/2);
+  }
+
+  function setWallColor(hex, el) {
+    wallColor = hex;
+    document.querySelectorAll('.viz-swatch').forEach(s => s.classList.remove('active'));
+    el.classList.add('active');
+    const c = new THREE.Color(hex);
+    wallMeshes.forEach(m => { if (m.material.color) m.material.color.set(c); });
+  }
+
+  function setFloorMaterial(color) {
+    floorColor = color;
+    const c = new THREE.Color(color);
+    floorMeshes.forEach((m, i) => { if (i === 0 && m.material.color) m.material.color.set(c); });
+  }
+
+  function downloadRender() {
+    if (!renderer) { alert('Generate a 3D model first.'); return; }
+    renderer.render(scene, camera);
+    const link = document.createElement('a');
+    link.download = 'ohisee-3d-model.png';
+    link.href = renderer.domElement.toDataURL('image/png');
+    link.click();
+  }
+
+  // Handle resize
+  window.addEventListener('resize', () => {
+    if (!renderer || !camera) return;
+    const wrap = document.getElementById('viz-wrap');
+    renderer.setSize(wrap.clientWidth, wrap.clientHeight);
+    camera.aspect = wrap.clientWidth / wrap.clientHeight;
+    camera.updateProjectionMatrix();
+  });
+  </script>
+  <script type="module" src="../js/design3d-loader.js"></script>
+  <script src="../js/design3d.js" defer></script>
+</body>
+</html>
+

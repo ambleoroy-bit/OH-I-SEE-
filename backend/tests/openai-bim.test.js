@@ -1,0 +1,10 @@
+'use strict';
+const test=require('node:test'),assert=require('node:assert/strict');
+const {interpret}=require('../src/services/openaiBim');
+const fixture=require('./fixtures/openai-bim-requirements.json');
+function response(value,status=200){return {ok:status===200,status,json:async()=>value};}
+const good=()=>({status:'completed',output:[{content:[{type:'output_text',text:JSON.stringify({requirements:fixture,changes:['Two-bedroom concept'],warnings:[]})}]}]});
+test('structured OpenAI request uses server key, no storage and exact schema',async()=>{let sent;const r=await interpret(fixture,'Two bedrooms',{key:'test-key',fetchImpl:async(url,options)=>{sent=JSON.parse(options.body);assert.equal(url,'https://api.openai.com/v1/responses');return response(good());}});assert.equal(sent.store,false);assert.equal(sent.text.format.strict,true);assert.equal(r.provider,'openai');assert.equal(r.requirements.building.bedrooms,2);});
+test('quota, auth failure and truncated responses are actionable, without secrets',async()=>{for(const status of [401,429,500])await assert.rejects(()=>interpret(fixture,'test',{key:'secret-test',fetchImpl:async()=>response({},status)}),e=>!e.message.includes('secret-test'));await assert.rejects(()=>interpret(fixture,'test',{key:'key',fetchImpl:async()=>response({status:'incomplete'})}),/did not finish/);});
+test('invalid schema, changed plot and invalid floors are rejected',async()=>{for(const mutate of [r=>delete r.building,r=>r.site.plotLengthFt++,r=>r.storeys[0].index=3,r=>r.projectName='<img src=x>']){const r=structuredClone(fixture);mutate(r);const value={status:'completed',output:[{content:[{type:'output_text',text:JSON.stringify({requirements:r,changes:['change'],warnings:[]})}]}]};await assert.rejects(()=>interpret(fixture,'test',{key:'key',fetchImpl:async()=>response(value)}));}});
+test('empty and oversized prompts do not call OpenAI',async()=>{let calls=0;for(const prompt of ['', 'x'.repeat(4001)])await assert.rejects(()=>interpret(fixture,prompt,{key:'key',fetchImpl:async()=>{calls++;return response(good());}}));assert.equal(calls,0);});

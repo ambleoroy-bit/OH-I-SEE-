@@ -235,6 +235,8 @@
               </div>
               <nav class="dashboard-nav">
                 <a href="#" class="active" data-section="overview-section"><span>📊</span> Overview</a>
+                <a href="#" data-section="leads-section"><span>🏗️</span> Client Leads & Bids</a>
+                <a href="#" data-section="employees-section"><span>👷</span> Site Employees & Wages</a>
                 <a href="#" data-section="orders-section"><span>📦</span> Procurement Log</a>
                 <a href="#" data-section="discounts-section"><span>🏷️</span> Tier Discounts</a>
                 <a href="#" data-section="commissions-section"><span>💰</span> Commissions & Reports</a>
@@ -288,6 +290,71 @@
                 <div id="overview-orders-list">
                   <!-- JS populated -->
                   <div style="padding:16px; text-align:center; color:#888;">No recent orders found.</div>
+                </div>
+              </div>
+
+              <!-- Section 1.5: Client Leads & Bids -->
+              <div class="dashboard-content-section" id="leads-section">
+                <h2>Client Project Leads & Bids</h2>
+                <p style="font-size:13px; color:#666; margin-bottom:24px;">Review incoming client construction intents, approve deals, and configure payment schedules.</p>
+                <div id="vendor-leads-list-wrapper">
+                  <div style="text-align:center; padding:32px; color:#888;">Loading client project leads...</div>
+                </div>
+              </div>
+
+              <!-- Section 1.6: Site Employees & Wages -->
+              <div class="dashboard-content-section" id="employees-section">
+                <h2>Site Employees & Wage Management</h2>
+                <p style="font-size:13px; color:#666; margin-bottom:24px;">Assign engineers, masons, electricians, and plumbers to accepted client projects with daily/monthly wage schedules.</p>
+                
+                <div style="background:#f9f9f9; border:1px solid #e0e0e0; border-radius:8px; padding:20px; margin-bottom:24px;">
+                  <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
+                    <div>
+                      <h4 style="font-family:'Space Grotesk',monospace; margin:0 0 4px 0;">Select Active Project</h4>
+                      <div style="font-size:12px; color:#777;">Choose a project to manage assigned workforce and wage rates.</div>
+                    </div>
+                    <select id="employee-project-select" onchange="loadProjectEmployees(this.value)" style="padding:8px 12px; border-radius:6px; border:1px solid #ccc; font-weight:600;">
+                      <option value="PRJ-88412">PRJ-88412 (3BHK Villa - Peelamedu)</option>
+                    </select>
+                  </div>
+
+                  <form id="assign-employee-form" onsubmit="event.preventDefault(); handleAssignEmployee();" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(160px, 1fr)); gap:12px; background:white; padding:16px; border-radius:8px; border:1px solid #ddd;">
+                    <div>
+                      <label style="font-size:11px; font-weight:700; text-transform:uppercase; color:#666;">Employee Name *</label>
+                      <input type="text" id="emp-name" placeholder="e.g. Ramesh Kumar" required style="width:100%; padding:8px; border-radius:4px; border:1px solid #ccc;">
+                    </div>
+                    <div>
+                      <label style="font-size:11px; font-weight:700; text-transform:uppercase; color:#666;">Role / Skill *</label>
+                      <select id="emp-role" style="width:100%; padding:8px; border-radius:4px; border:1px solid #ccc;">
+                        <option value="Site Engineer">Site Engineer</option>
+                        <option value="Senior Mason">Senior Mason</option>
+                        <option value="Licensed Electrician">Licensed Electrician</option>
+                        <option value="Plumbing Specialist">Plumbing Specialist</option>
+                        <option value="General Supervisor">General Supervisor</option>
+                        <option value="Helper / Laborer">Helper / Laborer</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label style="font-size:11px; font-weight:700; text-transform:uppercase; color:#666;">Wage Type *</label>
+                      <select id="emp-wage-type" style="width:100%; padding:8px; border-radius:4px; border:1px solid #ccc;">
+                        <option value="daily">Daily Wages (₹/day)</option>
+                        <option value="monthly">Monthly Salary (₹/mo)</option>
+                        <option value="completion">Completion / Milestone</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label style="font-size:11px; font-weight:700; text-transform:uppercase; color:#666;">Wage Rate (₹) *</label>
+                      <input type="number" id="emp-wage-rate" placeholder="e.g. 950" required style="width:100%; padding:8px; border-radius:4px; border:1px solid #ccc;">
+                    </div>
+                    <div style="grid-column:1/-1; text-align:right;">
+                      <button type="submit" class="btn btn-dark btn-sm" style="padding:8px 20px;">+ Assign Worker to Project</button>
+                    </div>
+                  </form>
+                </div>
+
+                <h3>Assigned Workforce Ledger</h3>
+                <div id="project-employees-list-wrapper">
+                  <!-- JS Populated -->
                 </div>
               </div>
 
@@ -563,6 +630,53 @@
     </div>
   </footer>
 
+  <!-- Accept Deal Modal Overlay -->
+  <div id="accept-deal-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:9999; align-items:center; justify-content:center; padding:16px;">
+    <div style="background:#fff; width:100%; max-width:540px; border-radius:12px; padding:24px; box-shadow:0 12px 40px rgba(0,0,0,0.3); border:1px solid #e0e0e0; max-height:90vh; overflow-y:auto;">
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #eee; padding-bottom:12px; margin-bottom:16px;">
+        <h3 style="margin:0; font-family:'Space Grotesk',monospace; font-size:18px; text-transform:uppercase; color:#111;">🤝 Accept Deal & Configure Terms</h3>
+        <button onclick="closeAcceptDealModal()" style="background:none; border:none; font-size:20px; cursor:pointer;">✕</button>
+      </div>
+
+      <div style="margin-bottom:16px; background:#f9f9f9; padding:12px; border-radius:6px; font-size:13px;">
+        <div><strong>Project ID:</strong> <span id="modal-project-id">PRJ-00000</span></div>
+        <div><strong>Client Requirement:</strong> <span id="modal-project-name">Requirement</span></div>
+      </div>
+
+      <form id="accept-deal-form" onsubmit="event.preventDefault(); submitAcceptDeal();">
+        <div style="margin-bottom:16px;">
+          <label style="font-size:11px; font-weight:700; text-transform:uppercase; color:#555;">Advance Payment Required (%) *</label>
+          <select id="deal-advance-pct" style="width:100%; padding:10px; border-radius:6px; border:1px solid #ccc; font-weight:600; margin-top:4px;">
+            <option value="15">15% Advance Payment</option>
+            <option value="20" selected>20% Advance Payment (Standard)</option>
+            <option value="25">25% Advance Payment</option>
+            <option value="30">30% Advance Payment</option>
+          </select>
+        </div>
+
+        <div style="margin-bottom:16px;">
+          <label style="font-size:11px; font-weight:700; text-transform:uppercase; color:#555;">Labor & Wage Payment Schedule *</label>
+          <select id="deal-payment-model" style="width:100%; padding:10px; border-radius:6px; border:1px solid #ccc; font-weight:600; margin-top:4px;">
+            <option value="daily">Daily Wages (Paid every evening/week)</option>
+            <option value="monthly">Monthly Salary Schedule</option>
+            <option value="milestone" selected>Milestone Basis (Stage-wise Payout)</option>
+            <option value="completion">Full Payment on Project Completion</option>
+          </select>
+        </div>
+
+        <div style="margin-bottom:20px;">
+          <label style="font-size:11px; font-weight:700; text-transform:uppercase; color:#555;">Commercial Notes / Terms for Client</label>
+          <textarea id="deal-notes" placeholder="e.g. Work begins within 3 days of advance credit. Includes 2 site engineers and certified masons." style="width:100%; min-height:80px; padding:10px; border-radius:6px; border:1px solid #ccc; font-family:inherit; margin-top:4px;"></textarea>
+        </div>
+
+        <div style="display:flex; justify-content:flex-end; gap:12px;">
+          <button type="button" class="btn btn-outline-dark" onclick="closeAcceptDealModal()">Cancel</button>
+          <button type="submit" class="btn btn-dark" style="background:#000; color:#FFD400; font-weight:700;">🚀 Approve & Accept Client Deal</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="../js/supabase-client.js"></script>
   <script src="../js/api/api-core.js"></script>
@@ -571,6 +685,7 @@
   <script src="../js/api/orders.js"></script>
   <script src="../js/api/quotes.js"></script>
   <script src="../js/api/partners.js"></script>
+  <script src="../js/api/projects.js"></script>
   <script src="../js/api/users.js"></script>
   <script src="../js/api/session-restore.js"></script>
   <script src="../js/utils/helpers.js"></script>
@@ -651,9 +766,227 @@
       document.getElementById('ref-revenue-val').textContent = `₹${(parseFloat(p.referral_revenue || 0)).toLocaleString('en-IN')}`;
       document.getElementById('ref-commission-val').textContent = `₹${(parseFloat(p.referral_commission || 0)).toLocaleString('en-IN')}`;
 
-      // Load Orders Log
+      // Load Orders Log & Leads
       await renderOrdersLog();
+      await renderVendorLeads();
+      await loadProjectEmployees('PRJ-88412');
     });
+
+    let currentModalProjectId = null;
+    let currentModalProjectName = null;
+
+    async function renderVendorLeads() {
+      const container = document.getElementById('vendor-leads-list-wrapper');
+      if (!container) return;
+      container.innerHTML = `<div style="padding:24px 0; text-align:center; color:#888;">Loading project leads...</div>`;
+
+      try {
+        const res = await ProjectsAPI.getLeads();
+        const leads = res.data || [];
+        if (leads.length === 0) {
+          container.innerHTML = `<div style="padding:32px; text-align:center; color:#888; border:1px dashed #ccc; border-radius:8px;">No open client project leads matching your region.</div>`;
+          return;
+        }
+
+        container.innerHTML = leads.map(lead => {
+          const isAccepted = lead.acceptance_status === 'accepted';
+          const statusBadge = isAccepted
+            ? `<span style="background:#00a651; color:#fff; font-size:11px; font-weight:700; padding:4px 10px; border-radius:4px; text-transform:uppercase;">ACCEPTED & IN PROGRESS</span>`
+            : `<span style="background:#ffd400; color:#000; font-size:11px; font-weight:700; padding:4px 10px; border-radius:4px; text-transform:uppercase;">OPEN LEAD — WAITING FOR VENDOR</span>`;
+
+          return `
+            <div style="background:#fff; border:1px solid #e0e0e0; border-radius:10px; padding:20px; margin-bottom:16px; box-shadow:0 2px 8px rgba(0,0,0,0.03);">
+              <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:12px; margin-bottom:12px;">
+                <div>
+                  <span style="font-family:'Space Grotesk',monospace; font-size:12px; font-weight:700; color:#888;">${lead.project_id}</span>
+                  <h3 style="margin:4px 0 2px 0; font-family:'Space Grotesk',sans-serif; font-size:18px; color:#111;">${lead.project_name}</h3>
+                  <div style="font-size:13px; color:#666;">📍 ${lead.city || 'Coimbatore'}, ${lead.state || 'Tamil Nadu'} • Tier: <strong>${lead.quality_level || 'Standard'} Quality</strong></div>
+                </div>
+                ${statusBadge}
+              </div>
+
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(140px, 1fr)); gap:12px; background:#f9f9f9; padding:12px; border-radius:6px; margin-bottom:16px; font-size:13px;">
+                <div><span style="color:#888; font-size:11px; display:block; text-transform:uppercase; font-weight:700;">Est. Budget</span> <strong>₹${parseFloat(lead.budget || 0).toLocaleString('en-IN')}</strong></div>
+                <div><span style="color:#888; font-size:11px; display:block; text-transform:uppercase; font-weight:700;">Scope / BUA</span> <strong>${lead.built_up_area || 'Custom Scope'}</strong></div>
+                <div><span style="color:#888; font-size:11px; display:block; text-transform:uppercase; font-weight:700;">Floors</span> <strong>${lead.floors || 1} Floor(s)</strong></div>
+                <div><span style="color:#888; font-size:11px; display:block; text-transform:uppercase; font-weight:700;">Created On</span> <strong>${new Date(lead.created_at || Date.now()).toLocaleDateString('en-IN')}</strong></div>
+              </div>
+
+              <p style="font-size:13px; color:#555; margin-bottom:16px; line-height:1.5;">${lead.description || 'Client requirement launched via OH I SEE AI Construction Engine.'}</p>
+
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; border-top:1px solid #f0f0f0; padding-top:12px;">
+                <div style="font-size:12px; color:#666;">Contact OH I SEE Desk for direct buyer coordination</div>
+                <div>
+                  ${isAccepted ? `
+                    <button class="btn btn-outline-dark btn-sm" onclick="switchSectionToEmployees('${lead.project_id}')">👷 Manage Site Employees</button>
+                  ` : `
+                    <button class="btn btn-dark btn-sm" style="background:#000; color:#FFD400;" onclick="openAcceptDealModal('${lead.project_id}', '${lead.project_name.replace(/'/g, "\\'")}')">🤝 Review & Accept Deal</button>
+                  `}
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (err) {
+        container.innerHTML = `<div style="padding:24px; text-align:center; color:var(--danger);">Failed to load leads: ${err.message}</div>`;
+      }
+    }
+
+    function openAcceptDealModal(projectId, projectName) {
+      currentModalProjectId = projectId;
+      currentModalProjectName = projectName;
+      document.getElementById('modal-project-id').textContent = projectId;
+      document.getElementById('modal-project-name').textContent = projectName;
+      document.getElementById('accept-deal-modal').style.display = 'flex';
+    }
+
+    function closeAcceptDealModal() {
+      document.getElementById('accept-deal-modal').style.display = 'none';
+    }
+
+    async function submitAcceptDeal() {
+      if (!currentModalProjectId) return;
+      const advancePct = document.getElementById('deal-advance-pct').value;
+      const paymentModel = document.getElementById('deal-payment-model').value;
+      const notes = document.getElementById('deal-notes').value;
+
+      showToast('Transmitting deal acceptance to client...', 'info');
+
+      try {
+        const res = await ProjectsAPI.acceptDeal(currentModalProjectId, {
+          advance_percentage: advancePct,
+          payment_model: paymentModel,
+          notes
+        });
+
+        if (res.error) throw new Error(res.error);
+
+        showToast('Deal accepted successfully! Client notified.', 'success');
+        closeAcceptDealModal();
+        await renderVendorLeads();
+      } catch (err) {
+        showToast(err.message || 'Failed to accept deal', 'error');
+      }
+    }
+
+    function switchSectionToEmployees(projectId) {
+      const empLink = document.querySelector(`.dashboard-nav a[data-section="employees-section"]`);
+      if (empLink) empLink.click();
+      const sel = document.getElementById('employee-project-select');
+      if (sel) {
+        let optExists = Array.from(sel.options).some(o => o.value === projectId);
+        if (!optExists) {
+          const opt = document.createElement('option');
+          opt.value = projectId;
+          opt.textContent = `${projectId} (Active Project)`;
+          sel.appendChild(opt);
+        }
+        sel.value = projectId;
+        loadProjectEmployees(projectId);
+      }
+    }
+
+    async function loadProjectEmployees(projectId) {
+      const container = document.getElementById('project-employees-list-wrapper');
+      if (!container) return;
+      container.innerHTML = `<div style="padding:24px 0; text-align:center; color:#888;">Loading assigned workers...</div>`;
+
+      try {
+        const res = await ProjectsAPI.getEmployees(projectId);
+        const list = res.data || [];
+        if (list.length === 0) {
+          container.innerHTML = `
+            <div style="padding:32px; text-align:center; color:#888; border:1px dashed #ccc; border-radius:8px;">
+              No site workers assigned yet. Use the form above to add engineers, masons, electricians, and laborers.
+            </div>
+          `;
+          return;
+        }
+
+        const wageLabels = { daily: 'Per Day (Daily)', monthly: 'Per Month (Monthly)', completion: 'Milestone / Completion' };
+
+        container.innerHTML = `
+          <div style="overflow-x:auto;">
+            <table class="specs-table" style="width:100%; background:#fff; border-radius:8px; overflow:hidden;">
+              <thead>
+                <tr>
+                  <th>Emp ID</th>
+                  <th>Name</th>
+                  <th>Role / Skill</th>
+                  <th>Wage Type</th>
+                  <th>Wage Rate</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${list.map(emp => `
+                  <tr>
+                    <td><strong>${emp.emp_id}</strong></td>
+                    <td>${emp.employee_name}</td>
+                    <td><span style="background:#f0f0f0; padding:2px 8px; border-radius:4px; font-size:12px; font-weight:600;">${emp.role}</span></td>
+                    <td>${wageLabels[emp.wage_type] || emp.wage_type}</td>
+                    <td style="color:#00a651; font-weight:700; font-family:'Space Grotesk',monospace;">₹${parseFloat(emp.wage_rate || 0).toLocaleString('en-IN')}</td>
+                    <td><span style="color:#00a651; font-weight:700; text-transform:uppercase; font-size:11px;">Active</span></td>
+                    <td>
+                      <button class="btn btn-outline-dark btn-sm" style="color:var(--danger); border-color:#ffcccc; padding:2px 8px;" onclick="handleRemoveEmployee('${projectId}', '${emp.emp_id}')">Remove</button>
+                    </td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        `;
+      } catch (err) {
+        container.innerHTML = `<div style="padding:24px; text-align:center; color:var(--danger);">Failed to load employees: ${err.message}</div>`;
+      }
+    }
+
+    async function handleAssignEmployee() {
+      const sel = document.getElementById('employee-project-select');
+      const projectId = sel ? sel.value : 'PRJ-88412';
+      const name = document.getElementById('emp-name').value.trim();
+      const role = document.getElementById('emp-role').value;
+      const wageType = document.getElementById('emp-wage-type').value;
+      const wageRate = document.getElementById('emp-wage-rate').value;
+
+      if (!name) {
+        showToast('Please enter employee name', 'error');
+        return;
+      }
+
+      showToast('Assigning site worker...', 'info');
+
+      try {
+        const res = await ProjectsAPI.assignEmployee(projectId, {
+          employee_name: name,
+          role,
+          wage_type: wageType,
+          wage_rate: wageRate
+        });
+
+        if (res.error) throw new Error(res.error);
+
+        showToast(`${name} assigned to ${projectId} successfully!`, 'success');
+        document.getElementById('emp-name').value = '';
+        document.getElementById('emp-wage-rate').value = '';
+        await loadProjectEmployees(projectId);
+      } catch (err) {
+        showToast(err.message || 'Failed to assign worker', 'error');
+      }
+    }
+
+    async function handleRemoveEmployee(projectId, empId) {
+      if (confirm('Remove this worker from the project ledger?')) {
+        try {
+          await ProjectsAPI.removeEmployee(projectId, empId);
+          showToast('Worker removed from project', 'info');
+          await loadProjectEmployees(projectId);
+        } catch (err) {
+          showToast('Failed to remove worker', 'error');
+        }
+      }
+    }
 
     async function renderOrdersLog() {
       const container = document.getElementById('orders-list-wrapper');

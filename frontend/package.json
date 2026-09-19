@@ -2,6 +2,9 @@
   "name": "ohisee-frontend",
   "version": "1.0.0",
   "description": "OH I SEE Industrial Solutions — Frontend",
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -9,5 +12,8 @@
   },
   "devDependencies": {
     "vite": "^5.2.0"
+  },
+  "dependencies": {
+    "three": "^0.170.0"
   }
 }

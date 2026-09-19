@@ -1,0 +1,11 @@
+const test=require('node:test');const assert=require('node:assert/strict');const fs=require('node:fs');
+const {validateSpecification,validateInput,validateUpload,renderOptions}=require('../src/services/design3d/specification');
+const fixture=()=>JSON.parse(fs.readFileSync(__dirname+'/fixtures/design3d-modern.json','utf8').replace(/^\uFEFF/,''));
+test('valid specification is copied without mutation',()=>{let s=fixture(),r=validateSpecification(s);assert.deepEqual(s,r);assert.notEqual(s,r)});
+test('rejects arbitrary AI fields and executable operations',()=>{let s=fixture();s.python='import os';assert.throws(()=>validateSpecification(s),/Invalid construction/)});
+test('rejects unsupported balcony floors',()=>{let s=fixture();s.features.balconyCount=3;assert.throws(()=>validateSpecification(s),e=>e.code==='CLARIFICATION_REQUIRED')});
+test('asks for clarification when footprint exceeds plot',()=>{let s=fixture();s.plot.area=500;assert.throws(()=>validateSpecification(s),e=>e.code==='CLARIFICATION_REQUIRED')});
+test('rejects overlapping floor plan rooms before Blender',()=>{let s=fixture();s.layout=[{id:'a',type:'living',floor:0,x:0,y:0,width:3,depth:3},{id:'b',type:'bedroom',floor:0,x:1,y:1,width:3,depth:3}];assert.throws(()=>validateSpecification(s),/overlapping/) });
+test('rejects invalid render resource requests',()=>{for(const r of [{width:9000},{samples:10000},{height:NaN}])assert.throws(()=>renderOptions(r));assert.equal(renderOptions({}).exportGlb,true)});
+test('validates prompt and numeric input',()=>{assert.throws(()=>validateInput({prompt:' '}));assert.throws(()=>validateInput({prompt:'home',plotWidth:'Infinity'}));assert.equal(validateInput({prompt:' home ',plotWidth:'40'}).inputs.plotWidth,40)});
+test('checks upload content instead of trusting file extension',()=>{assert.throws(()=>validateUpload({name:'plan.png',data:Buffer.from('<script>alert(1)</script>').toString('base64')}));const r=validateUpload({name:'../../evil.pdf',data:Buffer.from('%PDF-1.7\nfixture').toString('base64')});assert.equal(r.name,'floor-plan.pdf');assert.equal(r.type,'application/pdf')});

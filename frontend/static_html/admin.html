@@ -1,0 +1,1197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Administrative control center for OH I SEE. Manage products, update logistics, approve corporate quotations, and view revenue analytics.">
+  <title>Admin Portal — OH I SEE Industrial Solutions</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="images/logo.png" type="image/png">
+  <style>
+    /* Admin custom classes to override main site colors for dark dashboard vibe */
+    .admin-nav a.active {
+      background: var(--primary) !important;
+      color: var(--secondary) !important;
+    }
+    .admin-section {
+      display: none;
+    }
+    .admin-section.active {
+      display: block;
+    }
+    /* Status pills in tables */
+    .status-pill {
+      font-size: 11px;
+      font-family: var(--font-industrial);
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: var(--radius-full);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: inline-block;
+    }
+    .badge-admin-instock { background:#e8f5e9; color:var(--success); }
+    .badge-admin-limited { background:#fff3e0; color:var(--warning); }
+    .badge-admin-out { background:#fce4ec; color:var(--danger); }
+  </style>
+</head>
+<body>
+
+  <!-- Page Loader -->
+  <div class="page-loader">
+    <div class="loader-logo"><img src="images/logo.png" alt="OH I SEE"></div>
+    <div class="loader-text">OH I SEE</div>
+    <div class="loader-bar"></div>
+  </div>
+
+  <!-- Mobile Nav Overlay -->
+  <div class="mobile-nav-overlay">
+    <div class="mobile-nav-panel">
+      <button class="mobile-nav-close">✕</button>
+      <div class="mobile-nav-links">
+        <a href="index.html">Home</a>
+        <a href="products.html">Products</a>
+        <a href="products.html?cat=Electrical">Electrical</a>
+        <a href="products.html?cat=Plumbing">Plumbing</a>
+        <a href="products.html?cat=Hardware">Hardware</a>
+        <a href="products.html?cat=Industrial">Industrial</a>
+        <a href="bulk-quote.html">Bulk Quotation</a>
+        <a href="about.html">About Us</a>
+        <a href="contact.html">Contact</a>
+        <a href="login.html">Login / Register</a>
+        <a href="account.html">My Account</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-top">
+      <a href="index.html" class="header-logo">
+        <img src="images/logo.png" alt="OH I SEE">
+        <span class="header-logo-text">OH I SEE</span>
+      </a>
+      <span style="font-family:'Space Grotesk',monospace; font-weight:700; font-size:11px; text-transform:uppercase; letter-spacing:3px; color:#fff; background:#444; padding:4px 10px; border-radius:4px;">ADMIN PORTAL</span>
+      <div class="header-actions">
+        <a href="login.html" class="btn-request-quote" style="background:#444; color:#fff !important;">Logout</a>
+      </div>
+      <button class="mobile-menu-toggle">☰</button>
+    </div>
+  </header>
+
+  <!-- Admin Layout -->
+  <div class="admin-layout">
+    <!-- Left Sidebar -->
+    <aside class="admin-sidebar">
+      <h3>Operations Console</h3>
+      <nav class="admin-nav">
+        <a href="#" class="active" data-section="admin-dash"><span>📊</span> Dashboard Overview</a>
+        <a href="#" data-section="admin-products"><span>📦</span> Products Inventory</a>
+        <a href="#" data-section="admin-orders"><span>🚚</span> Orders Pipeline</a>
+        <a href="#" data-section="admin-quotes"><span>📋</span> Quotation Review</a>
+        <a href="#" data-section="admin-partners"><span>🤝</span> Partner Management</a>
+        <a href="#" data-section="admin-reports"><span>📈</span> Analytics Reports</a>
+      </nav>
+      <h3>Configuration</h3>
+      <nav class="admin-nav">
+        <a href="#" onclick="showToast('Admin Settings simulated.', 'info')"><span>⚙️</span> Portal Settings</a>
+      </nav>
+    </aside>
+
+    <!-- Main Content Panel -->
+    <main class="admin-main">
+      
+      <!-- SECTION 1: Dashboard Overview -->
+      <div class="admin-section active" id="admin-dash">
+        <div class="admin-header">
+          <h1>Operations Overview</h1>
+          <div style="font-size:14px; font-family:'Space Grotesk',monospace; font-weight:600;">System Clock: 2026-06-20</div>
+        </div>
+
+        <!-- Overview stats cards -->
+        <div class="admin-stats">
+          <div class="admin-stat-card">
+            <div class="stat-icon" style="background:#e3f2fd; color:#2196f3;">💰</div>
+            <div class="stat-value" id="stat-revenue">₹1,85,450</div>
+            <div class="stat-label">Total Revenue (₹)</div>
+            <div class="stat-change positive">↑ 12.4%</div>
+          </div>
+          <div class="admin-stat-card">
+            <div class="stat-icon" style="background:#ede7f6; color:#673ab7;">🏷️</div>
+            <div class="stat-value" id="stat-products">0</div>
+            <div class="stat-label">Total Products</div>
+            <div class="stat-change positive">Active SKUs</div>
+          </div>
+          <div class="admin-stat-card">
+            <div class="stat-icon" style="background:#e8f5e9; color:#4caf50;">📦</div>
+            <div class="stat-value" id="stat-orders">0</div>
+            <div class="stat-label">Total Orders</div>
+            <div class="stat-change positive">↑ 4.2%</div>
+          </div>
+          <div class="admin-stat-card">
+            <div class="stat-icon" style="background:#fff3e0; color:#ff9800;">📋</div>
+            <div class="stat-value" id="stat-quotes">0</div>
+            <div class="stat-label">Pending Quotes</div>
+            <div class="stat-change negative">↓ 1.5%</div>
+          </div>
+          <div class="admin-stat-card">
+            <div class="stat-icon" style="background:#efebe9; color:#795548;">⚠️</div>
+            <div class="stat-value" id="stat-low-stock">3</div>
+            <div class="stat-label">Low Stock items</div>
+            <div class="stat-change" style="background:#ffebee; color:#c62828;">Critical</div>
+          </div>
+        </div>
+
+        <!-- Analytics Charts -->
+        <div class="admin-chart-grid">
+          <div class="admin-chart">
+            <h3 style="font-family:'Space Grotesk',monospace; text-transform:uppercase; font-size:14px; margin-bottom:16px;">Sales Trend Pipeline (Monthly)</h3>
+            <div class="chart-container">
+              <canvas id="salesChart"></canvas>
+            </div>
+          </div>
+          <div class="admin-chart">
+            <h3 style="font-family:'Space Grotesk',monospace; text-transform:uppercase; font-size:14px; margin-bottom:16px;">Procurement Categories Ratio</h3>
+            <div class="chart-container">
+              <canvas id="categoryChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 2: Products Inventory -->
+      <div class="admin-section" id="admin-products">
+        <div class="admin-header">
+          <h1>Staged Products Listing</h1>
+          <button class="btn btn-primary btn-sm" onclick="openProductModal()">➕ Add Stock Product</button>
+        </div>
+
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <h3 id="admin-products-header">Registered SKU Inventory</h3>
+          </div>
+          <div style="overflow-x:auto;">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>SKU Code</th>
+                  <th>Product Detail</th>
+                  <th>Category</th>
+                  <th>Supplier/Brand</th>
+                  <th>Price/Unit</th>
+                  <th>Staged Quantity</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="admin-product-rows">
+                <!-- Populated dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 3: Orders Pipeline -->
+      <div class="admin-section" id="admin-orders">
+        <div class="admin-header">
+          <h1>Logistic Orders Pipeline</h1>
+        </div>
+
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <h3>Incoming Orders logs</h3>
+          </div>
+          <div style="overflow-x:auto;">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Date</th>
+                  <th>Items Details</th>
+                  <th>GST Invoice Total</th>
+                  <th>Logistic Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="admin-order-rows">
+                <!-- Populated by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 4: Quotation Review -->
+      <div class="admin-section" id="admin-quotes">
+        <div class="admin-header">
+          <h1>Corporate Quotation requests</h1>
+        </div>
+
+        <div class="admin-card">
+          <div class="admin-card-header">
+            <h3>Pending Bulk RFQs</h3>
+          </div>
+          <div style="overflow-x:auto;">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Quote ID</th>
+                  <th>Project Name</th>
+                  <th>Date</th>
+                  <th>Company / GSTIN</th>
+                  <th>Budget Category</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="admin-quote-rows">
+                <!-- Populated by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 5: Partner Management -->
+      <div class="admin-section" id="admin-partners">
+        <div class="admin-header">
+          <h1>Partner Ecosystem Management</h1>
+        </div>
+
+        <div style="display: flex; gap: 12px; margin-bottom: 20px;">
+          <button class="btn btn-dark btn-sm partner-tab active" id="btn-partner-tab-pending" onclick="switchPartnerSubTab('pending')">Pending Applications</button>
+          <button class="btn btn-outline-dark btn-sm partner-tab" id="btn-partner-tab-approved" onclick="switchPartnerSubTab('approved')">Approved Partners</button>
+          <button class="btn btn-outline-dark btn-sm partner-tab" id="btn-partner-tab-rejected" onclick="switchPartnerSubTab('rejected')">Rejected/Suspended</button>
+        </div>
+
+        <!-- Sub-section: Pending -->
+        <div class="admin-card partner-sub-section" id="partner-sub-pending">
+          <div class="admin-card-header"><h3>Pending Partner Approvals</h3></div>
+          <div style="overflow-x:auto;">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Contact Details</th>
+                  <th>Company & Category</th>
+                  <th>GSTIN / PAN</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="admin-partner-pending-rows">
+                <!-- JS populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Sub-section: Approved -->
+        <div class="admin-card partner-sub-section" id="partner-sub-approved" style="display:none;">
+          <div class="admin-card-header"><h3>Active Approved Partners</h3></div>
+          <div style="overflow-x:auto;">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name & Company</th>
+                  <th>Type & Tier</th>
+                  <th>GSTIN / PAN</th>
+                  <th>Purchase Volume</th>
+                  <th>Reward Points</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="admin-partner-approved-rows">
+                <!-- JS populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Sub-section: Rejected -->
+        <div class="admin-card partner-sub-section" id="partner-sub-rejected" style="display:none;">
+          <div class="admin-card-header"><h3>Rejected / Suspended Applications</h3></div>
+          <div style="overflow-x:auto;">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name & Company</th>
+                  <th>Type & GSTIN</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="admin-partner-rejected-rows">
+                <!-- JS populated -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 6: Analytics Reports -->
+      <div class="admin-section" id="admin-reports">
+        <div class="admin-header">
+          <h1>Financial & SKU Audit Reports</h1>
+          <button class="btn btn-dark btn-sm" onclick="showToast('Exporting Excel Sheets...', 'success')">📄 Export Audit Sheet (CSV)</button>
+        </div>
+
+        <div class="admin-card" style="padding:24px;">
+          <h3>Procurement Metrics (FY 2026)</h3>
+          <p style="color:#666; margin-bottom:24px;">Audit log of GST declarations, shipping pipeline yields, and category gross margins.</p>
+          
+          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px;">
+            <div style="background:#f9f9f9; padding:20px; border-radius:8px;">
+              <h4 style="font-family:'Space Grotesk',monospace; font-size:13px; text-transform:uppercase; margin-bottom:8px;">Integrated GST Collections</h4>
+              <div style="font-size:24px; font-weight:700;">₹42,390</div>
+              <p style="font-size:12px; color:var(--success); margin-top:4px;">100% compliant with GSTR-1</p>
+            </div>
+            
+            <div style="background:#f9f9f9; padding:20px; border-radius:8px;">
+              <h4 style="font-family:'Space Grotesk',monospace; font-size:13px; text-transform:uppercase; margin-bottom:8px;">Logistics Handover Yield</h4>
+              <div style="font-size:24px; font-weight:700;">99.8%</div>
+              <p style="font-size:12px; color:var(--success); margin-top:4px;">No claims of damaged transit</p>
+            </div>
+
+            <div style="background:#f9f9f9; padding:20px; border-radius:8px;">
+              <h4 style="font-family:'Space Grotesk',monospace; font-size:13px; text-transform:uppercase; margin-bottom:8px;">Quotation Success Ratio</h4>
+              <div style="font-size:24px; font-weight:700;">64.2%</div>
+              <p style="font-size:12px; color:var(--info); margin-top:4px;">Drafts accepted by commercial buyers</p>
+            </div>
+          </div>
+
+          <h3 style="margin-top:32px; border-top:1px solid var(--border-color); padding-top:24px;">Partner Ecosystem Reports</h3>
+          <p style="color:#666; margin-bottom:24px;">Metrics on partner procurement volumes, commissions pending/paid, active reward allocations, insurance, and referral revenues.</p>
+          
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:16px;">
+            <div style="background:#f9f9f9; padding:20px; border-radius:8px;">
+              <h4 style="font-family:'Space Grotesk',monospace; font-size:13px; text-transform:uppercase; margin-bottom:8px;">Cumulative Partner Sales</h4>
+              <div style="font-size:24px; font-weight:700;" id="report-partner-sales">₹0</div>
+              <p style="font-size:12px; color:var(--success); margin-top:4px;">Generated by Ecosystem</p>
+            </div>
+            
+            <div style="background:#f9f9f9; padding:20px; border-radius:8px;">
+              <h4 style="font-family:'Space Grotesk',monospace; font-size:13px; text-transform:uppercase; margin-bottom:8px;">Total Partner Commissions</h4>
+              <div style="font-size:24px; font-weight:700;" id="report-partner-commissions">₹0</div>
+              <p style="font-size:12px; color:var(--info); margin-top:4px;">Paid & Staged payout cycles</p>
+            </div>
+
+            <div style="background:#f9f9f9; padding:20px; border-radius:8px;">
+              <h4 style="font-family:'Space Grotesk',monospace; font-size:13px; text-transform:uppercase; margin-bottom:8px;">Allocated Reward Points</h4>
+              <div style="font-size:24px; font-weight:700;" id="report-partner-points">0 Points</div>
+              <p style="font-size:12px; color:#555; margin-top:4px;">Awaiting catalogue redemption</p>
+            </div>
+
+            <div style="background:#f9f9f9; padding:20px; border-radius:8px;">
+              <h4 style="font-family:'Space Grotesk',monospace; font-size:13px; text-transform:uppercase; margin-bottom:8px;">Referral System Revenue</h4>
+              <div style="font-size:24px; font-weight:700;" id="report-referral-revenue">₹0</div>
+              <p style="font-size:12px; color:var(--success); margin-top:4px;">Sales from referred signups</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom" style="border-top:none; padding-bottom:24px;">
+        © 2024 OH I SEE Admin Terminal. Full ISO 27001 Security Standard Active. Coimbatore, Tamil Nadu.
+      </div>
+    </div>
+  </footer>
+
+  <!-- Add/Edit Product Modal -->
+  <div class="modal-overlay" id="product-modal-overlay">
+    <div class="modal" style="max-width: 650px;">
+      <div class="modal-header">
+        <h3 id="product-modal-title">Staging Product Data</h3>
+        <button class="modal-close" onclick="closeProductModal()">✕</button>
+      </div>
+      <div class="modal-body" style="padding: 20px; max-height: 75vh; overflow-y: auto;">
+        <form id="product-form" onsubmit="saveProduct(event)">
+          <input type="hidden" id="prod-form-id">
+          
+          <!-- Basic Information -->
+          <h4 style="font-family:'Space Grotesk',monospace; text-transform:uppercase; font-size:12px; color:var(--secondary); background:var(--primary); padding:6px 12px; margin-bottom:12px; border-radius:4px; font-weight:700;">Basic Information</h4>
+          
+          <div class="form-group">
+            <label>Product Images *</label>
+            <input type="file" id="prod-form-images" multiple accept="image/*" onchange="previewImages()">
+            <div id="image-preview-container" style="display:flex; gap:8px; margin-top:8px; flex-wrap:wrap;"></div>
+            <div style="font-size:11px; color:#666; margin-top:4px;">Select one or more images. (Simulation: category placeholder image will be used if uploaded)</div>
+          </div>
+
+          <div class="form-group">
+            <label>Product Name *</label>
+            <input type="text" id="prod-form-name" placeholder="e.g. IC900 Circuit Breaker 15A" required>
+            <div id="name-validation-err" style="color:var(--danger); font-size:12px; margin-top:4px; display:none;">Product Name cannot be empty.</div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Category *</label>
+              <select id="prod-form-category" required>
+                <option value="">-- Select Category --</option>
+                <option value="Electrical">Electrical</option>
+                <option value="Plumbing">Plumbing</option>
+                <option value="Hardware">Hardware Tools</option>
+                <option value="Industrial">Safety & Industrial</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Brand *</label>
+              <input type="text" id="prod-form-brand" placeholder="e.g. Schneider Electric" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>SKU Code *</label>
+              <input type="text" id="prod-form-sku" placeholder="e.g. IND-EL-9022" required>
+              <div id="sku-validation-err" style="color:var(--danger); font-size:12px; margin-top:4px; display:none;">Duplicate SKU is not allowed.</div>
+            </div>
+            <div class="form-group">
+              <label>Unit Type *</label>
+              <input type="text" id="prod-form-unit" placeholder="e.g. Pieces, Roll, Meter" value="Pieces" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Product Description</label>
+            <textarea id="prod-form-desc" placeholder="Describe the technical details..." style="min-height:80px;"></textarea>
+          </div>
+
+          <!-- Pricing -->
+          <h4 style="font-family:'Space Grotesk',monospace; text-transform:uppercase; font-size:12px; color:var(--secondary); background:var(--primary); padding:6px 12px; margin-bottom:12px; border-radius:4px; margin-top:16px; font-weight:700;">Pricing</h4>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label>Product Price (₹) *</label>
+              <input type="number" id="prod-form-price" placeholder="e.g. 2450" required min="0.01" step="any">
+              <div id="price-validation-err" style="color:var(--danger); font-size:12px; margin-top:4px; display:none;">Product Price must be greater than zero.</div>
+            </div>
+            <div class="form-group">
+              <label>Original/Discount Price (₹)</label>
+              <input type="number" id="prod-form-discount-price" placeholder="e.g. 2800" min="0" step="any">
+            </div>
+            <div class="form-group">
+              <label>GST Percentage (%)</label>
+              <input type="number" id="prod-form-gst" placeholder="e.g. 18" value="18" min="0">
+            </div>
+          </div>
+
+          <!-- Inventory -->
+          <h4 style="font-family:'Space Grotesk',monospace; text-transform:uppercase; font-size:12px; color:var(--secondary); background:var(--primary); padding:6px 12px; margin-bottom:12px; border-radius:4px; margin-top:16px; font-weight:700;">Inventory & Status</h4>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label>Available Stock *</label>
+              <input type="number" id="prod-form-stock" placeholder="e.g. 100" required min="0" value="100">
+            </div>
+            <div class="form-group">
+              <label>Minimum Order Qty</label>
+              <input type="number" id="prod-form-moq" placeholder="e.g. 5" min="1" value="1">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Staging Status</label>
+            <select id="prod-form-status">
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+              <option value="outofstock">Out of Stock</option>
+            </select>
+          </div>
+
+          <!-- Buttons -->
+          <div class="product-action-btns" style="margin-top:24px; border-top:1px solid var(--border-color); padding-top:16px; display:flex; justify-content:flex-end; gap:12px;">
+            <button type="button" class="btn btn-outline-dark" onclick="closeProductModal()">Cancel</button>
+            <button type="button" class="btn btn-outline" style="border-color:#ccc; color:#333;" onclick="saveProductDraft()">Save as Draft</button>
+            <button type="submit" class="btn btn-primary">Publish Product</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Include Chart.js via CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="products-data.js?v=1.0.2"></script>
+  <script src="app.js?v=1.0.2"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Direct Admin access verification
+      const user = Security.getCurrentUser();
+      const role = Security.getCurrentRole();
+      
+      if (role !== 'Super Admin' && role !== 'Admin') {
+        // Block access and render 403 Access Denied template
+        document.body.innerHTML = `
+          <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; background:#111; color:#fff; font-family:'Space Grotesk', monospace; text-align:center; padding: 24px;">
+            <div style="font-size:120px; color:#FFD400; margin-bottom:16px; font-weight:700;">403</div>
+            <h1 style="font-size:32px; text-transform:uppercase; letter-spacing:2px; margin-bottom:12px;">HTTP 403 - Access Denied</h1>
+            <p style="color:#aaa; font-size:16px; max-width:480px; margin-bottom:32px; line-height:1.6;">You do not have permission to manage products.</p>
+            <a href="index.html" class="btn btn-primary" style="padding: 12px 24px;">Return to Terminal Home</a>
+          </div>
+        `;
+        return;
+      }
+
+      // Populate dashboard records
+      refreshAdminData();
+
+      // Render Charts
+      initCharts();
+    });
+
+    function refreshAdminData() {
+      // Products Table
+      const productBody = document.getElementById('admin-product-rows');
+      productBody.innerHTML = PRODUCTS.map(p => {
+        const stockStatus = p.stock === 'instock' || p.stock === 'active' ? 'badge-admin-instock' :
+                            p.stock === 'limited' ? 'badge-admin-limited' : 'badge-admin-out';
+        const stockLabel = p.stock === 'instock' || p.stock === 'active' ? 'In Stock' :
+                           p.stock === 'limited' ? 'Limited' : p.stock === 'inactive' ? 'Inactive/Draft' : 'Out of Stock';
+
+        return `
+          <tr id="admin-prod-row-${p.id}">
+            <td style="width:60px; height:60px; padding: 8px;"><img src="${p.image}" style="width:100%; height:100%; object-fit:cover; border-radius:4px;"></td>
+            <td style="font-family:'Space Grotesk',monospace; font-weight:600; font-size:13px;">${p.sku}</td>
+            <td><strong>${p.name}</strong></td>
+            <td>${p.category}</td>
+            <td>${p.brand}</td>
+            <td>₹${p.price.toLocaleString('en-IN')}</td>
+            <td>
+              <span class="status-pill ${stockStatus}">${p.stockQty} units (${stockLabel})</span>
+            </td>
+            <td>
+              <div style="display:flex; gap:6px;">
+                <a href="product-detail.html?id=${p.id}" target="_blank" class="btn btn-outline btn-sm" style="border-color:#ccc; color:#333; padding:4px 8px;">View</a>
+                <button class="btn btn-outline btn-sm" style="border-color:#ccc; color:#333; padding:4px 8px;" onclick="openProductModal(${p.id})">Edit</button>
+                <button class="btn btn-outline btn-sm" style="border-color:var(--danger); color:var(--danger); padding:4px 8px;" onclick="deleteProduct(${p.id})">Delete</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      // Orders Table
+      const orders = JSON.parse(localStorage.getItem('ohisee_orders')) || [];
+      document.getElementById('stat-orders').textContent = orders.length;
+      
+      const ordersBody = document.getElementById('admin-order-rows');
+      if (orders.length === 0) {
+        ordersBody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#999;">No logistic orders registered.</td></tr>';
+      } else {
+        ordersBody.innerHTML = orders.map(ord => {
+          let itemsDesc = ord.items.map(it => `${it.name} (x${it.qty})`).join(', ');
+          if (itemsDesc.length > 50) itemsDesc = itemsDesc.substring(0, 47) + '...';
+
+          const selectVal = ord.status;
+          
+          return `
+            <tr id="admin-order-row-${ord.orderId}">
+              <td style="font-family:'Space Grotesk',monospace; font-weight:700;">${ord.orderId}</td>
+              <td>${ord.date}</td>
+              <td style="font-size:13px; color:#555;">${itemsDesc}</td>
+              <td style="font-family:'Space Grotesk',monospace; font-weight:700;">₹${ord.total.toLocaleString('en-IN')}</td>
+              <td>
+                <select style="padding:6px 12px; border:1px solid #ccc; border-radius:4px;" onchange="updateOrderStatus('${ord.orderId}', this.value)">
+                  <option value="pending" ${selectVal==='pending'?'selected':''}>Pending</option>
+                  <option value="processing" ${selectVal==='processing'?'selected':''}>Processing</option>
+                  <option value="shipped" ${selectVal==='shipped'?'selected':''}>Shipped</option>
+                  <option value="delivered" ${selectVal==='delivered'?'selected':''}>Delivered</option>
+                  <option value="cancelled" ${selectVal==='cancelled'?'selected':''}>Cancelled</option>
+                </select>
+              </td>
+              <td>
+                <button class="btn btn-outline btn-sm" style="border-color:#ccc; color:#333;" onclick="showToast('Audit report printed.', 'success')">Print</button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      // Quotations Table
+      const quotes = JSON.parse(localStorage.getItem('ohisee_quotations')) || [];
+      document.getElementById('stat-quotes').textContent = quotes.length;
+
+      const quotesBody = document.getElementById('admin-quote-rows');
+      if (quotes.length === 0) {
+        quotesBody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#999;">No bulk quote requests active.</td></tr>';
+      } else {
+        quotesBody.innerHTML = quotes.map(q => {
+          const selectVal = q.status;
+          return `
+            <tr id="admin-quote-row-${q.quoteId}">
+              <td style="font-family:'Space Grotesk',monospace; font-weight:700;">${q.quoteId}</td>
+              <td><strong>${q.projectName}</strong></td>
+              <td>${q.date}</td>
+              <td style="font-size:13px;">${q.company}</td>
+              <td style="font-size:13px;">${q.budget}</td>
+              <td>
+                <select style="padding:6px 12px; border:1px solid #ccc; border-radius:4px;" onchange="updateQuoteStatus('${q.quoteId}', this.value)">
+                  <option value="pending" ${selectVal==='pending'?'selected':''}>Review Draft</option>
+                  <option value="delivered" ${selectVal==='delivered'?'selected':''}>Pricing Staged</option>
+                </select>
+              </td>
+              <td>
+                <button class="btn btn-dark btn-sm" onclick="showToast('Quote proposal email dispatched!', 'success')">Dispath Price</button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      // Dynamic Total Products count
+      document.getElementById('stat-products').textContent = PRODUCTS.length.toLocaleString('en-IN');
+      document.getElementById('admin-products-header').textContent = `Registered SKU Inventory (${PRODUCTS.length} Total)`;
+
+      // Calculate low stock items count
+      const lowStockCount = PRODUCTS.filter(p => p.stockQty <= 25).length;
+      document.getElementById('stat-low-stock').textContent = lowStockCount;
+
+      // Calculate total revenue
+      const totalRev = orders.reduce((sum, ord) => sum + (ord.status !== 'cancelled' ? ord.total : 0), 0) + 124000;
+      document.getElementById('stat-revenue').textContent = `₹${totalRev.toLocaleString('en-IN')}`;
+
+      // Load Partner Management lists
+      renderPartnerManagement();
+    }
+
+    // Switch between Partner sub-tabs (Pending, Approved, Rejected)
+    window.switchPartnerSubTab = function(sub) {
+      document.querySelectorAll('.partner-tab').forEach(btn => {
+        btn.classList.remove('active', 'btn-dark');
+        btn.classList.add('btn-outline-dark');
+      });
+      
+      const activeBtn = document.getElementById(`btn-partner-tab-${sub}`);
+      if (activeBtn) {
+        activeBtn.classList.add('active', 'btn-dark');
+        activeBtn.classList.remove('btn-outline-dark');
+      }
+
+      document.querySelectorAll('.partner-sub-section').forEach(sec => sec.style.display = 'none');
+      document.getElementById(`partner-sub-${sub}`).style.display = 'block';
+    };
+
+    // Render Partner Lists & Analytics Report Metrics
+    function renderPartnerManagement() {
+      const partners = JSON.parse(localStorage.getItem('ohisee_partners')) || [];
+
+      // Pending rows
+      const pendingRows = document.getElementById('admin-partner-pending-rows');
+      const pendingList = partners.filter(p => p.partnerStatus === 'pending');
+      if (pendingList.length === 0) {
+        pendingRows.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#999; padding: 16px;">No pending partner applications.</td></tr>';
+      } else {
+        pendingRows.innerHTML = pendingList.map(p => `
+          <tr>
+            <td style="font-family:\'Space Grotesk\',monospace; font-weight:700;">#${p.id}</td>
+            <td>
+              <strong>${p.name}</strong><br>
+              <span style="font-size:11px; color:#555;">${p.email} · ${p.phone}</span>
+            </td>
+            <td>
+              <strong>${p.company}</strong><br>
+              <span style="font-size:11px; color:#666;">${p.partnerType}</span>
+            </td>
+            <td style="font-family:\'Space Grotesk\',monospace; font-size:12px;">
+              GST: ${p.gst || p.gstin || 'N/A'}<br>
+              PAN: ${p.pan || 'N/A'}
+            </td>
+            <td>
+              <span class="status-pill" style="background:#fff3cd; color:#856404;">Pending Review</span>
+            </td>
+            <td>
+              <div style="display:flex; gap:6px;">
+                <button class="btn btn-primary btn-sm" style="color:#000;" onclick="approvePartner(${p.id})">Approve</button>
+                <button class="btn btn-outline-dark btn-sm" style="border-color:var(--danger); color:var(--danger);" onclick="rejectPartner(${p.id})">Reject</button>
+              </div>
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      // Approved rows
+      const approvedRows = document.getElementById('admin-partner-approved-rows');
+      const approvedList = partners.filter(p => p.partnerStatus === 'approved');
+      if (approvedList.length === 0) {
+        approvedRows.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#999; padding: 16px;">No approved active partners.</td></tr>';
+      } else {
+        approvedRows.innerHTML = approvedList.map(p => `
+          <tr>
+            <td style="font-family:\'Space Grotesk\',monospace; font-weight:700;">#${p.id}</td>
+            <td>
+              <strong>${p.name}</strong><br>
+              <span style="font-size:11px; color:#555;">${p.company} · ${p.city}</span>
+            </td>
+            <td>
+              <span style="font-size:11px; font-weight:700; color:#00A651;">${p.partnerType}</span><br>
+              <span class="status-pill" style="background:#000; color:#FFD400; font-size:10px; padding: 2px 6px;">${p.partnerTier} Tier</span>
+            </td>
+            <td style="font-family:\'Space Grotesk\',monospace; font-size:12px;">
+              GST: ${p.gst || p.gstin || 'N/A'}<br>
+              PAN: ${p.pan || 'N/A'}
+            </td>
+            <td style="font-family:\'Space Grotesk\',monospace;">₹${p.purchaseVolume.toLocaleString('en-IN')}</td>
+            <td style="font-family:\'Space Grotesk\',monospace;">${p.rewardPointsAvailable} pts</td>
+            <td>
+              <div style="display:flex; gap:6px;">
+                <button class="btn btn-outline btn-sm" style="border-color:#ccc; color:#333;" onclick="upgradePartnerTier(${p.id})">Upgrade Tier</button>
+                <button class="btn btn-outline btn-sm" style="border-color:var(--danger); color:var(--danger);" onclick="suspendPartner(${p.id})">Suspend</button>
+              </div>
+            </td>
+          </tr>
+        `).join('');
+      }
+
+      // Rejected rows
+      const rejectedRows = document.getElementById('admin-partner-rejected-rows');
+      const rejectedList = partners.filter(p => p.partnerStatus === 'rejected' || p.partnerStatus === 'suspended');
+      if (rejectedList.length === 0) {
+        rejectedRows.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#999; padding: 16px;">No rejected or suspended records.</td></tr>';
+      } else {
+        rejectedRows.innerHTML = rejectedList.map(p => {
+          const isSusp = p.partnerStatus === 'suspended';
+          const pillColor = isSusp ? 'background:#ffebee; color:#c62828;' : 'background:#efebe9; color:#4e342e;';
+          return `
+            <tr>
+              <td style="font-family:\'Space Grotesk\',monospace; font-weight:700;">#${p.id}</td>
+              <td>
+                <strong>${p.name}</strong><br>
+                <span style="font-size:11px; color:#555;">${p.company}</span>
+              </td>
+              <td>
+                <span style="font-size:11px; font-weight:600;">${p.partnerType}</span><br>
+                <span style="font-size:11px; font-family:\'Space Grotesk\',monospace; color:#888;">GST: ${p.gst || p.gstin || 'N/A'}</span>
+              </td>
+              <td>
+                <span class="status-pill" style="${pillColor}">${p.partnerStatus}</span>
+              </td>
+              <td>
+                <button class="btn btn-outline btn-sm" style="border-color:#ccc; color:#333;" onclick="approvePartner(${p.id})">Re-Approve</button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      // Populate Analytics Reports Metrics
+      let cumulativeSales = 0;
+      let cumulativeCommissions = 0;
+      let cumulativePoints = 0;
+      let cumulativeReferralRev = 0;
+
+      approvedList.forEach(p => {
+        cumulativeSales += p.purchaseVolume;
+        cumulativeCommissions += p.commissionEarned;
+        cumulativePoints += p.rewardPointsAvailable;
+        cumulativeReferralRev += (p.referralRevenue || 0);
+      });
+
+      document.getElementById('report-partner-sales').textContent = `₹${cumulativeSales.toLocaleString('en-IN')}`;
+      document.getElementById('report-partner-commissions').textContent = `₹${cumulativeCommissions.toLocaleString('en-IN')}`;
+      document.getElementById('report-partner-points').textContent = `${cumulativePoints.toLocaleString('en-IN')} Points`;
+      document.getElementById('report-referral-revenue').textContent = `₹${cumulativeReferralRev.toLocaleString('en-IN')}`;
+    }
+
+    // Partner Actions Helpers
+    window.approvePartner = function(partnerId) {
+      const partners = JSON.parse(localStorage.getItem('ohisee_partners')) || [];
+      const p = partners.find(part => part.id === partnerId);
+      if (p) {
+        p.partnerStatus = 'approved';
+        p.insuranceStatus = 'Active';
+        p.insurancePolicyNo = 'PIP-INS-' + Math.floor(Math.random() * 9000 + 1000);
+        localStorage.setItem('ohisee_partners', JSON.stringify(partners));
+        showToast(`Partner application #${partnerId} approved successfully!`, 'success');
+        
+        // Update user session if that partner is currently logged in
+        const user = Security.getCurrentUser();
+        if (user && user.id === partnerId) {
+          localStorage.setItem('ohisee_user', JSON.stringify(p));
+        }
+
+        refreshAdminData();
+      }
+    };
+
+    window.rejectPartner = function(partnerId) {
+      const partners = JSON.parse(localStorage.getItem('ohisee_partners')) || [];
+      const p = partners.find(part => part.id === partnerId);
+      if (p) {
+        p.partnerStatus = 'rejected';
+        localStorage.setItem('ohisee_partners', JSON.stringify(partners));
+        showToast(`Partner application #${partnerId} rejected.`, 'info');
+        
+        const user = Security.getCurrentUser();
+        if (user && user.id === partnerId) {
+          localStorage.setItem('ohisee_user', JSON.stringify(p));
+        }
+
+        refreshAdminData();
+      }
+    };
+
+    window.suspendPartner = function(partnerId) {
+      const partners = JSON.parse(localStorage.getItem('ohisee_partners')) || [];
+      const p = partners.find(part => part.id === partnerId);
+      if (p) {
+        p.partnerStatus = 'suspended';
+        localStorage.setItem('ohisee_partners', JSON.stringify(partners));
+        showToast(`Partner #${partnerId} suspended.`, 'warning');
+        
+        const user = Security.getCurrentUser();
+        if (user && user.id === partnerId) {
+          localStorage.setItem('ohisee_user', JSON.stringify(p));
+        }
+
+        refreshAdminData();
+      }
+    };
+
+    window.upgradePartnerTier = function(partnerId) {
+      const partners = JSON.parse(localStorage.getItem('ohisee_partners')) || [];
+      const p = partners.find(part => part.id === partnerId);
+      if (p) {
+        const tiers = ['Silver', 'Gold', 'Platinum', 'Diamond'];
+        const currentIdx = tiers.indexOf(p.partnerTier || 'Silver');
+        const nextIdx = (currentIdx + 1) % tiers.length;
+        p.partnerTier = tiers[nextIdx];
+        
+        localStorage.setItem('ohisee_partners', JSON.stringify(partners));
+        showToast(`Partner #${partnerId} upgraded to ${p.partnerTier} Tier!`, 'success');
+        
+        const user = Security.getCurrentUser();
+        if (user && user.id === partnerId) {
+          localStorage.setItem('ohisee_user', JSON.stringify(p));
+        }
+
+        refreshAdminData();
+      }
+    };
+
+    function updateOrderStatus(orderId, status) {
+      const orders = JSON.parse(localStorage.getItem('ohisee_orders')) || [];
+      const ord = orders.find(o => o.orderId === orderId);
+      if (ord) {
+        ord.status = status;
+        localStorage.setItem('ohisee_orders', JSON.stringify(orders));
+        showToast(`Order ${orderId} updated to ${status}.`, 'success');
+        refreshAdminData();
+      }
+    }
+
+    function updateQuoteStatus(quoteId, status) {
+      const quotes = JSON.parse(localStorage.getItem('ohisee_quotations')) || [];
+      const q = quotes.find(qt => qt.quoteId === quoteId);
+      if (q) {
+        q.status = status;
+        localStorage.setItem('ohisee_quotations', JSON.stringify(quotes));
+        showToast(`Quotation ${quoteId} marked as ${status}.`, 'success');
+        refreshAdminData();
+      }
+    }
+
+    // Modal Control Handlers
+    function openProductModal(id = null) {
+      const overlay = document.getElementById('product-modal-overlay');
+      const title = document.getElementById('product-modal-title');
+      const form = document.getElementById('product-form');
+
+      // Reset validation states
+      document.getElementById('name-validation-err').style.display = 'none';
+      document.getElementById('sku-validation-err').style.display = 'none';
+      document.getElementById('price-validation-err').style.display = 'none';
+      document.getElementById('image-preview-container').innerHTML = '';
+      
+      form.reset();
+
+      if (id) {
+        title.textContent = 'Edit Product Data';
+        const p = PRODUCTS.find(prod => prod.id === id);
+        if (p) {
+          document.getElementById('prod-form-id').value = p.id;
+          document.getElementById('prod-form-name').value = p.name;
+          document.getElementById('prod-form-category').value = p.category;
+          document.getElementById('prod-form-brand').value = p.brand;
+          document.getElementById('prod-form-sku').value = p.sku;
+          document.getElementById('prod-form-unit').value = p.specs && p.specs['Unit'] ? p.specs['Unit'] : 'Pieces';
+          document.getElementById('prod-form-desc').value = p.description || '';
+          document.getElementById('prod-form-price').value = p.price;
+          document.getElementById('prod-form-discount-price').value = p.originalPrice || '';
+          document.getElementById('prod-form-gst').value = p.specs && p.specs['GST'] ? p.specs['GST'].replace('%','') : '18';
+          document.getElementById('prod-form-stock').value = p.stockQty;
+          document.getElementById('prod-form-moq').value = p.specs && p.specs['MOQ'] ? p.specs['MOQ'] : '1';
+          document.getElementById('prod-form-status').value = p.stock === 'outofstock' ? 'outofstock' : p.stock === 'inactive' ? 'inactive' : 'active';
+          
+          // Image preview of existing image
+          document.getElementById('image-preview-container').innerHTML = `
+            <div style="position:relative; width:60px; height:60px; border:1px solid #ccc; border-radius:4px; overflow:hidden;">
+              <img src="${p.image}" style="width:100%; height:100%; object-fit:cover;">
+            </div>
+          `;
+        }
+      } else {
+        title.textContent = 'Staging Product Data';
+        document.getElementById('prod-form-id').value = '';
+      }
+
+      overlay.classList.add('active');
+    }
+
+    function closeProductModal() {
+      const overlay = document.getElementById('product-modal-overlay');
+      overlay.classList.remove('active');
+    }
+
+    function previewImages() {
+      const container = document.getElementById('image-preview-container');
+      const files = document.getElementById('prod-form-images').files;
+      container.innerHTML = '';
+
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          container.innerHTML += `
+            <div style="position:relative; width:60px; height:60px; border:1px solid #ccc; border-radius:4px; overflow:hidden;">
+              <img src="${e.target.result}" style="width:100%; height:100%; object-fit:cover;">
+            </div>
+          `;
+        }
+        reader.readAsDataURL(file);
+      }
+    }
+
+    // Modal save draft
+    function saveProductDraft() {
+      document.getElementById('prod-form-status').value = 'inactive';
+      document.getElementById('product-form').requestSubmit();
+    }
+
+    function saveProduct(event) {
+      event.preventDefault();
+
+      const prodIdVal = document.getElementById('prod-form-id').value;
+      const prodId = prodIdVal ? parseInt(prodIdVal) : null;
+
+      const nameVal = document.getElementById('prod-form-name').value.trim();
+      const categoryVal = document.getElementById('prod-form-category').value;
+      const brandVal = document.getElementById('prod-form-brand').value.trim();
+      const skuVal = document.getElementById('prod-form-sku').value.trim();
+      const unitVal = document.getElementById('prod-form-unit').value.trim();
+      const descVal = document.getElementById('prod-form-desc').value.trim();
+      
+      const priceVal = parseFloat(document.getElementById('prod-form-price').value);
+      const discountVal = parseFloat(document.getElementById('prod-form-discount-price').value) || null;
+      const gstVal = parseInt(document.getElementById('prod-form-gst').value) || 18;
+      
+      const stockVal = parseInt(document.getElementById('prod-form-stock').value) || 0;
+      const moqVal = parseInt(document.getElementById('prod-form-moq').value) || 1;
+      const statusVal = document.getElementById('prod-form-status').value;
+
+      // Validation States
+      let hasError = false;
+      
+      // Name empty check
+      if (!nameVal) {
+        document.getElementById('name-validation-err').style.display = 'block';
+        hasError = true;
+      } else {
+        document.getElementById('name-validation-err').style.display = 'none';
+      }
+
+      // Price bounds check (> 0)
+      if (isNaN(priceVal) || priceVal <= 0) {
+        document.getElementById('price-validation-err').style.display = 'block';
+        hasError = true;
+      } else {
+        document.getElementById('price-validation-err').style.display = 'none';
+      }
+
+      // Image mandatory check
+      const imageFiles = document.getElementById('prod-form-images').files;
+      const isEdit = prodId !== null;
+      const existingProduct = isEdit ? PRODUCTS.find(p => p.id === prodId) : null;
+      
+      if (imageFiles.length === 0 && (!isEdit || !existingProduct)) {
+        showToast('Product Image is mandatory.', 'error');
+        hasError = true;
+      }
+
+      // Duplicate SKU check
+      const isDuplicateSku = PRODUCTS.some(p => p.sku.toLowerCase() === skuVal.toLowerCase() && p.id !== prodId);
+      if (isDuplicateSku) {
+        document.getElementById('sku-validation-err').style.display = 'block';
+        hasError = true;
+      } else {
+        document.getElementById('sku-validation-err').style.display = 'none';
+      }
+
+      if (hasError) {
+        return;
+      }
+
+      // Simulate API Security Authorization (403 check)
+      try {
+        Security.validateApiAccess(isEdit ? 'edit_product' : 'add_product');
+      } catch (err) {
+        showToast(`HTTP ${err.status} - ${err.message}`, 'error');
+        return;
+      }
+
+      // Pick image path
+      let imagePath = 'images/cat-electrical.png'; // default fallback
+      if (categoryVal === 'Plumbing') imagePath = 'images/cat-plumbing.png';
+      else if (categoryVal === 'Hardware') imagePath = 'images/cat-hardware.png';
+      else if (categoryVal === 'Industrial') imagePath = 'images/cat-industrial.png';
+
+      if (isEdit && existingProduct && imageFiles.length === 0) {
+        imagePath = existingProduct.image; // Keep existing
+      }
+
+      // Construct specs
+      const specs = {
+        "Unit": unitVal,
+        "GST": gstVal + "%",
+        "MOQ": moqVal
+      };
+      if (categoryVal === 'Electrical') {
+        specs["Rating"] = "Standard 230V";
+      }
+
+      // Save custom item
+      const customProducts = JSON.parse(localStorage.getItem('ohisee_custom_products')) || [];
+      const deletedProducts = JSON.parse(localStorage.getItem('ohisee_deleted_products')) || [];
+
+      const newProductObj = {
+        id: isEdit ? prodId : Math.max(...PRODUCTS.map(p => p.id), 0) + 1,
+        name: nameVal,
+        brand: brandVal,
+        category: categoryVal,
+        sku: skuVal,
+        price: priceVal,
+        originalPrice: discountVal,
+        image: imagePath,
+        stock: statusVal === 'active' ? 'instock' : statusVal,
+        stockQty: stockVal,
+        badge: statusVal === 'active' ? 'instock' : 'limited',
+        description: descVal,
+        specs: specs
+      };
+
+      if (isEdit) {
+        const idx = customProducts.findIndex(p => p.id === prodId);
+        if (idx !== -1) {
+          customProducts[idx] = newProductObj;
+        } else {
+          customProducts.push(newProductObj);
+        }
+        showToast('Product configurations modified successfully!', 'success');
+      } else {
+        customProducts.push(newProductObj);
+        showToast('New Product SKU published successfully!', 'success');
+      }
+
+      localStorage.setItem('ohisee_custom_products', JSON.stringify(customProducts));
+      
+      closeProductModal();
+      
+      // Reload page to re-trigger DOMContentLoaded which loads/merges synced catalog
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    }
+
+    function deleteProduct(id) {
+      if (!confirm('Are you sure you want to permanently delete this product?')) {
+        return;
+      }
+
+      // Simulate API Security Authorization (403 check)
+      try {
+        Security.validateApiAccess('delete_product');
+      } catch (err) {
+        showToast(`HTTP ${err.status} - ${err.message}`, 'error');
+        return;
+      }
+
+      const deletedProducts = JSON.parse(localStorage.getItem('ohisee_deleted_products')) || [];
+      deletedProducts.push(id);
+      localStorage.setItem('ohisee_deleted_products', JSON.stringify(deletedProducts));
+
+      // Remove from custom products list if it exists there
+      const customProducts = JSON.parse(localStorage.getItem('ohisee_custom_products')) || [];
+      const filteredCustom = customProducts.filter(p => p.id !== id);
+      localStorage.setItem('ohisee_custom_products', JSON.stringify(filteredCustom));
+
+      showToast('Product removed from database.');
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    }
+
+    function initCharts() {
+      // Sales Chart
+      const salesCtx = document.getElementById('salesChart').getContext('2d');
+      new Chart(salesCtx, {
+        type: 'line',
+        data: {
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+          datasets: [{
+            label: 'Sales Vol (₹)',
+            data: [45000, 72000, 58000, 95000, 110000, 185450],
+            borderColor: '#FFD400',
+            backgroundColor: 'rgba(255, 212, 0, 0.1)',
+            fill: true,
+            tension: 0.3,
+            borderWidth: 3
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            y: { grid: { color: '#e0e0e0' } },
+            x: { grid: { display: false } }
+          }
+        }
+      });
+
+      // Category breakdown Chart
+      const catCtx = document.getElementById('categoryChart').getContext('2d');
+      new Chart(catCtx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Electrical', 'Plumbing', 'Hardware Tools', 'Safety & Industrial'],
+          datasets: [{
+            data: [42, 28, 18, 12],
+            backgroundColor: ['#FFD400', '#000000', '#555555', '#999999'],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 11 } } }
+          }
+        }
+      });
+    }
+  </script>
+</body>
+</html>

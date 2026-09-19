@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ohisee-ingress
+  annotations:
+    cert-manager.io/cluster-issuer: null
+spec:
+  tls: []
+  rules:
+    - host: ohisee.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ohisee-frontend
+                port:
+                  number: 80
+    - host: api.ohisee.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ohisee-api
+                port:
+                  number: 3001

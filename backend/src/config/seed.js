@@ -16,6 +16,8 @@ try {
   console.error('⚠ Failed to require products-data.js directly:', err.message);
 }
 
+const { seedEnterpriseDemoData } = require('./seed_v2');
+
 async function seedProductsIfEmpty() {
   try {
     if (!PRODUCTS || !PRODUCTS.length) {
@@ -76,6 +78,10 @@ async function seedProductsIfEmpty() {
     } else {
       console.log('✓ Products table populated. Seeding not required.');
     }
+
+    // Seed Enterprise Demo Data
+    await seedEnterpriseDemoData();
+
   } catch (err) {
     console.error('⚠ Failed to auto-seed products catalog:', err);
   }

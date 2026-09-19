@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ohisee-config
+  labels:
+    app.kubernetes.io/part-of: ohisee
+data:
+  NODE_ENV: production
+  PORT: "3001"
+  FRONTEND_URL: https://ohisee.com
+  APP_URL: https://ohisee.com
+  PLATFORM_DOMAIN: ohisee.com
+  OHISEE_API_BASE: https://api.ohisee.com/api
+  DESIGN3D_WORKER_MODE: headless
+  DESIGN3D_STORAGE: supabase
+  DESIGN3D_BUCKET: design3d-private
+  JWT_EXPIRES_IN: 7d
+  OPENAI_DESIGN_MODEL: gpt-4.1-mini

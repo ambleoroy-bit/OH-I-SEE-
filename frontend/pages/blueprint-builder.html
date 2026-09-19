@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="OH I SEE AI Blueprint Builder — Generate a customized house floor plan from your requirements.">
+  <title>AI Blueprint Builder — OH I SEE</title>
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/home-ai.css">
+  <link rel="stylesheet" href="../css/blueprint.css">
+<link rel="stylesheet" href="../css/home-requirements.css">
+  <link rel="icon" href="/images/logo.png" type="image/png">
+  <!-- jsPDF for PDF download -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body class="blueprint-page">
+
+  <!-- Page Loader -->
+  <div class="page-loader">
+    <div class="loader-logo"><img src="/images/logo.png" alt="OH I SEE"></div>
+    <div class="loader-text">OH I SEE</div>
+    <div class="loader-bar"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header" id="header">
+    <div class="header-top">
+      <a href="index.html" class="header-logo">
+        <img src="/images/logo.png" alt="OH I SEE">
+        <span class="header-logo-text">OH I SEE</span>
+      </a>
+      <nav class="header-nav">
+        <a href="index.html">Home</a>
+        <a href="products.html">Products</a>
+        <a href="project-detail.html">Projects</a>
+      </nav>
+      <div class="header-actions">
+        <a href="account.html" class="header-action-btn" title="Account">👤</a>
+        <a href="cart.html" class="header-action-btn" title="Cart">🛒</a>
+      </div>
+      <button class="mobile-menu-toggle">☰</button>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <div class="blueprint-hero">
+    <div class="container">
+      <div class="hp-section-label">AI Blueprint Builder</div>
+      <h1 style="font-family:'Space Grotesk',monospace;font-size:32px;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:-0.5px;margin:8px 0;">
+        GENERATE YOUR FLOOR PLAN
+      </h1>
+      <p style="font-size:14px;color:#555;max-width:540px;">
+        Tell us about your plot, your family and the home you want. Keep your requirements in one place, ready for planning and professional review.
+      </p>
+    </div>
+  </div>
+
+  <!-- Steps -->
+  <div class="container" style="padding-top:40px;">
+    <div class="blueprint-steps" id="bp-steps">
+      <div class="bp-step active" id="bps-1">
+        <div class="bp-step-dot active">1</div>
+        <div class="bp-step-label">Requirements</div>
+      </div>
+      <div class="bp-step-line" id="bpl-1"></div>
+      <div class="bp-step" id="bps-2">
+        <div class="bp-step-dot">2</div>
+        <div class="bp-step-label">Review</div>
+      </div>
+      <div class="bp-step-line" id="bpl-2"></div>
+      <div class="bp-step" id="bps-3">
+        <div class="bp-step-dot">3</div>
+        <div class="bp-step-label">Blueprint</div>
+      </div>
+    </div>
+
+    <!-- STEP 1: Requirements Form -->
+    <form class="blueprint-form" id="bp-form">
+      <div class="bp-form-section-title">📐 Plot & Building Details</div>
+      <div class="bp-form-grid">
+        <div class="bp-form-field">
+          <label>Plot Length (feet) *</label>
+          <input type="number" id="bp-plot-length" placeholder="e.g. 40" min="10" max="500" required>
+        </div>
+        <div class="bp-form-field">
+          <label>Plot Width (feet) *</label>
+          <input type="number" id="bp-plot-width" placeholder="e.g. 60" min="10" max="500" required>
+        </div>
+        <div class="bp-form-field">
+          <label>Road Facing</label>
+          <select id="bp-road-facing">
+            <option>East</option><option>West</option><option>North</option><option>South</option><option>Corner Plot</option>
+          </select>
+        </div>
+        <div class="bp-form-field">
+          <label>Number of Floors</label>
+          <select id="bp-floors">
+            <option value="1">Ground Floor Only</option>
+            <option value="2">G + 1 Floor</option>
+            <option value="3">G + 2 Floors</option>
+          </select>
+        </div>
+        <div class="bp-form-field">
+          <label>Bedrooms *</label>
+          <select id="bp-bedrooms">
+            <option value="1">1 Bedroom</option>
+            <option value="2">2 Bedrooms</option>
+            <option value="3" selected>3 Bedrooms</option>
+            <option value="4">4 Bedrooms</option>
+            <option value="5">5 Bedrooms</option>
+          </select>
+        </div>
+        <div class="bp-form-field">
+          <label>Bathrooms</label>
+          <select id="bp-bathrooms">
+            <option value="1">1</option><option value="2" selected>2</option>
+            <option value="3">3</option><option value="4">4</option>
+          </select>
+        </div>
+        <div class="bp-form-field">
+          <label>Parking</label>
+          <select id="bp-parking">
+            <option value="0">No Parking</option>
+            <option value="1" selected>1 Car</option>
+            <option value="2">2 Cars</option>
+          </select>
+        </div>
+        <div class="bp-form-field">
+          <label>Architectural Style</label>
+          <select id="bp-style">
+            <option>Contemporary / Modern</option>
+            <option>Traditional</option>
+            <option>Minimalist</option>
+            <option>South Indian Traditional</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="bp-form-section-title" style="margin-top:8px;">🏠 Optional Rooms</div>
+      <div class="bp-checkbox-group" id="bp-extras-group">
+        <label class="bp-checkbox-chip" id="chip-pooja">
+          <input type="checkbox" id="bp-pooja"> Pooja Room
+        </label>
+        <label class="bp-checkbox-chip" id="chip-office">
+          <input type="checkbox" id="bp-office"> Home Office / Study
+        </label>
+        <label class="bp-checkbox-chip" id="chip-terrace">
+          <input type="checkbox" id="bp-terrace"> Terrace
+        </label>
+        <label class="bp-checkbox-chip" id="chip-utility">
+          <input type="checkbox" id="bp-utility"> Utility / Wash Area
+        </label>
+        <label class="bp-checkbox-chip" id="chip-garden">
+          <input type="checkbox" id="bp-garden"> Garden / Open Area
+        </label>
+        <label class="bp-checkbox-chip" id="chip-vastu">
+          <input type="checkbox" id="bp-vastu"> Follow Vastu
+        </label>
+      </div>
+
+      <div style="margin-top:28px;text-align:right;">
+        <button type="button" class="btn-hero-primary" onclick="showSummaryStep()">
+          Review Requirements →
+        </button>
+      </div>
+    </form>
+
+    <!-- STEP 2: Summary -->
+    <div class="blueprint-summary" id="bp-summary">
+      <div class="bp-summary-title">📋 Blueprint Requirements Summary</div>
+      <div class="bp-summary-grid" id="bp-summary-grid"></div>
+      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+        <button class="btn-hero-primary" onclick="generateBlueprint()">
+          ⚡ Generate AI Blueprint
+        </button>
+        <button class="btn-hero-outline" onclick="backToForm()">
+          ← Edit Requirements
+        </button>
+      </div>
+    </div>
+
+    <!-- STEP 3: Blueprint Viewer -->
+    <div class="blueprint-viewer" id="bp-viewer">
+      <div class="blueprint-viewer-toolbar">
+        <span style="font-family:'Space Grotesk',monospace;font-size:13px;font-weight:700;color:#FFD400;text-transform:uppercase;letter-spacing:0.5px;margin-right:auto;">
+          📐 Generated Floor Plan
+        </span>
+        <button class="bp-tool-btn" onclick="toggleView()">⊞ Toggle View</button>
+        <button class="bp-download-btn" onclick="downloadPNG()">⬇️ PNG</button>
+        <button class="bp-download-btn" onclick="downloadSVG()">⬇️ SVG</button>
+        <button class="bp-download-btn" onclick="downloadPDF()">⬇️ PDF</button>
+        <button class="btn-hero-primary" style="font-size:11px;padding:9px 16px;" onclick="window.location.href='visualizer-3d.html'">
+          🧊 View in 3D →
+        </button>
+      </div>
+
+      <div class="blueprint-canvas-wrap" id="bp-canvas-wrap">
+        <!-- SVG injected here by JS -->
+      </div>
+
+      <!-- Validation checklist -->
+      <div class="validation-list" id="bp-validation"></div>
+
+      <!-- AI Disclaimer -->
+      <div class="ai-disclaimer-badge">
+        <span>⚠️</span>
+        <span><strong>AI-Generated Preliminary Design.</strong> This floor plan is a conceptual layout for reference only. Final structural drawings, architectural plans and statutory approvals must be obtained from a licensed architect and structural engineer. Room proportions are indicative.</span>
+      </div>
+
+      <!-- Save/Share -->
+      <div style="display:flex;gap:12px;margin-top:20px;flex-wrap:wrap;">
+        <button class="btn-hero-primary" onclick="saveBlueprint()" id="btn-save-bp">
+          💾 Save to My Project
+        </button>
+        <button class="btn-hero-outline" onclick="generateBlueprint()">
+          🔄 Regenerate
+        </button>
+        <a href="visualizer-3d.html" class="btn-hero-outline">
+          🧊 2D → 3D Visualizer
+        </a>
+      </div>
+    </div>
+
+    <div style="height:60px;"></div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">© 2024 OH I SEE Industrial Solutions. Coimbatore, Tamil Nadu.</div>
+    </div>
+  </footer>
+
+  <script src="../js/utils/helpers.js"></script>
+  <script src="../js/components/notifications.js"></script>
+  <script src="../js/app.js"></script>
+  <script>
+  // ============================================================
+  // OH I SEE — Blueprint Builder Engine
+  // Client-side SVG floor plan generator
+  // ============================================================
+
+  // Attach checkbox chip toggling
+  document.querySelectorAll('.bp-checkbox-chip').forEach(chip => {
+    chip.addEventListener('click', () => chip.classList.toggle('checked'));
+  });
+
+  let currentSVG = '';
+  let requirements = {};
+
+  // ── Step navigation ──────────────────────────────────────────
+  function setStep(n) {
+    ['bp-form','bp-summary','bp-viewer'].forEach((id, i) => {
+      document.getElementById(id).style.display = (i === n - 1) ? 'block' : 'none';
+    });
+    [1,2,3].forEach(s => {
+      const dot = document.getElementById(`bps-${s}`)?.querySelector('.bp-step-dot');
+      const step = document.getElementById(`bps-${s}`);
+      const line = document.getElementById(`bpl-${s}`);
+      if (dot && step) {
+        dot.className = 'bp-step-dot' + (s < n ? ' done' : s === n ? ' active' : '');
+        step.className = 'bp-step' + (s < n ? ' done' : s === n ? ' active' : '');
+      }
+      if (line) line.className = 'bp-step-line' + (s < n ? ' done' : '');
+    });
+  }
+
+  function backToForm() { setStep(1); }
+
+  function showSummaryStep() {
+    const pl = parseFloat(document.getElementById('bp-plot-length').value);
+    const pw = parseFloat(document.getElementById('bp-plot-width').value);
+    if (!pl || !pw) { alert('Please enter Plot Length and Width.'); return; }
+
+    requirements = gatherRequirements();
+    const summaryGrid = document.getElementById('bp-summary-grid');
+    summaryGrid.innerHTML = Object.entries({
+      'Plot Size': `${requirements.plotLength} × ${requirements.plotWidth} ft`,
+      'Built-up Area': `≈ ${requirements.builtUpArea.toFixed(0)} sq.ft`,
+      'Road Facing': requirements.roadFacing,
+      'Floors': requirements.floors,
+      'Bedrooms': requirements.bedrooms,
+      'Bathrooms': requirements.bathrooms,
+      'Parking': requirements.parking > 0 ? `${requirements.parking} Car` : 'None',
+      'Style': requirements.style,
+      'Optional Rooms': [requirements.hasPooja && 'Pooja', requirements.hasOffice && 'Office', requirements.hasTerrace && 'Terrace', requirements.hasUtility && 'Utility'].filter(Boolean).join(', ') || 'None',
+      'Vastu': requirements.vastu ? 'Yes' : 'No',
+    }).map(([k, v]) => `
+      <div class="bp-summary-item">
+        <div class="bp-summary-item-label">${k}</div>
+        <div class="bp-summary-item-val">${v || '—'}</div>
+      </div>`).join('');
+
+    document.getElementById('bp-summary').style.display = 'block';
+    document.getElementById('bp-form').style.display = 'block';
+    setStep(2);
+    document.getElementById('bp-summary').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function gatherRequirements() {
+    const pl = parseFloat(document.getElementById('bp-plot-length').value) || 40;
+    const pw = parseFloat(document.getElementById('bp-plot-width').value) || 60;
+    const floors = parseInt(document.getElementById('bp-floors').value) || 1;
+    const bua = pl * pw * 0.6 * floors; // 60% coverage per floor
+    return {
+      plotLength: pl, plotWidth: pw, builtUpArea: bua,
+      roadFacing: document.getElementById('bp-road-facing').value,
+      floors,
+      bedrooms: parseInt(document.getElementById('bp-bedrooms').value) || 3,
+      bathrooms: parseInt(document.getElementById('bp-bathrooms').value) || 2,
+      parking: parseInt(document.getElementById('bp-parking').value) || 0,
+      style: document.getElementById('bp-style').value,
+      hasPooja: document.getElementById('bp-pooja').checked,
+      hasOffice: document.getElementById('bp-office').checked,
+      hasTerrace: document.getElementById('bp-terrace').checked,
+      hasUtility: document.getElementById('bp-utility').checked,
+      hasGarden: document.getElementById('bp-garden').checked,
+      vastu: document.getElementById('bp-vastu').checked,
+    };
+  }
+
+  // ── Blueprint Generator ───────────────────────────────────────
+  function generateBlueprint() {
+    requirements = gatherRequirements();
+    setStep(3);
+
+    const svgStr = buildFloorPlanSVG(requirements);
+    currentSVG = svgStr;
+    document.getElementById('bp-canvas-wrap').innerHTML = svgStr;
+
+    // Validation
+    const checks = validateLayout(requirements);
+    const valEl = document.getElementById('bp-validation');
+    valEl.innerHTML = checks.map(c => `<div class="validation-item ${c.status}">${c.status === 'pass' ? '✅' : c.status === 'warn' ? '⚠️' : '❌'} ${c.text}</div>`).join('');
+
+    document.getElementById('bp-viewer').style.display = 'block';
+    document.getElementById('bp-viewer').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // ── Download functions ────────────────────────────────────────
+  function downloadSVG() {
+    const blob = new Blob([currentSVG], { type: 'image/svg+xml' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = 'ohisee-blueprint.svg'; a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function downloadPNG() {
+    const svgEl = document.querySelector('#bp-canvas-wrap svg');
+    if (!svgEl) return;
+    const canvas = document.createElement('canvas');
+    const svgRect = svgEl.getBoundingClientRect();
+    canvas.width = svgEl.viewBox.baseVal.width * 2;
+    canvas.height = svgEl.viewBox.baseVal.height * 2;
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    const blob = new Blob([currentSVG], { type: 'image/svg+xml' });
+    const url = URL.createObjectURL(blob);
+    img.onload = () => {
+      ctx.scale(2, 2);
+      ctx.drawImage(img, 0, 0);
+      URL.revokeObjectURL(url);
+      const a = document.createElement('a');
+      a.href = canvas.toDataURL('image/png');
+      a.download = 'ohisee-blueprint.png';
+      a.click();
+    };
+    img.src = url;
+  }
+
+  function downloadPDF() {
+    if (typeof jspdf === 'undefined' && typeof window.jspdf === 'undefined') {
+      alert('PDF library loading... please try again in a moment.');
+      return;
+    }
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation: 'landscape', unit: 'pt', format: 'a4' });
+    doc.setFontSize(14);
+    doc.text('OH I SEE — AI Blueprint', 20, 20);
+    doc.setFontSize(9);
+    doc.text('AI-Generated Conceptual Layout — Not for Construction Without Professional Review', 20, 32);
+
+    const svgEl = document.querySelector('#bp-canvas-wrap svg');
+    if (svgEl) {
+      const svgData = new XMLSerializer().serializeToString(svgEl);
+      const canvas = document.createElement('canvas');
+      canvas.width = svgEl.viewBox.baseVal.width;
+      canvas.height = svgEl.viewBox.baseVal.height;
+      const ctx = canvas.getContext('2d');
+      const img = new Image();
+      img.onload = () => {
+        ctx.drawImage(img, 0, 0);
+        const imgData = canvas.toDataURL('image/png');
+        const pageW = doc.internal.pageSize.getWidth();
+        const pageH = doc.internal.pageSize.getHeight();
+        const scale = Math.min((pageW - 40) / canvas.width, (pageH - 60) / canvas.height);
+        doc.addImage(imgData, 'PNG', 20, 44, canvas.width * scale, canvas.height * scale);
+        doc.save('ohisee-blueprint.pdf');
+      };
+      const blob = new Blob([svgData], { type: 'image/svg+xml' });
+      img.src = URL.createObjectURL(blob);
+    }
+  }
+
+  // ── Save to project ──────────────────────────────────────────
+  async function saveBlueprint() {
+    const token = localStorage.getItem('ohisee_token') || sessionStorage.getItem('ohisee_token');
+    if (!token) { window.location.href = 'login.html?redirect=blueprint-builder.html'; return; }
+
+    const btn = document.getElementById('btn-save-bp');
+    btn.disabled = true; btn.textContent = '⏳ Saving...';
+
+    try {
+      const API = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' ? 'http://localhost:3001/api' : '/api';
+      const response = await fetch(`${API}/blueprints`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ requirements, layoutData: currentBlueprintCAD(), svgContent: currentSVG }),
+      });
+      if(!response.ok) throw new Error('Save failed');
+      btn.textContent = '✅ Saved';
+      btn.style.background = '#00A651';
+    } catch {
+      btn.disabled = false; btn.textContent = '💾 Save to My Project';
+    }
+  }
+
+  function toggleView() {
+    const wrap = document.getElementById('bp-canvas-wrap');
+    if (wrap.style.background === 'rgb(0, 0, 0)') {
+      wrap.style.background = '#fff';
+      const svg = wrap.querySelector('svg'); if(svg) svg.style.filter = ''; 
+    } else {
+      wrap.style.background = '#000';
+      const svg = wrap.querySelector('svg');
+      if (svg) svg.style.filter = 'invert(1) hue-rotate(180deg)';
+    }
+  }
+  </script>
+<script src="../js/blueprint-presentation.js"></script>
+<script src="../js/blueprint-styles.js"></script>
+<script src="../js/blueprint-cad.js"></script>
+<script src="../js/blueprint-cad-ui.js"></script>
+<script src="../js/home-requirements-model.js"></script>
+<script src="../js/home-requirements-page.js"></script>
+</body>
+</html>

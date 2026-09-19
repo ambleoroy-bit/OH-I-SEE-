@@ -1,11 +1,17 @@
 window.AuthAPI = {
-  signup: async (name, email, password, phone, role) => {
+  signup: async (name, email, password, phone, role, accountType, business = {}, location = null, profile_image = '') => {
     console.log("✓ Request Sent: signup", email);
     const res = await apiFetch('/auth/signup', { 
       method: 'POST', 
-      body: JSON.stringify({ name, email, password, phone, role }) 
+      body: JSON.stringify({
+        name, email, password, phone, role, accountType, business,
+        city: business?.city,
+        state: business?.state,
+        location,
+        profile_image
+      }) 
     });
-    console.log("✓ Response Received:", res);
+
     if (res.token) {
       TokenStore.set(res.token);
       UserCache.set(res.user);
@@ -14,12 +20,12 @@ window.AuthAPI = {
     return res;
   },
 
-  login: async (email, password) => {
+  login: async (email, password, location = null) => {
     console.log("✓ Request Sent: login", email);
     try {
       const res = await apiFetch('/auth/login', { 
         method: 'POST', 
-        body: JSON.stringify({ email, password }) 
+        body: JSON.stringify({ email, password, location }) 
       });
       console.log("LOGIN_SUCCESS", res.user?.email);
       if (res.token) {
@@ -81,6 +87,19 @@ window.AuthAPI = {
 
   redirectByRole: (role) => {
     console.log("REDIRECT_TRIGGERED", role);
+    const requested = new URLSearchParams(location.search).get('redirect');
+    if (requested) {
+      try {
+        const url = new URL(requested, location.href);
+        if (url.origin === location.origin && !url.pathname.endsWith('/login.html')) {
+          location.href = url.href;
+          return;
+        }
+      } catch (e) {}
+    }
+    const profile=UserCache.get();
+    if(role==='Supplier'||profile?.partner_type==='Supplier'){location.href='supplier-dashboard.html';return;}
+    if(['Contractor','Vendor'].includes(profile?.partner_type)){location.href='vendor-dashboard.html';return;}
     switch (role) {
       case 'Admin':
       case 'Super Admin':

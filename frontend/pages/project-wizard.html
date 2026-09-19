@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="OH I SEE — Start a New Project. 8-step AI guided project wizard.">
+  <title>New Project Wizard — OH I SEE AI Construction Platform</title>
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/home-ai.css">
+  <link rel="icon" href="/images/logo.png" type="image/png">
+  <style>
+    body { background: #000; color: #fff; }
+    .wizard-container {
+      max-width: 720px;
+      margin: 40px auto 80px;
+      background: #0d0d0d;
+      border: 1px solid #1e1e1e;
+      border-radius: 16px;
+      padding: 40px;
+    }
+    .wizard-step { display: none; }
+    .wizard-step.active { display: block; }
+    .wizard-progress {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 32px;
+    }
+    .wizard-progress-bar {
+      flex: 1;
+      height: 4px;
+      background: #222;
+      border-radius: 2px;
+    }
+    .wizard-progress-bar.active {
+      background: #FFD400;
+    }
+    .wizard-title {
+      font-family: 'Space Grotesk', monospace;
+      font-size: 24px;
+      font-weight: 700;
+      color: #fff;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .wizard-subtitle {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 24px;
+    }
+    .wizard-label {
+      font-family: 'Space Grotesk', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: #FFD400;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      display: block;
+    }
+    .wizard-input, .wizard-select, .wizard-textarea {
+      width: 100%;
+      box-sizing: border-box;
+      background: #181818;
+      border: 1px solid #333;
+      color: #fff;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      margin-bottom: 16px;
+    }
+    .wizard-input:focus, .wizard-select:focus, .wizard-textarea:focus {
+      border-color: #FFD400;
+    }
+    .wizard-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .wizard-nav-btns {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 32px;
+      border-top: 1px solid #1a1a1a;
+      padding-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="header-top">
+      <a href="index.html" class="header-logo">
+        <img src="/images/logo.png" alt="OH I SEE">
+        <span class="header-logo-text">OH I SEE</span>
+      </a>
+      <a href="index.html" style="color:#888;font-size:13px;text-decoration:none;">Cancel & Exit</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="wizard-container">
+      
+      <!-- Progress Bar -->
+      <div class="wizard-progress">
+        <div class="wizard-progress-bar active"></div>
+        <div class="wizard-progress-bar"></div>
+        <div class="wizard-progress-bar"></div>
+        <div class="wizard-progress-bar"></div>
+        <div class="wizard-progress-bar"></div>
+        <div class="wizard-progress-bar"></div>
+        <div class="wizard-progress-bar"></div>
+        <div class="wizard-progress-bar"></div>
+      </div>
+
+      <!-- Step 1: Project Type -->
+      <div class="wizard-step active" data-step="1">
+        <div class="wizard-title">Step 1 — Project Type</div>
+        <div class="wizard-subtitle">What type of construction project are you planning?</div>
+        <label class="wizard-label">Project Name *</label>
+        <input type="text" id="wz-name" class="wizard-input" placeholder="e.g. Dream Residence Coimbatore">
+
+        <label class="wizard-label">Project Category</label>
+        <select id="wz-type" class="wizard-select">
+          <option value="Residential">Residential House</option>
+          <option value="Villa">Independent Villa</option>
+          <option value="Apartment">Apartment Complex</option>
+          <option value="Commercial">Commercial Building</option>
+          <option value="Industrial">Industrial Warehouse</option>
+          <option value="Renovation">Renovation & Remodel</option>
+          <option value="Interior">Interior Fit-out</option>
+        </select>
+      </div>
+
+      <!-- Step 2: Location -->
+      <div class="wizard-step" data-step="2">
+        <div class="wizard-title">Step 2 — Location</div>
+        <div class="wizard-subtitle">Where is the construction site located?</div>
+        <div class="wizard-grid">
+          <div>
+            <label class="wizard-label">City *</label>
+            <input type="text" id="wz-city" class="wizard-input" value="Coimbatore">
+          </div>
+          <div>
+            <label class="wizard-label">State</label>
+            <input type="text" id="wz-state" class="wizard-input" value="Tamil Nadu">
+          </div>
+        </div>
+        <label class="wizard-label">Area / Location</label>
+        <input type="text" id="wz-address" class="wizard-input" placeholder="e.g. Saravanampatti, IT Corridor">
+      </div>
+
+      <!-- Step 3: Plot Details -->
+      <div class="wizard-step" data-step="3">
+        <div class="wizard-title">Step 3 — Plot & Dimensions</div>
+        <div class="wizard-subtitle">Specify your land area and floor requirements.</div>
+        <div class="wizard-grid">
+          <div>
+            <label class="wizard-label">Plot Length (ft)</label>
+            <input type="number" id="wz-length" class="wizard-input" value="40">
+          </div>
+          <div>
+            <label class="wizard-label">Plot Width (ft)</label>
+            <input type="number" id="wz-width" class="wizard-input" value="60">
+          </div>
+        </div>
+        <div class="wizard-grid">
+          <div>
+            <label class="wizard-label">Floors (G+N)</label>
+            <input type="number" id="wz-floors" class="wizard-input" value="2">
+          </div>
+          <div>
+            <label class="wizard-label">Est. Built-up Area (Sq Ft)</label>
+            <input type="number" id="wz-area" class="wizard-input" value="2400">
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4: Requirements -->
+      <div class="wizard-step" data-step="4">
+        <div class="wizard-title">Step 4 — Space Requirements</div>
+        <div class="wizard-subtitle">Select rooms and space layout requirements.</div>
+        <div class="wizard-grid">
+          <div>
+            <label class="wizard-label">Bedrooms</label>
+            <input type="number" id="wz-beds" class="wizard-input" value="3">
+          </div>
+          <div>
+            <label class="wizard-label">Bathrooms</label>
+            <input type="number" id="wz-baths" class="wizard-input" value="3">
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 5: Budget -->
+      <div class="wizard-step" data-step="5">
+        <div class="wizard-title">Step 5 — Target Budget</div>
+        <div class="wizard-subtitle">Set your financial allocation for the project.</div>
+        <label class="wizard-label">Target Budget (₹ INR)</label>
+        <input type="number" id="wz-budget" class="wizard-input" value="4500000">
+      </div>
+
+      <!-- Step 6: Quality Tier -->
+      <div class="wizard-step" data-step="6">
+        <div class="wizard-title">Step 6 — Quality Grade</div>
+        <div class="wizard-subtitle">Choose material & construction specification tier.</div>
+        <select id="wz-quality" class="wizard-select">
+          <option value="Economy">Economy — Cost Optimized</option>
+          <option value="Standard" selected>Standard — Balanced Premium</option>
+          <option value="Premium">Premium — High Specifications</option>
+          <option value="Luxury">Luxury — Custom Bespoke</option>
+        </select>
+      </div>
+
+      <!-- Step 7: Timeline -->
+      <div class="wizard-step" data-step="7">
+        <div class="wizard-title">Step 7 — Timeline</div>
+        <div class="wizard-subtitle">When do you want to start and finish?</div>
+        <div class="wizard-grid">
+          <div>
+            <label class="wizard-label">Target Start Date</label>
+            <input type="date" id="wz-start" class="wizard-input">
+          </div>
+          <div>
+            <label class="wizard-label">Target Completion</label>
+            <input type="date" id="wz-end" class="wizard-input">
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 8: AI Brief -->
+      <div class="wizard-step" data-step="8">
+        <div class="wizard-title">Step 8 — AI Design Brief</div>
+        <div class="wizard-subtitle">Add any special requests, architectural styles, or guidelines.</div>
+        <textarea id="wz-brief" class="wizard-textarea" rows="4" placeholder="e.g. Modern elevation with natural lighting, solar roof provision, and Schneider electrical fittings."></textarea>
+      </div>
+
+      <!-- Navigation Buttons -->
+      <div class="wizard-nav-btns">
+        <button id="wz-btn-prev" class="btn-hero-outline" style="visibility:hidden;">← Previous</button>
+        <button id="wz-btn-next" class="btn-hero-primary">Next Step →</button>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="../js/utils/helpers.js"></script>
+  <script src="../js/components/notifications.js"></script>
+  <script src="../js/components/auth-prompt.js"></script>
+  <script src="../js/app.js"></script>
+  <script>
+    let currentStep = 1;
+    const totalSteps = 8;
+
+    document.getElementById('wz-start').value = new Date().toISOString().split('T')[0];
+    document.getElementById('wz-end').value = new Date(Date.now() + 180 * 86400000).toISOString().split('T')[0];
+
+    const prevBtn = document.getElementById('wz-btn-prev');
+    const nextBtn = document.getElementById('wz-btn-next');
+
+    function updateStepUI() {
+      document.querySelectorAll('.wizard-step').forEach(el => el.classList.remove('active'));
+      document.querySelector(`.wizard-step[data-step="${currentStep}"]`).classList.add('active');
+
+      document.querySelectorAll('.wizard-progress-bar').forEach((bar, idx) => {
+        bar.classList.toggle('active', idx < currentStep);
+      });
+
+      prevBtn.style.visibility = currentStep === 1 ? 'hidden' : 'visible';
+      nextBtn.textContent = currentStep === totalSteps ? '✨ Create Project' : 'Next Step →';
+    }
+
+    prevBtn.addEventListener('click', () => {
+      if (currentStep > 1) { currentStep--; updateStepUI(); }
+    });
+
+    nextBtn.addEventListener('click', async () => {
+      if (currentStep < totalSteps) {
+        if (currentStep === 1 && !document.getElementById('wz-name').value.trim()) {
+          alert('Please enter a project name.');
+          return;
+        }
+        currentStep++;
+        updateStepUI();
+      } else {
+        // Submit project
+        nextBtn.disabled = true;
+        nextBtn.textContent = '⏳ Creating Project...';
+
+        const token = localStorage.getItem('ohisee_token') || sessionStorage.getItem('ohisee_token');
+        if (!token) {
+          nextBtn.disabled = false;
+          nextBtn.textContent = '✨ Create Project';
+          if (typeof AuthPrompt !== 'undefined') {
+            AuthPrompt.show({ redirectUrl: 'project-wizard.html' });
+          } else {
+            window.location.href = 'login.html?tab=register&reason=create_project&redirect=project-wizard.html';
+          }
+          return;
+        }
+
+        const API = window.location.hostname === 'localhost' ? 'http://localhost:3001/api' : '/api';
+        try {
+          const resp = await fetch(`${API}/projects`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+              projectName: document.getElementById('wz-name').value.trim(),
+              projectType: document.getElementById('wz-type').value,
+              city: document.getElementById('wz-city').value,
+              state: document.getElementById('wz-state').value,
+              address: document.getElementById('wz-address').value,
+              plotLength: Number(document.getElementById('wz-length').value),
+              plotWidth: Number(document.getElementById('wz-width').value),
+              floors: Number(document.getElementById('wz-floors').value),
+              builtupArea: Number(document.getElementById('wz-area').value),
+              budget: Number(document.getElementById('wz-budget').value),
+              qualityTier: document.getElementById('wz-quality').value,
+              aiBrief: document.getElementById('wz-brief').value
+            })
+          });
+
+          if (!resp.ok) throw new Error('Failed to create project');
+          const data = await resp.json();
+          const projId = data.data ? data.data.project_id : data.project_id;
+          window.location.href = `project-detail.html?id=${projId}`;
+        } catch (err) {
+          alert('Project creation failed: ' + err.message);
+          nextBtn.disabled = false;
+          nextBtn.textContent = '✨ Create Project';
+        }
+      }
+    });
+  </script>
+</body>
+</html>

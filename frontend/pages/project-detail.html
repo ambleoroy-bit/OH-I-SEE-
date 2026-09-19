@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="OH I SEE — Project Dashboard. Track your construction project from design to completion.">
+  <title>Project Dashboard — OH I SEE AI Construction Platform</title>
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/home-ai.css">
+  <link rel="stylesheet" href="../css/ai-assistant.css">
+  <link rel="icon" href="/images/logo.png" type="image/png">
+  <style>
+    body { background: #000; color: #fff; }
+
+    .project-detail-hero {
+      background: #0a0a0a;
+      border-bottom: 1px solid #1a1a1a;
+      padding: 40px 0;
+    }
+
+    .project-detail-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-bottom: 8px;
+    }
+
+    .project-detail-id {
+      font-family: 'Space Grotesk', monospace;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #FFD400;
+      margin-bottom: 8px;
+    }
+
+    .project-detail-name {
+      font-family: 'Space Grotesk', monospace;
+      font-size: 32px;
+      font-weight: 700;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: -0.5px;
+    }
+
+    .project-detail-meta {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+      font-size: 13px;
+      color: #555;
+    }
+
+    .project-detail-meta span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .module-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      padding: 32px 0 48px;
+    }
+
+    .module-card {
+      background: #0d0d0d;
+      border: 1px solid #1e1e1e;
+      border-radius: 12px;
+      padding: 24px 20px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      text-decoration: none;
+      display: block;
+    }
+
+    .module-card:hover {
+      border-color: rgba(255,212,0,0.25);
+      transform: translateY(-3px);
+    }
+
+    .module-card-icon { font-size: 28px; margin-bottom: 12px; }
+
+    .module-card-title {
+      font-family: 'Space Grotesk', monospace;
+      font-size: 14px;
+      font-weight: 700;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+    }
+
+    .module-card-status {
+      font-size: 11px;
+      color: #555;
+      margin-bottom: 12px;
+    }
+
+    .module-card-progress {
+      height: 4px;
+      background: #1a1a1a;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .module-card-progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #FFD400, #E6BF00);
+    }
+
+    .loading-state, .error-state {
+      text-align: center;
+      padding: 80px 24px;
+    }
+
+    .pd-bim-card {
+      background: linear-gradient(135deg, rgba(255,212,0,0.08), rgba(255,212,0,0.02));
+      border: 1px solid rgba(255,212,0,0.35);
+      border-radius: 14px;
+      padding: 22px 24px;
+      margin-top: 24px;
+    }
+
+    .pd-bim-card-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .pd-bim-title {
+      font-family: 'Space Grotesk', monospace;
+      font-size: 13px;
+      font-weight: 700;
+      color: #FFD400;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
+    }
+
+    .pd-bim-sub { font-size: 13px; color: #888; }
+
+    .pd-bim-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .pd-bim-stat {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 8px;
+      padding: 12px 14px;
+    }
+
+    .pd-bim-stat-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      color: #666;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .pd-bim-stat-val {
+      font-family: 'Space Grotesk', monospace;
+      font-size: 16px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .pd-bim-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    .pd-bim-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 999px;
+      text-transform: uppercase;
+    }
+
+    .pd-bim-badge.ready { background: rgba(0,166,81,0.15); color: #00A651; }
+    .pd-bim-badge.none { background: rgba(136,136,136,0.15); color: #888; }
+    .pd-bim-badge.pending { background: rgba(255,212,0,0.12); color: #FFD400; }
+
+    @media (max-width: 900px) {
+      .pd-bim-stats { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .project-stage-timeline {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      padding: 32px 0;
+      overflow-x: auto;
+    }
+
+    .timeline-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .timeline-step-dot {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #1a1a1a;
+      border: 2px solid #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+
+    .timeline-step-dot.active {
+      background: rgba(255,212,0,0.15);
+      border-color: #FFD400;
+    }
+
+    .timeline-step-dot.completed {
+      background: #FFD400;
+      border-color: #FFD400;
+      color: #000;
+    }
+
+    .timeline-step-label {
+      font-family: 'Space Grotesk', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      color: #555;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      text-align: center;
+    }
+
+    .timeline-step.active .timeline-step-label { color: #FFD400; }
+    .timeline-step.completed .timeline-step-label { color: #00A651; }
+
+    .timeline-line {
+      width: 60px;
+      height: 2px;
+      background: #222;
+      flex-shrink: 0;
+      margin-bottom: 24px;
+    }
+
+    .timeline-line.completed { background: #FFD400; }
+
+    .ai-boq-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 36px;
+    }
+
+    @media (max-width: 900px) {
+      .ai-boq-grid { grid-template-columns: 1fr; }
+      .module-grid { grid-template-columns: repeat(2, 1fr); }
+      .project-detail-name { font-size: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Page Loader -->
+  <div class="page-loader">
+    <div class="loader-logo"><img src="/images/logo.png" alt="OH I SEE"></div>
+    <div class="loader-text">OH I SEE</div>
+    <div class="loader-bar"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="site-header" id="header">
+    <div class="header-top">
+      <a href="index.html" class="header-logo">
+        <img src="/images/logo.png" alt="OH I SEE">
+        <span class="header-logo-text">OH I SEE</span>
+      </a>
+      <nav class="header-nav">
+        <a href="index.html">Home</a>
+        <a href="products.html">Products</a>
+        <a href="project-detail.html" class="active">Projects</a>
+        <a href="bulk-quote.html">Bulk Quotation</a>
+      </nav>
+      <div class="header-actions">
+        <a href="account.html#wishlist" class="header-action-btn" title="Wishlist">♡</a>
+        <a href="account.html" class="header-action-btn" title="Account">👤</a>
+        <a href="cart.html" class="header-action-btn" title="Cart">🛒<span class="badge cart-count" style="display:none;">0</span></a>
+        <a href="bulk-quote.html" class="btn-request-quote">Request Quote</a>
+      </div>
+      <button class="mobile-menu-toggle">☰</button>
+    </div>
+  </header>
+
+  <!-- Back Button -->
+  <div style="background:#0a0a0a;border-bottom:1px solid #1a1a1a;padding:12px 0;">
+    <div class="container">
+      <a href="index.html" style="font-size:13px;color:#555;font-family:'Space Grotesk',monospace;text-decoration:none;display:inline-flex;align-items:center;gap:8px;">
+        ← Back to Home
+      </a>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <main id="project-main">
+    <div class="loading-state" id="project-loading">
+      <div style="font-size:32px;margin-bottom:16px;">⏳</div>
+      <div style="font-family:'Space Grotesk',monospace;font-size:18px;font-weight:700;color:#fff;text-transform:uppercase;margin-bottom:8px;">Loading Project</div>
+      <div style="font-size:14px;color:#555;">Fetching your project data...</div>
+    </div>
+
+    <div id="project-content" style="display:none;">
+      <!-- Hero -->
+      <div class="project-detail-hero">
+        <div class="container">
+          <div class="project-detail-header">
+            <div>
+              <div class="project-detail-id" id="pd-id">PRJ-XXXXX</div>
+              <div class="project-detail-name" id="pd-name">Loading...</div>
+              <div class="project-detail-meta" id="pd-meta"></div>
+            </div>
+            <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;">
+              <span class="project-status-badge status-active" id="pd-status">Active</span>
+              <a href="#" id="btn-open-workspace" class="btn-hero-primary" style="font-size:12px;padding:10px 18px;text-decoration:none;">🧱 Open Workspace</a>
+              <a href="#" id="btn-open-bim" class="btn-hero-outline" style="font-size:12px;padding:10px 18px;text-decoration:none;">View BIM</a>
+              <button class="btn-hero-outline" onclick="window.location.href='bulk-quote.html'" style="font-size:12px;padding:8px 16px;">Request Quote</button>
+            </div>
+          </div>
+
+          <!-- Stage Timeline -->
+          <div class="project-stage-timeline" id="pd-timeline"></div>
+
+          <!-- BIM Summary Card -->
+          <div class="pd-bim-card" id="pd-bim-card">
+            <div class="pd-bim-card-head">
+              <div>
+                <div class="pd-bim-title">🧱 BIM Model — Building Source of Truth</div>
+                <div class="pd-bim-sub">3D geometry, quantities, floor plans and exports derive from this model.</div>
+              </div>
+              <span class="pd-bim-badge none" id="pd-bim-status-badge">Checking…</span>
+            </div>
+            <div class="pd-bim-stats" id="pd-bim-stats">
+              <div class="pd-bim-stat"><div class="pd-bim-stat-label">Elements</div><div class="pd-bim-stat-val" id="pd-bim-elements">—</div></div>
+              <div class="pd-bim-stat"><div class="pd-bim-stat-label">Version</div><div class="pd-bim-stat-val" id="pd-bim-version">—</div></div>
+              <div class="pd-bim-stat"><div class="pd-bim-stat-label">Walls</div><div class="pd-bim-stat-val" id="pd-bim-walls">—</div></div>
+              <div class="pd-bim-stat"><div class="pd-bim-stat-label">Rooms</div><div class="pd-bim-stat-val" id="pd-bim-rooms">—</div></div>
+            </div>
+            <div class="pd-bim-actions">
+              <a href="#" id="btn-bim-workspace" class="btn-hero-primary" style="font-size:12px;padding:10px 18px;text-decoration:none;">Open Workspace →</a>
+              <a href="#" id="btn-bim-viewer" class="btn-hero-outline" style="font-size:12px;padding:10px 18px;text-decoration:none;">Open BIM Viewer</a>
+              <button type="button" id="btn-generate-bim" class="btn-hero-outline" style="font-size:12px;padding:10px 18px;">⚡ Generate BIM</button>
+            </div>
+          </div>
+
+          <!-- Vendor Partner & Workforce Deal Status Card -->
+          <div id="vendor-deal-card" style="background:#111; border:1px solid rgba(255,212,0,0.3); border-radius:12px; padding:20px; margin-top:20px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:14px; border-bottom:1px solid #222; padding-bottom:12px;">
+              <div>
+                <span style="font-family:'Space Grotesk',monospace; font-size:11px; color:#FFD400; font-weight:700; text-transform:uppercase; letter-spacing:1px;">🏗️ VENDOR CONTRACT & WORKFORCE STATUS</span>
+                <h3 style="margin:4px 0 0 0; font-family:'Space Grotesk',sans-serif; font-size:18px; color:#fff;" id="vd-vendor-title">Waiting for Vendor Acceptance...</h3>
+              </div>
+              <span id="vd-status-badge" style="background:#ffd400; color:#000; font-size:11px; font-weight:700; padding:4px 10px; border-radius:4px; text-transform:uppercase;">PENDING VENDOR REVIEW</span>
+            </div>
+
+            <div style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); display:grid; gap:12px; margin-bottom:16px; font-size:13px;">
+              <div style="background:#1a1a1a; padding:10px 14px; border-radius:6px;"><span style="color:#777; font-size:11px; display:block;">Advance Terms</span> <strong style="color:#FFD400;" id="vd-advance-terms">20% Advance Required</strong></div>
+              <div style="background:#1a1a1a; padding:10px 14px; border-radius:6px;"><span style="color:#777; font-size:11px; display:block;">Labor Wage Model</span> <strong style="color:#fff;" id="vd-wage-model">Milestone Payout Basis</strong></div>
+              <div style="background:#1a1a1a; padding:10px 14px; border-radius:6px;"><span style="color:#777; font-size:11px; display:block;">Assigned Workforce</span> <strong style="color:#50e3c2;" id="vd-workforce-count">0 Site Workers</strong></div>
+            </div>
+
+            <div style="font-size:12px; color:#aaa; margin-bottom:12px;">
+              <strong>Assigned Site Engineers & Artisans:</strong>
+            </div>
+            <div id="vd-employees-list" style="display:flex; gap:8px; flex-wrap:wrap;">
+              <div style="font-size:12px; color:#666; font-style:italic;">No site workers assigned yet by vendor.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BIM Workspace (quick access) -->
+      <div class="container" id="pd-workspace-section">
+        <div style="margin: 8px 0 20px;">
+          <div class="hp-section-label">BIM & Technical</div>
+          <h2 class="hp-section-title" style="font-size:24px;">Project Workspace</h2>
+        </div>
+        <div class="module-grid" id="pd-workspace-modules" style="padding-top:0;"></div>
+      </div>
+
+      <!-- AI BOQ Hub & Advisor Section -->
+      <div class="container">
+        <div class="ai-boq-grid">
+          
+          <!-- BOQ Card -->
+          <div style="background:#0d0d0d; border:1px solid #222; border-radius:12px; padding:24px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
+              <div style="font-family:'Space Grotesk',monospace; font-size:16px; font-weight:700; color:#FFD400; text-transform:uppercase; letter-spacing:0.5px;">
+                📋 Bill of Quantities (BOQ)
+              </div>
+              <button id="btn-gen-boq" class="btn-hero-primary" style="font-size:12px; padding:8px 14px;">
+                ⚡ Generate AI BOQ
+              </button>
+            </div>
+            <div id="boq-content-area"></div>
+          </div>
+
+          <!-- Project AI Advisor Panel -->
+          <div style="background:#0d0d0d; border:1px solid #222; border-radius:12px; padding:24px; display:flex; flex-direction:column; height:460px;">
+            <div style="font-family:'Space Grotesk',monospace; font-size:16px; font-weight:700; color:#fff; text-transform:uppercase; margin-bottom:12px; letter-spacing:0.5px; display:flex; align-items:center; gap:8px;">
+              <span style="color:#FFD400;">✨</span> Project AI Advisor
+            </div>
+            <div id="project-chat-history" style="flex:1; overflow-y:auto; padding-right:6px; display:flex; flex-direction:column; gap:12px; margin-bottom:12px;">
+            </div>
+            <div style="display:flex; gap:8px;">
+              <input type="text" id="project-chat-input" placeholder="Ask AI about this project..." style="flex:1; background:#181818; border:1px solid #333; color:#fff; padding:10px 14px; border-radius:8px; font-size:13px; outline:none;">
+              <button id="project-chat-send" class="btn-hero-primary" style="padding:10px 16px; font-size:13px; cursor:pointer;">Send</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Module Grid -->
+      <div class="container">
+        <div style="margin: 40px 0 20px;">
+          <div class="hp-section-label">Project Modules</div>
+          <h2 class="hp-section-title" style="font-size:24px;">Project Digital Twin</h2>
+        </div>
+        <div class="module-grid" id="pd-modules"></div>
+      </div>
+    </div>
+
+    <div id="project-error" style="display:none;">
+      <div class="error-state">
+        <div style="font-size:40px;margin-bottom:16px;">⚠️</div>
+        <div style="font-family:'Space Grotesk',monospace;font-size:20px;font-weight:700;color:#fff;text-transform:uppercase;margin-bottom:8px;">Project Not Found</div>
+        <div style="font-size:14px;color:#555;margin-bottom:24px;">This project doesn't exist or you don't have permission to view it.</div>
+        <a href="index.html" class="btn-hero-primary" style="display:inline-block;">← Go to Home</a>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-bottom">© 2024 OH I SEE Industrial Solutions. Coimbatore, Tamil Nadu.</div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../js/utils/helpers.js"></script>
+  <script src="../js/components/notifications.js"></script>
+  <script src="../js/api/api-core.js"></script>
+  <script src="../js/api/ai.js"></script>
+  <script src="../js/components/ai-assistant.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/api/projects.js"></script>
+  <script src="../js/bim/api/bim.js"></script>
+  <script>
+    const STAGES = ['Requirement', 'Design', 'Blueprint', 'BOQ', 'Estimate', 'Products', 'Procurement', 'Construction'];
+    const WORKSPACE_MODULES = [
+      { icon: '📋', title: 'Overview', link: 'project-overview.html?projectId=' },
+      { icon: '🧱', title: 'BIM & Technical', link: 'project-bim.html?projectId=' },
+      { icon: '📐', title: 'Floor Plan', link: 'project-floor-plan.html?projectId=' },
+      { icon: '🏠', title: '3D Home', link: 'project-3d.html?projectId=' },
+      { icon: '📊', title: 'BOQ', link: 'project-boq.html?projectId=' },
+      { icon: '💰', title: 'Cost', link: 'project-cost.html?projectId=' },
+      { icon: '📤', title: 'Export', link: 'project-export.html?projectId=' },
+    ];
+
+    const MODULES = [
+      { icon: '🎨', title: 'Design', key: 'progress_design', link: '#' },
+      { icon: '📐', title: 'Blueprint', key: null, link: 'bulk-quote.html?mode=blueprint' },
+      { icon: '📋', title: 'BOQ', key: 'progress_boq', link: '#' },
+      { icon: '💰', title: 'Estimate', key: 'progress_estimate', link: '#' },
+      { icon: '📦', title: 'Products', key: 'progress_products', link: 'products.html' },
+      { icon: '🛒', title: 'Orders', key: 'progress_procurement', link: 'cart.html' },
+      { icon: '👷', title: 'Professionals', key: null, link: '#professionals-section' },
+      { icon: '🚚', title: 'Delivery', key: null, link: '#' },
+      { icon: '🏗️', title: 'Construction', key: 'progress_construction', link: '#' },
+      { icon: '📄', title: 'Documents', key: null, link: '#' },
+      { icon: '💳', title: 'Payments', key: null, link: 'checkout.html' },
+      { icon: '🛡️', title: 'Warranty', key: null, link: '#' }
+    ];
+
+    let currentProject = null;
+    let projectChatHistory = [];
+
+    async function loadProject() {
+      const params = new URLSearchParams(window.location.search);
+      const projectId = params.get('id');
+
+      if (!projectId) {
+        document.getElementById('project-loading').style.display = 'none';
+        document.getElementById('project-error').style.display = 'block';
+        return;
+      }
+
+      const token = localStorage.getItem('ohisee_jwt')
+        || localStorage.getItem('ohisee_token')
+        || sessionStorage.getItem('ohisee_token');
+      if (!token) {
+        window.location.href = `login.html?redirect=project-detail.html?id=${encodeURIComponent(projectId)}`;
+        return;
+      }
+
+      try {
+        let p = null;
+        if (typeof ProjectsAPI !== 'undefined') {
+          const result = await ProjectsAPI.getOne(projectId);
+          if (result?.data) p = result.data;
+        }
+        if (!p) {
+          const API = typeof resolveOhiseeApiBase === 'function'
+            ? resolveOhiseeApiBase()
+            : ((location.port === '3000' || location.port === '5173') ? '/api' : 'http://127.0.0.1:3001/api');
+          const resp = await fetch(`${API}/projects/${encodeURIComponent(projectId)}`, {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+          if (resp.ok) {
+            const payload = await resp.json();
+            p = payload.data;
+          }
+        }
+        if (!p && typeof ProjectsAPI !== 'undefined') {
+          p = ProjectsAPI.getLocal(projectId);
+        }
+        if (!p) {
+          document.getElementById('project-loading').style.display = 'none';
+          document.getElementById('project-error').style.display = 'block';
+          return;
+        }
+        if (typeof ProjectsAPI !== 'undefined') ProjectsAPI.cacheLocally(p);
+        currentProject = p;
+        renderProject(p);
+      } catch (err) {
+        console.error(err);
+        const fallback = typeof ProjectsAPI !== 'undefined' ? ProjectsAPI.getLocal(projectId) : null;
+        if (fallback) {
+          currentProject = fallback;
+          renderProject(fallback);
+          return;
+        }
+        document.getElementById('project-loading').style.display = 'none';
+        document.getElementById('project-error').style.display = 'block';
+      }
+    }
+
+    function renderProject(p) {
+      document.title = `${p.project_id} — ${p.project_name} | OH I SEE`;
+      document.getElementById('pd-id').textContent = p.project_id;
+      document.getElementById('pd-name').textContent = p.project_name;
+
+      const meta = [
+        p.project_type && `🏠 ${p.project_type}`,
+        p.city && `📍 ${p.city}, ${p.state}`,
+        p.budget > 0 && `💰 Budget: ₹${(p.budget/100000).toFixed(1)}L`,
+        `📅 Updated: ${new Date(p.updated_at).toLocaleDateString('en-IN')}`
+      ].filter(Boolean);
+      document.getElementById('pd-meta').innerHTML = meta.map(m => `<span>${m}</span>`).join('');
+
+      const statusMap = { active: 'status-active', paused: 'status-paused', completed: 'status-completed' };
+      const statusEl = document.getElementById('pd-status');
+      statusEl.className = `project-status-badge ${statusMap[p.status] || 'status-active'}`;
+      statusEl.textContent = p.status ? (p.status.charAt(0).toUpperCase() + p.status.slice(1)) : 'Active';
+
+      // Stage Timeline
+      const currentIdx = STAGES.indexOf(p.current_stage);
+      const timelineEl = document.getElementById('pd-timeline');
+      timelineEl.innerHTML = STAGES.map((stage, i) => {
+        const isCompleted = i < currentIdx;
+        const isActive = i === currentIdx;
+        return `
+          ${i > 0 ? `<div class="timeline-line${isCompleted ? ' completed' : ''}"></div>` : ''}
+          <div class="timeline-step${isActive ? ' active' : ''}${isCompleted ? ' completed' : ''}">
+            <div class="timeline-step-dot${isActive ? ' active' : ''}${isCompleted ? ' completed' : ''}">
+              ${isCompleted ? '✓' : (i + 1)}
+            </div>
+            <div class="timeline-step-label">${stage}</div>
+          </div>`;
+      }).join('');
+
+      // Vendor Contract & Workforce Card
+      renderVendorDealCard(p);
+
+      // BOQ Section
+      renderBOQSection(p);
+
+      // AI Advisor Chat
+      initProjectAIChat(p);
+
+      // Modules
+      const progressMap = {
+        progress_design: p.progress_design,
+        progress_boq: p.progress_boq,
+        progress_estimate: p.progress_estimate,
+        progress_products: p.progress_products,
+        progress_procurement: p.progress_procurement,
+        progress_construction: p.progress_construction
+      };
+
+      const pid = encodeURIComponent(p.project_id);
+      const workspaceUrl = `project-overview.html?projectId=${pid}`;
+      const bimUrl = `project-bim.html?projectId=${pid}`;
+
+      ['btn-open-workspace', 'btn-bim-workspace'].forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) el.href = workspaceUrl;
+      });
+      ['btn-open-bim', 'btn-bim-viewer'].forEach((id) => {
+        const el = document.getElementById(id);
+        if (el) el.href = bimUrl;
+      });
+
+      document.getElementById('pd-workspace-modules').innerHTML = WORKSPACE_MODULES.map(m => `
+          <a class="module-card" href="${m.link}${pid}">
+            <div class="module-card-icon">${m.icon}</div>
+            <div class="module-card-title">${m.title}</div>
+            <div class="module-card-status">${m.title === 'BIM & Technical' ? 'View 3D model & properties' : 'Open workspace'}</div>
+          </a>`).join('');
+
+      renderBimSummary(p);
+
+      document.getElementById('pd-modules').innerHTML = MODULES.map(m => {
+        const pct = m.key ? (progressMap[m.key] || 0) : 0;
+        const status = pct === 100 ? '✓ Complete' : pct > 0 ? `${pct}% In Progress` : 'Not Started';
+        return `
+          <a class="module-card" href="${m.link}">
+            <div class="module-card-icon">${m.icon}</div>
+            <div class="module-card-title">${m.title}</div>
+            <div class="module-card-status">${status}</div>
+            ${m.key ? `
+              <div class="module-card-progress">
+                <div class="module-card-progress-fill" style="width:${pct}%"></div>
+              </div>` : ''}
+          </a>`;
+      }).join('');
+
+      document.getElementById('project-loading').style.display = 'none';
+      document.getElementById('project-content').style.display = 'block';
+    }
+
+    function setBimBadge(status) {
+      const badge = document.getElementById('pd-bim-status-badge');
+      if (!badge) return;
+      const labels = { ready: 'BIM Ready', none: 'No BIM Yet', generating: 'Generating…', pending: 'Pending', failed: 'Failed' };
+      badge.textContent = labels[status] || status || 'Unknown';
+      badge.className = `pd-bim-badge ${status === 'ready' ? 'ready' : (status === 'generating' || status === 'pending' ? 'pending' : 'none')}`;
+    }
+
+    async function renderBimSummary(p) {
+      const genBtn = document.getElementById('btn-generate-bim');
+      if (genBtn) {
+        genBtn.onclick = async () => {
+          genBtn.disabled = true;
+          genBtn.textContent = 'Generating…';
+          try {
+            await BimAPI.generate(p.project_id);
+            await renderBimSummary(p);
+            if (typeof Notifications !== 'undefined') Notifications.show('BIM model generated.', 'success');
+          } catch (e) {
+            if (typeof Notifications !== 'undefined') Notifications.show(e.message, 'error');
+          } finally {
+            genBtn.disabled = false;
+            genBtn.textContent = '⚡ Generate BIM';
+          }
+        };
+      }
+
+      if (typeof BimAPI === 'undefined') {
+        setBimBadge('none');
+        return;
+      }
+
+      try {
+        const res = await BimAPI.getModel(p.project_id);
+        const data = res.data || {};
+        const status = data.status || 'none';
+        const model = data.model;
+        setBimBadge(status);
+
+        const elements = model?.elements || [];
+        document.getElementById('pd-bim-elements').textContent = elements.length || '0';
+        document.getElementById('pd-bim-version').textContent = data.version?.version_number ? `v${data.version.version_number}` : '—';
+        document.getElementById('pd-bim-walls').textContent = elements.filter((e) => e.type === 'Wall').length;
+        document.getElementById('pd-bim-rooms').textContent = elements.filter((e) => e.type === 'Room').length;
+
+        if (genBtn) {
+          genBtn.style.display = elements.length ? 'none' : 'inline-block';
+        }
+      } catch (e) {
+        setBimBadge('none');
+        document.getElementById('pd-bim-elements').textContent = '—';
+      }
+    }
+
+    async function renderVendorDealCard(p) {
+      const isAccepted = p.acceptance_status === 'accepted' || (p.vendor_id && p.vendor_id !== '');
+      const vendorTitle = document.getElementById('vd-vendor-title');
+      const statusBadge = document.getElementById('vd-status-badge');
+      const advTerms = document.getElementById('vd-advance-terms');
+      const wageModel = document.getElementById('vd-wage-model');
+      const wfCount = document.getElementById('vd-workforce-count');
+      const empContainer = document.getElementById('vd-employees-list');
+
+      const terms = p.payment_terms || {};
+      const advPct = terms.advance_percentage || 20;
+      const modelLabels = { daily: 'Daily Wages', monthly: 'Monthly Salary Schedule', milestone: 'Milestone Basis', completion: 'Full Payment on Completion' };
+
+      if (isAccepted) {
+        vendorTitle.textContent = `🤝 Accepted Deal — Partner: ${p.vendor_name || 'Verified Structural Vendor'}`;
+        statusBadge.style.background = '#00A651';
+        statusBadge.style.color = '#fff';
+        statusBadge.textContent = 'DEAL APPROVED & IN PROGRESS';
+        advTerms.textContent = `${advPct}% Advance Payment Agreed`;
+        wageModel.textContent = modelLabels[terms.payment_model] || 'Milestone Basis';
+      } else {
+        vendorTitle.textContent = `⏳ Waiting for Vendor Acceptance & Deal Approval...`;
+        statusBadge.style.background = '#FFD400';
+        statusBadge.style.color = '#000';
+        statusBadge.textContent = 'PENDING VENDOR REVIEW';
+        advTerms.textContent = '20% Advance (Standard)';
+        wageModel.textContent = 'Milestone Basis';
+      }
+
+      // Fetch assigned workforce employees
+      try {
+        const empRes = await ProjectsAPI.getEmployees(p.project_id);
+        const empList = empRes.data || [];
+        wfCount.textContent = `${empList.length} Site Workers`;
+
+        if (empList.length === 0) {
+          empContainer.innerHTML = `<div style="font-size:12px; color:#666; font-style:italic;">No site workers assigned yet by vendor.</div>`;
+        } else {
+          empContainer.innerHTML = empList.map(emp => `
+            <div style="background:#1a1a1a; border:1px solid #333; border-radius:6px; padding:6px 12px; font-size:12px; display:flex; align-items:center; gap:8px;">
+              <span style="font-size:14px;">👷</span>
+              <div>
+                <strong style="color:#fff;">${emp.employee_name}</strong>
+                <span style="color:#888; margin-left:6px;">(${emp.role})</span>
+                <div style="font-size:10px; color:#FFD400; font-weight:700;">₹${parseFloat(emp.wage_rate || 0).toLocaleString('en-IN')} / ${emp.wage_type}</div>
+              </div>
+            </div>
+          `).join('');
+        }
+      } catch (e) {
+        empContainer.innerHTML = `<div style="font-size:12px; color:#888;">Workforce status active.</div>`;
+      }
+    }
+
+    function renderBOQSection(p) {
+      const container = document.getElementById('boq-content-area');
+      const genBtn = document.getElementById('btn-gen-boq');
+      
+      if (p.boq_data && p.boq_data.items && p.boq_data.items.length) {
+        const boq = p.boq_data;
+        genBtn.textContent = '🔄 Regenerate BOQ';
+        
+        let html = `
+          <div style="font-size:12px; color:#666; margin-bottom:12px;">
+            Generated: ${boq.generatedAt ? new Date(boq.generatedAt).toLocaleDateString('en-IN') : 'Recently'}
+          </div>
+          <div style="max-height:240px; overflow-y:auto; border:1px solid #1a1a1a; border-radius:8px; margin-bottom:16px;">
+            <table style="width:100%; border-collapse:collapse; font-size:12px; text-align:left;">
+              <thead>
+                <tr style="background:#141414; color:#FFD400; border-bottom:1px solid #222;">
+                  <th style="padding:8px 10px;">Material / Service</th>
+                  <th style="padding:8px 10px;">Qty</th>
+                  <th style="padding:8px 10px;">Unit Price</th>
+                  <th style="padding:8px 10px;">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+        `;
+        
+        boq.items.forEach(item => {
+          const name = (item.name || item.item || '').replace(/</g, '&lt;');
+          const qty = item.quantity || 1;
+          const unit = (item.unit || '').replace(/</g, '&lt;');
+          const price = item.unitPrice || item.price || 0;
+          const total = item.totalPrice || (price * qty);
+
+          html += `
+            <tr style="border-bottom:1px solid #1a1a1a;">
+              <td style="padding:8px 10px; color:#fff;">${name}</td>
+              <td style="padding:8px 10px; color:#aaa;">${qty} ${unit}</td>
+              <td style="padding:8px 10px; color:#aaa;">₹${Number(price).toLocaleString('en-IN')}</td>
+              <td style="padding:8px 10px; color:#FFD400; font-weight:600;">₹${Number(total).toLocaleString('en-IN')}</td>
+            </tr>
+          `;
+        });
+
+        html += `
+              </tbody>
+            </table>
+          </div>
+          <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid #222; padding-top:12px; flex-wrap:wrap; gap:10px;">
+            <div>
+              <span style="font-size:11px; color:#666; text-transform:uppercase;">Estimated Cost</span>
+              <div style="font-family:'Space Grotesk',monospace; font-size:18px; font-weight:700; color:#FFD400;">
+                ₹${Number(boq.totalAmount || 0).toLocaleString('en-IN')}
+              </div>
+            </div>
+            <button class="btn-hero-primary" id="btn-add-boq-cart" style="font-size:12px; padding:8px 14px;">
+              🛒 Add BOQ Materials to Cart
+            </button>
+          </div>
+        `;
+
+        container.innerHTML = html;
+
+        const addBtn = document.getElementById('btn-add-boq-cart');
+        if (addBtn) {
+          addBtn.addEventListener('click', () => {
+            boq.items.forEach(item => {
+              if (typeof Cart !== 'undefined' && Cart.addItem && item.id) {
+                Cart.addItem(item.id, item.quantity || 1);
+              }
+            });
+            if (typeof showToast === 'function') showToast('Added BOQ items to cart!', 'success');
+            addBtn.textContent = 'Added ✓';
+            addBtn.style.background = '#00A651';
+          });
+        }
+      } else {
+        genBtn.textContent = '⚡ Generate AI BOQ';
+        container.innerHTML = `
+          <div style="text-align:center; padding:32px 12px; color:#666;">
+            <div style="font-size:32px; margin-bottom:12px;">📋</div>
+            <div style="font-size:14px; color:#aaa; font-weight:600; margin-bottom:6px;">No BOQ Generated Yet</div>
+            <div style="font-size:12px; margin-bottom:16px; color:#555;">Click button above to calculate materials & cost estimates automatically with AI.</div>
+          </div>
+        `;
+      }
+
+      genBtn.onclick = () => handleGenerateBOQ(p.project_id);
+    }
+
+    async function handleGenerateBOQ(projectId) {
+      const container = document.getElementById('boq-content-area');
+      const genBtn = document.getElementById('btn-gen-boq');
+      genBtn.disabled = true;
+      genBtn.textContent = '⏳ Generating...';
+      container.innerHTML = `
+        <div style="text-align:center; padding:40px; color:#FFD400;">
+          <div style="font-size:28px; margin-bottom:8px;">⚙️</div>
+          <div style="font-size:13px;">AI is analyzing project scope & calculating material estimates...</div>
+        </div>
+      `;
+
+      try {
+        const res = await window.AiAPI.generateBOQ(projectId);
+        if (res.success && res.boq) {
+          currentProject.boq_data = res.boq;
+          renderBOQSection(currentProject);
+          if (typeof showToast === 'function') showToast('BOQ generated successfully!', 'success');
+        } else {
+          throw new Error(res.error || 'Generation failed');
+        }
+      } catch (err) {
+        genBtn.disabled = false;
+        genBtn.textContent = '⚡ Generate AI BOQ';
+        container.innerHTML = `<div style="color:#ff4d4d; padding:20px; text-align:center; font-size:13px;">Failed to generate BOQ. ${err.message}</div>`;
+      }
+    }
+
+    function initProjectAIChat(p) {
+      const historyEl = document.getElementById('project-chat-history');
+      const inputEl = document.getElementById('project-chat-input');
+      const sendBtn = document.getElementById('project-chat-send');
+
+      historyEl.innerHTML = ''; // reset history container DOM
+
+      const addMsg = (text, sender) => {
+        const msgDiv = document.createElement('div');
+        msgDiv.style.cssText = sender === 'user' 
+          ? 'align-self:flex-end; background:#FFD400; color:#000; padding:8px 12px; border-radius:12px 12px 2px 12px; max-width:85%; font-size:13px; font-weight:500;'
+          : 'align-self:flex-start; background:#1a1a1a; color:#fff; border:1px solid #333; padding:10px 14px; border-radius:12px 12px 12px 2px; max-width:85%; font-size:13px; line-height:1.4;';
+        
+        const formatted = text
+          .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+          .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+          .replace(/\n/g, '<br>');
+
+        msgDiv.innerHTML = formatted;
+        historyEl.appendChild(msgDiv);
+        historyEl.scrollTop = historyEl.scrollHeight;
+      };
+
+      const safeName = (p.project_name || '').replace(/</g, '&lt;');
+      const safeType = (p.project_type || 'Construction').replace(/</g, '&lt;');
+      addMsg(`Welcome! I'm your AI advisor for <strong>${safeName}</strong> (${safeType}). How can I help with your project materials or planning?`, 'bot');
+
+      const send = async () => {
+        const text = inputEl.value.trim();
+        if (!text) return;
+        inputEl.value = '';
+        addMsg(text, 'user');
+
+        const typingDiv = document.createElement('div');
+        typingDiv.style.cssText = 'align-self:flex-start; color:#666; font-size:12px; font-style:italic;';
+        typingDiv.textContent = 'AI is typing...';
+        historyEl.appendChild(typingDiv);
+        historyEl.scrollTop = historyEl.scrollHeight;
+
+        try {
+          const projCtx = { id: p.project_id, name: p.project_name, type: p.project_type, stage: p.current_stage };
+          const resp = await window.AiAPI.sendMessage(text, projectChatHistory, projCtx);
+          typingDiv.remove();
+
+          if (resp.text) {
+            addMsg(resp.text, 'bot');
+            projectChatHistory.push({ role: 'user', content: text });
+            projectChatHistory.push({ role: 'assistant', content: resp.text });
+          }
+        } catch (err) {
+          typingDiv.remove();
+          addMsg('Sorry, unable to process your request at the moment.', 'bot');
+        }
+      };
+
+      sendBtn.onclick = send;
+      inputEl.onkeypress = e => { if (e.key === 'Enter') send(); };
+    }
+
+    document.addEventListener('DOMContentLoaded', loadProject);
+  </script>
+</body>
+</html>

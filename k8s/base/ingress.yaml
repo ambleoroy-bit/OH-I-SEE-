@@ -1,0 +1,49 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ohisee-ingress
+  labels:
+    app.kubernetes.io/part-of: ohisee
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/proxy-body-size: "12m"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "120"
+spec:
+  tls:
+    - hosts:
+        - ohisee.com
+        - www.ohisee.com
+        - api.ohisee.com
+      secretName: ohisee-tls
+  rules:
+    - host: ohisee.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ohisee-frontend
+                port:
+                  number: 80
+    - host: www.ohisee.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ohisee-frontend
+                port:
+                  number: 80
+    - host: api.ohisee.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ohisee-api
+                port:
+                  number: 3001

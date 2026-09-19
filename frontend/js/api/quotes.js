@@ -9,13 +9,27 @@ window.QuotesAPI = {
       body: JSON.stringify(data) 
     });
   },
+
+  create: async (data) => {
+    return apiFetch('/quotes', { 
+      method: 'POST', 
+      body: JSON.stringify(data) 
+    });
+  },
   
   getAll: async () => {
-    return apiFetch('/quotes');
+    const res = await apiFetch('/quotes');
+    return Array.isArray(res) ? res : (res.quotes || res.data || []);
+  },
+
+  getMyQuotes: async () => {
+    const res = await apiFetch('/quotes');
+    return Array.isArray(res) ? res : (res.quotes || res.data || []);
   },
   
   getAllAdmin: async () => {
-    return apiFetch('/quotes/all');
+    const res = await apiFetch('/quotes/all');
+    return Array.isArray(res) ? res : (res.quotes || res.data || []);
   },
   
   updateStatus: async (id, status) => {

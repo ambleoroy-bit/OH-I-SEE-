@@ -11,11 +11,18 @@ window.OrdersAPI = {
   },
   
   getAll: async () => {
-    return apiFetch('/orders');
+    const res = await apiFetch('/orders');
+    return Array.isArray(res) ? res : (res.orders || res.data || []);
+  },
+  
+  getMyOrders: async () => {
+    const res = await apiFetch('/orders');
+    return Array.isArray(res) ? res : (res.orders || res.data || []);
   },
   
   getAllAdmin: async () => {
-    return apiFetch('/orders/all');
+    const res = await apiFetch('/orders/all');
+    return Array.isArray(res) ? res : (res.orders || res.data || []);
   },
   
   updateStatus: async (id, status) => {

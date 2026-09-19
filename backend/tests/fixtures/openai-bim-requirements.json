@@ -1,0 +1,92 @@
+{
+  "schemaVersion": 1,
+  "projectName": "Integration test",
+  "description": "",
+  "site": {
+    "location": "",
+    "city": "",
+    "state": "",
+    "plotLengthFt": 40,
+    "plotWidthFt": 60,
+    "roadFacing": "East"
+  },
+  "building": {
+    "floors": 1,
+    "bedrooms": 2,
+    "bathrooms": 2,
+    "parking": 1,
+    "architecturalStyle": "Contemporary",
+    "qualityLevel": "Standard",
+    "budgetInr": 0,
+    "hasPooja": false,
+    "hasOffice": false,
+    "hasTerrace": false,
+    "vastu": ""
+  },
+  "rooms": [
+    {
+      "name": "Living Room",
+      "type": "living",
+      "storeyIndex": 0,
+      "lengthFt": 16,
+      "widthFt": 14
+    },
+    {
+      "name": "Kitchen",
+      "type": "kitchen",
+      "storeyIndex": 0,
+      "lengthFt": 12,
+      "widthFt": 10
+    },
+    {
+      "name": "Dining",
+      "type": "dining",
+      "storeyIndex": 0,
+      "lengthFt": 12,
+      "widthFt": 10
+    },
+    {
+      "name": "Bedroom 1",
+      "type": "bedroom",
+      "storeyIndex": 0,
+      "lengthFt": 12,
+      "widthFt": 11
+    },
+    {
+      "name": "Bedroom 2",
+      "type": "bedroom",
+      "storeyIndex": 0,
+      "lengthFt": 12,
+      "widthFt": 11
+    },
+    {
+      "name": "Bathroom 1",
+      "type": "bathroom",
+      "storeyIndex": 0,
+      "lengthFt": 8,
+      "widthFt": 6
+    },
+    {
+      "name": "Bathroom 2",
+      "type": "bathroom",
+      "storeyIndex": 0,
+      "lengthFt": 8,
+      "widthFt": 6
+    },
+    {
+      "name": "Car Parking",
+      "type": "parking",
+      "storeyIndex": 0,
+      "lengthFt": 18,
+      "widthFt": 10
+    }
+  ],
+  "storeys": [
+    {
+      "index": 0,
+      "name": "Ground Floor",
+      "elevationM": 0,
+      "clearHeightM": 3
+    }
+  ]
+}

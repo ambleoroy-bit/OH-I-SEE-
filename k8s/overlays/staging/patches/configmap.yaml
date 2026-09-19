@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ohisee-config
+data:
+  FRONTEND_URL: https://staging.ohisee.com
+  APP_URL: https://staging.ohisee.com
+  OHISEE_API_BASE: https://api.staging.ohisee.com/api

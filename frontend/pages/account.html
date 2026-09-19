@@ -27,6 +27,34 @@
         grid-template-columns: 1fr;
       }
     }
+    .dashboard-avatar {
+      position: relative; overflow: hidden;
+    }
+    .dashboard-avatar img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+    }
+    .profile-photo-row {
+      display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+      margin-bottom: 20px; padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .profile-photo-preview {
+      width: 88px; height: 88px; border-radius: 50%;
+      border: 2px solid #FFD400; background: #111; color: #FFD400;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px; font-weight: 800; overflow: hidden; flex-shrink: 0;
+    }
+    .profile-photo-preview img { width: 100%; height: 100%; object-fit: cover; }
+    .profile-photo-actions p {
+      margin: 0 0 8px; font-size: 13px; color: #666; max-width: 360px;
+    }
+    .profile-photo-upload-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #000; color: #FFD400; border: 1px solid #FFD400;
+      border-radius: 8px; padding: 8px 14px; font-size: 12px; font-weight: 700;
+      cursor: pointer;
+    }
+    .profile-photo-upload-btn input { display: none; }
   </style>
 </head>
 <body>
@@ -104,25 +132,52 @@
         <!-- Left Column: Sidebar -->
         <aside class="dashboard-sidebar">
           <div class="dashboard-user">
-            <div class="dashboard-avatar" id="user-avatar-initials">AP</div>
+            <div class="dashboard-avatar" id="user-avatar-wrap">
+              <img id="user-avatar-img" alt="" style="display:none;">
+              <span id="user-avatar-initials">AP</span>
+            </div>
             <h4 id="user-display-name">Andrew Paul</h4>
             <p id="user-display-company">Antigravity Devs</p>
           </div>
           <nav class="dashboard-nav">
-            <a href="#" class="active" data-section="orders-section"><span>📦</span> Orders Log</a>
+            <a href="#" class="active" data-section="projects-section"><span>🏗️</span> Saved Construction Projects</a>
+            <a href="#" data-section="orders-section"><span>📦</span> Orders Log</a>
             <a href="#" data-section="quotes-section"><span>📋</span> Quotation Requests</a>
             <a href="#" data-section="wishlist-section"><span>♡</span> Wishlist Inventory</a>
             <a href="#" data-section="addresses-section"><span>📍</span> Shipping Addresses</a>
             <a href="#" data-section="profile-section"><span>👤</span> Profile Details</a>
             <a href="#" style="color:var(--danger); border-top:1px solid var(--border-color); margin-top:12px; padding-top:16px;" onclick="handleLogout()"><span>🚪</span> Terminate Session</a>
+            <a href="vendor-dashboard.html" style="border-top:1px solid var(--border-color); margin-top:12px; padding-top:16px; color:#777; font-size:12px;"><span>🏗️</span> Vendor Portal →</a>
           </nav>
         </aside>
 
         <!-- Right Column: Content Panels -->
         <main class="dashboard-content">
           
+          <!-- Section 0: Construction Projects -->
+          <div class="dashboard-content-section active" id="projects-section">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
+              <div>
+                <h2 style="margin:0;">Saved Construction Projects & Vendor Deals</h2>
+                <p style="font-size:13px; color:#666; margin-top:4px;">Track project status, vendor acceptance, advance payment terms, and assigned site engineers.</p>
+              </div>
+              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <a href="customer-portal.html" class="btn btn-dark btn-sm" style="background:#FFD400; color:#000; font-weight:700;">
+                  Customer Portal
+                </a>
+                <a href="intent-engine.html?intent=NEW_HOME&step=1&portal=1" class="btn btn-dark btn-sm" style="background:#000; color:#FFD400; font-weight:700;">
+                  New Project
+                </a>
+              </div>
+            </div>
+
+            <div id="customer-projects-list-wrapper">
+              <div style="text-align:center; padding:48px 0;"><p style="color:#666;">Loading your construction projects...</p></div>
+            </div>
+          </div>
+
           <!-- Section 1: Orders Log -->
-          <div class="dashboard-content-section active" id="orders-section">
+          <div class="dashboard-content-section" id="orders-section">
             <h2>Order History</h2>
             <div id="orders-list-wrapper">
               <!-- Rendered by JS -->
@@ -191,6 +246,19 @@
           <div class="dashboard-content-section" id="profile-section">
             <h2>Corporate Profile & Tax Identifiers</h2>
             <div class="quote-form" style="box-shadow:none; border:1px solid var(--border-color); padding:24px;">
+              <div class="profile-photo-row">
+                <div class="profile-photo-preview" id="profile-photo-preview">
+                  <span id="profile-photo-initials">AP</span>
+                  <img id="profile-photo-img" alt="" style="display:none;">
+                </div>
+                <div class="profile-photo-actions">
+                  <p>Upload your profile photo. Constructors will see this when reviewing your project leads.</p>
+                  <label class="profile-photo-upload-btn">
+                    📷 Upload Profile Photo
+                    <input type="file" id="prof-photo" accept="image/*">
+                  </label>
+                </div>
+              </div>
               <div class="form-row">
                 <div class="form-group">
                   <label>Point of Contact Name *</label>
@@ -305,14 +373,47 @@
   <script src="../js/api/orders.js"></script>
   <script src="../js/api/quotes.js"></script>
   <script src="../js/api/partners.js"></script>
+  <script src="../js/api/projects.js"></script>
+  <script src="../js/bim/api/bim.js"></script>
   <script src="../js/api/users.js"></script>
   <script src="../js/api/session-restore.js"></script>
   <script src="../js/utils/helpers.js"></script>
   <script src="../js/components/notifications.js"></script>
-  <script src="../js/utils/helpers.js"></script>
-  <script src="../js/components/notifications.js"></script>
   <script src="../js/app.js"></script>
   <script>
+    let pendingProfileImage = null;
+
+    function getInitials(name) {
+      return (name || 'U').split(' ').filter(Boolean).map((part) => part[0]).join('').slice(0, 2).toUpperCase();
+    }
+
+    function setProfilePhotoPreview(imageSrc, name) {
+      const sidebarImg = document.getElementById('user-avatar-img');
+      const sidebarInitials = document.getElementById('user-avatar-initials');
+      const previewImg = document.getElementById('profile-photo-img');
+      const previewInitials = document.getElementById('profile-photo-initials');
+      const initials = getInitials(name);
+
+      [sidebarImg, previewImg].forEach((img) => {
+        if (!img) return;
+        if (imageSrc) {
+          img.src = imageSrc;
+          img.style.display = 'block';
+        } else {
+          img.removeAttribute('src');
+          img.style.display = 'none';
+        }
+      });
+      if (sidebarInitials) {
+        sidebarInitials.textContent = initials;
+        sidebarInitials.style.display = imageSrc ? 'none' : 'block';
+      }
+      if (previewInitials) {
+        previewInitials.textContent = initials;
+        previewInitials.style.display = imageSrc ? 'none' : 'block';
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', async () => {
       // Check session using API service
       const user = await AuthAPI.requireAuth();
@@ -321,7 +422,27 @@
       // Load Profile Data into Inputs
       document.getElementById('user-display-name').textContent = user.name || 'Anonymous User';
       document.getElementById('user-display-company').textContent = user.company || 'Private Buyer';
-      document.getElementById('user-avatar-initials').textContent = (user.name || 'U').split(' ').map(n=>n[0]).join('');
+      setProfilePhotoPreview(user.profile_image || '', user.name);
+
+      document.getElementById('prof-photo')?.addEventListener('change', (event) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+        if (!file.type.startsWith('image/')) {
+          showToast('Please choose an image file.', 'error');
+          return;
+        }
+        if (file.size > 2 * 1024 * 1024) {
+          showToast('Image must be under 2 MB.', 'error');
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = () => {
+          pendingProfileImage = reader.result;
+          setProfilePhotoPreview(pendingProfileImage, document.getElementById('prof-name').value.trim() || user.name);
+          showToast('Photo ready. Click Save Settings to apply.', 'success');
+        };
+        reader.readAsDataURL(file);
+      });
 
       document.getElementById('prof-name').value = user.name || '';
       document.getElementById('prof-company').value = user.company || '';
@@ -329,24 +450,217 @@
       if (user.phone) document.getElementById('prof-phone').value = user.phone;
 
       // Render Dashboard Panels
+      await renderCustomerProjects();
       await renderOrders();
       await renderQuotations();
       renderWishlist();
 
-      // Check hash router to show correct panel immediately (e.g. #wishlist)
-      const hash = window.location.hash;
+      // Hash router: activate correct tab on load
+      const hash = window.location.hash.replace('#', '');
       if (hash) {
-        const link = document.querySelector(`.dashboard-nav a[data-section="${hash.replace('#','')}-section"]`);
+        // Support both e.g. #projects and #projects-section
+        const sectionId = hash.endsWith('-section') ? hash : hash + '-section';
+        const link = document.querySelector(`.dashboard-nav a[data-section="${sectionId}"]`);
         if (link) link.click();
+        else {
+          // Try direct section show
+          const sec = document.getElementById(sectionId);
+          if (sec) {
+            document.querySelectorAll('.dashboard-content-section').forEach(s => s.classList.remove('active'));
+            sec.classList.add('active');
+          }
+        }
       }
+      // Always default to projects tab on account.html visit (first section)
     });
+
+    async function renderCustomerProjects() {
+      const container = document.getElementById('customer-projects-list-wrapper');
+      if (!container) return;
+      container.innerHTML = `<div style="text-align:center; padding:48px 0;"><p style="color:#666;">Loading your construction projects...</p></div>`;
+
+      try {
+        const res = await ProjectsAPI.getAll();
+        let projects = Array.isArray(res) ? res : (res.data || res.projects || []);
+        
+        // Also load from ohisee_recent_project (set when intent engine creates a project)
+        try {
+          const recentRaw = localStorage.getItem('ohisee_recent_project');
+          if (recentRaw) {
+            const recent = JSON.parse(recentRaw);
+            const projData = recent.data || recent;
+            if (projData && projData.project_id) {
+              const alreadyIn = projects.some(p => p.project_id === projData.project_id);
+              if (!alreadyIn) projects.unshift(projData);
+            }
+          }
+        } catch(e){}
+
+        // If still empty, check local draft
+        if (projects.length === 0) {
+          const localDraft = localStorage.getItem('ohisee_pending_project');
+          if (localDraft) {
+            try {
+              const p = JSON.parse(localDraft);
+              if (p.answers) {
+                projects = [{
+                  project_id: 'DRAFT-' + Math.floor(10000 + Math.random() * 89999),
+                  project_name: p.project_name || `${p.intentType || 'Residential'} Project - ${p.answers.location || 'Coimbatore'}`,
+                  project_type: p.intentType || 'Residential',
+                  city: p.answers.location || 'Coimbatore',
+                  budget: parseFloat(p.answers.budget || 0),
+                  built_up_area: p.answers.area_sqft ? `${p.answers.area_sqft} sq.ft` : (p.answers.plot_length ? `${Math.round(p.answers.plot_length * p.answers.plot_width * 0.65 * 2)} sq.ft` : 'Custom Scope'),
+                  floors: p.answers.floors ? parseInt(p.answers.floors) || 1 : 1,
+                  quality_level: p.answers.quality || 'Standard',
+                  acceptance_status: 'pending_vendor',
+                  created_at: new Date().toISOString(),
+                  _is_draft: true
+                }];
+              }
+            } catch(e){}
+          }
+        }
+
+        if (projects.length === 0) {
+          // Only show the hardcoded fallback demo project when truly nothing else is available
+          projects = [{
+            project_id: 'PRJ-88412',
+            project_name: '3BHK Villa Construction - Peelamedu (Demo)',
+            project_type: 'Residential',
+            city: 'Coimbatore',
+            budget: 4800000,
+            built_up_area: '2400 sq.ft',
+            floors: 2,
+            quality_level: 'Standard',
+            acceptance_status: 'pending_vendor',
+            created_at: new Date().toISOString(),
+            _is_demo: true
+          }];
+        }
+
+        container.innerHTML = projects.map(p => {
+          const pid = p.project_id;
+          const isAccepted = p.acceptance_status === 'accepted' || (p.vendor_id && p.vendor_id !== '');
+          const isDraft = !!p._is_draft;
+          const isDemo = !!p._is_demo;
+
+          const statusBadge = isAccepted
+            ? `<span class="order-status status-delivered" style="background:#d4edda; color:#155724; border:1px solid #c3e6cb;">✅ VENDOR ACCEPTED</span>`
+            : isDraft
+            ? `<span class="order-status" style="background:#fff3e0; color:#e65100; border:1px solid #ffcc80;">📝 DRAFT</span>`
+            : isDemo
+            ? `<span class="order-status" style="background:#f3e5f5; color:#7b1fa2; border:1px solid #ce93d8;">🔵 DEMO</span>`
+            : `<span class="order-status status-pending" style="background:#fff3cd; color:#856404; border:1px solid #ffeeba;">⏳ AWAITING VENDOR</span>`;
+
+          const vendorInfoHtml = isAccepted ? `
+            <div style="background:#f0fff4; border:1px solid #c3e6cb; padding:14px 16px; border-radius:8px; margin-bottom:16px; font-size:13px;">
+              <div style="font-weight:700; color:#155724; text-transform:uppercase; font-size:11px; margin-bottom:6px;">🤝 Matched Structural Contractor</div>
+              <div style="font-size:15px; font-weight:700; color:#111;">${p.vendor_name || 'OH I SEE Verified General Contractor'}</div>
+              <div style="color:#555; font-size:12px; margin-top:4px; display:flex; gap:16px; flex-wrap:wrap;">
+                <span>Payment: <strong>${(p.payment_terms && p.payment_terms.payment_model) || 'Milestone Payout'}</strong></span>
+                <span>Advance: <strong>${(p.payment_terms && p.payment_terms.advance_percentage) || 20}%</strong></span>
+              </div>
+            </div>
+          ` : isDraft ? `
+            <div style="background:#fff8e1; border:1px solid #ffe082; padding:12px 16px; border-radius:8px; margin-bottom:16px; font-size:13px; color:#f57f17;">
+              ⚠️ <strong>Draft — not submitted yet.</strong> Complete the AI wizard to broadcast to vendors.
+              <a href="intent-engine.html" style="margin-left:8px; font-weight:700; color:#e65100;">Resume Wizard →</a>
+            </div>
+          ` : `
+            <div style="background:#fff9e6; border:1px solid #ffe8a1; padding:12px 16px; border-radius:8px; margin-bottom:16px; font-size:13px; color:#856404; line-height:1.6;">
+              📡 <strong>Live on Vendor Board:</strong> Your requirements are visible to verified contractors in ${p.city || 'Tamil Nadu'}. Vendors will review and accept your project deal shortly.
+            </div>
+          `;
+
+          return `
+            <div class="order-card" style="border:1px solid #e0e0e0; border-radius:12px; padding:20px; margin-bottom:16px; background:#fff; box-shadow:0 4px 12px rgba(0,0,0,0.03);">
+              <div class="order-card-header" style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+                <div>
+                  <span class="order-id" style="font-family:'Space Grotesk',monospace; font-size:12px; font-weight:700; color:#888;">${pid}</span>
+                  <h3 style="margin:4px 0 2px 0; font-family:'Space Grotesk',sans-serif; font-size:20px; color:#111;">${p.project_name}</h3>
+                  <div style="font-size:13px; color:#666;">🏠 ${p.project_type || 'Residential'} • 📍 ${p.city || 'Tamil Nadu'} • Tier: <strong>${p.quality_level || 'Standard'}</strong></div>
+                  <div style="margin-top:8px;">
+                    <span id="bim-badge-${pid}" style="display:inline-block;font-size:11px;font-weight:700;padding:4px 10px;border-radius:999px;background:#f5f5f5;color:#888;text-transform:uppercase;">🧱 BIM — checking…</span>
+                  </div>
+                </div>
+                ${statusBadge}
+              </div>
+
+              ${vendorInfoHtml}
+
+              <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(130px, 1fr)); gap:12px; background:#f9f9f9; padding:12px; border-radius:8px; margin-bottom:16px; font-size:13px;">
+                <div><span style="color:#888; font-size:11px; display:block; text-transform:uppercase; font-weight:700;">Est. Budget</span> <strong style="font-family:'Space Grotesk',monospace;">₹${parseFloat(p.budget || 0).toLocaleString('en-IN')}</strong></div>
+                <div><span style="color:#888; font-size:11px; display:block; text-transform:uppercase; font-weight:700;">Scope / Area</span> <strong>${p.built_up_area || 'Custom Scope'}</strong></div>
+                <div><span style="color:#888; font-size:11px; display:block; text-transform:uppercase; font-weight:700;">Floors</span> <strong>${p.floors || 1} Floor(s)</strong></div>
+                <div><span style="color:#888; font-size:11px; display:block; text-transform:uppercase; font-weight:700;">Created On</span> <strong>${new Date(p.created_at || Date.now()).toLocaleDateString('en-IN')}</strong></div>
+              </div>
+
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; border-top:1px solid #f0f0f0; padding-top:12px;">
+                <div style="font-size:12px; color:#777;">${isAccepted ? '✅ Vendor assigned — proceed to project management.' : isDraft ? '⚡ Complete wizard to launch.' : '📋 Awaiting vendor review.'}</div>
+                <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                  ${isAccepted ? `<button class="btn btn-outline-dark btn-sm" onclick="contactVendor('${pid}', '${(p.vendor_name || 'Vendor').replace(/'/g, "\\'")}')">💬 Discuss with Vendor</button>` : ''}
+                  ${!isDraft ? `<a href="project-overview.html?projectId=${encodeURIComponent(pid)}" class="btn btn-sm" style="background:#FFD400; color:#000; font-weight:700;">🧱 Open Workspace</a>` : ''}
+                  ${!isDraft ? `<a href="project-bim.html?projectId=${encodeURIComponent(pid)}" class="btn btn-outline-dark btn-sm">View BIM</a>` : ''}
+                  ${!isDraft ? `<a href="project-detail.html?id=${pid}" class="btn btn-dark btn-sm" style="background:#000; color:#fff;">📐 Dashboard</a>` : ''}
+                  ${isDraft ? `<a href="intent-engine.html" class="btn btn-dark btn-sm" style="background:#e65100; color:#fff;">⚡ Complete Wizard →</a>` : ''}
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        loadBimBadgesForProjects(projects.filter((p) => !p._is_draft));
+      } catch (err) {
+        container.innerHTML = `
+          <div style="text-align:center; padding:32px; border:1px dashed var(--danger); border-radius:8px;">
+            <p style="color:var(--danger);">Failed to load construction projects: ${err.message}</p>
+          </div>
+        `;
+      }
+    }
+
+    async function loadBimBadgesForProjects(projects) {
+      if (typeof BimAPI === 'undefined') return;
+      for (const p of projects) {
+        const badge = document.getElementById(`bim-badge-${p.project_id}`);
+        if (!badge) continue;
+        try {
+          const res = await BimAPI.getModel(p.project_id);
+          const status = res.data?.status || 'none';
+          const count = res.data?.model?.elements?.length || 0;
+          if (status === 'ready' && count > 0) {
+            badge.style.background = '#e8f5e9';
+            badge.style.color = '#2e7d32';
+            badge.textContent = `🧱 BIM Ready · ${count} elements`;
+          } else {
+            badge.style.background = '#fff8e1';
+            badge.style.color = '#f57f17';
+            badge.textContent = '🧱 BIM — not generated yet';
+          }
+        } catch (e) {
+          badge.style.background = '#f5f5f5';
+          badge.style.color = '#888';
+          badge.textContent = '🧱 BIM — unavailable';
+        }
+      }
+    }
+
+    function contactVendor(projectId, vendorName) {
+      if (typeof showToast === 'function') {
+        showToast(`Connecting to ${vendorName} for project ${projectId}...`, 'info');
+      }
+      setTimeout(() => {
+        window.open(`https://wa.me/918970569910?text=Hello%20OH%20I%20SEE,%20I%20want%20to%20discuss%20my%20accepted%20project%20${projectId}%20with%20${encodeURIComponent(vendorName)}`, '_blank');
+      }, 600);
+    }
 
     async function renderOrders() {
       const container = document.getElementById('orders-list-wrapper');
       container.innerHTML = `<div style="text-align:center; padding:48px 0;"><p style="color:#666;">Loading procurement orders...</p></div>`;
 
       try {
-        const rawOrders = await OrdersAPI.getMyOrders();
+        const rawRes = await OrdersAPI.getMyOrders();
+        const rawOrders = Array.isArray(rawRes) ? rawRes : (rawRes?.orders || rawRes?.data || []);
         if (rawOrders.length === 0) {
           container.innerHTML = `
             <div style="text-align:center; padding:48px 0; border:1px dashed #ccc; border-radius:8px;">
@@ -361,36 +675,36 @@
                               ord.order_status === 'shipped' ? 'status-shipped' :
                               ord.order_status === 'processing' ? 'status-processing' : 'status-pending';
 
-          const statusLabel = ord.order_status.charAt(0).toUpperCase() + ord.order_status.slice(1);
+          const statusLabel = (ord.order_status || 'pending').charAt(0).toUpperCase() + (ord.order_status || 'pending').slice(1);
           
           let itemsListHtml = '';
           const items = Array.isArray(ord.items) ? ord.items : [];
           items.forEach(it => {
-            itemsListHtml += `<div style="font-size:13px; color:#555;">x${it.qty} — ${it.name} (₹${parseFloat(it.price).toLocaleString('en-IN')})</div>`;
+            itemsListHtml += `<div style="font-size:13px; color:#555;">x${it.qty || it.quantity || 1} — ${it.name || 'Item'} (₹${parseFloat(it.price || 0).toLocaleString('en-IN')})</div>`;
           });
 
           return `
             <div class="order-card">
               <div class="order-card-header">
                 <div>
-                  <span class="order-id">${ord.order_id}</span>
-                  <span style="font-size:12px; color:#999; margin-left:12px;">Placed: ${new Date(ord.created_at).toLocaleDateString('en-IN')}</span>
+                  <span class="order-id">${ord.order_id || ord.id || 'ORD-000'}</span>
+                  <span style="font-size:12px; color:#999; margin-left:12px;">Placed: ${ord.created_at ? new Date(ord.created_at).toLocaleDateString('en-IN') : 'Recent'}</span>
                 </div>
                 <span class="order-status ${statusClass}">${statusLabel}</span>
               </div>
               
               <div style="margin-bottom:16px; border-bottom:1px solid #f0f0f0; padding-bottom:12px;">
-                ${itemsListHtml}
+                ${itemsListHtml || '<div style="font-size:13px; color:#999;">Standard items</div>'}
               </div>
   
               <div style="display:flex; justify-content:space-between; align-items:center;">
                 <div>
                   <span style="font-size:12px; color:#999; text-transform:uppercase;">Invoice Value</span>
-                  <div style="font-family:'Space Grotesk',monospace; font-size:18px; font-weight:700;">₹${parseFloat(ord.total_amount).toLocaleString('en-IN')}</div>
+                  <div style="font-family:'Space Grotesk',monospace; font-size:18px; font-weight:700;">₹${parseFloat(ord.total_amount || 0).toLocaleString('en-IN')}</div>
                 </div>
                 <div style="display:flex; gap:12px;">
-                  <button class="btn btn-outline btn-sm" style="border-color:#ccc; color:#333;" onclick="downloadInvoice('${ord.order_id}')">📄 Invoice</button>
-                  <button class="btn btn-dark btn-sm" onclick="trackOrder('${ord.order_id}', '${ord.order_status}')">📦 Track</button>
+                  <button class="btn btn-outline btn-sm" style="border-color:#ccc; color:#333;" onclick="downloadInvoice('${ord.order_id || ord.id}')">📄 Invoice</button>
+                  <button class="btn btn-dark btn-sm" onclick="trackOrder('${ord.order_id || ord.id}', '${ord.order_status}')">📦 Track</button>
                 </div>
               </div>
             </div>
@@ -410,7 +724,8 @@
       container.innerHTML = `<div style="text-align:center; padding:48px 0;"><p style="color:#666;">Loading quotations...</p></div>`;
 
       try {
-        const rawQuotes = await QuotesAPI.getMyQuotes();
+        const rawRes = await QuotesAPI.getMyQuotes();
+        const rawQuotes = Array.isArray(rawRes) ? rawRes : (rawRes?.quotes || rawRes?.data || []);
         if (rawQuotes.length === 0) {
           container.innerHTML = `
             <div style="text-align:center; padding:48px 0; border:1px dashed #ccc; border-radius:8px;">
@@ -504,10 +819,14 @@
       btn.textContent = 'Saving...';
 
       try {
-        const updated = await UsersAPI.updateMe({ name, phone, company, gstin });
-        
+        const payload = { name, phone, company, gstin };
+        if (pendingProfileImage !== null) payload.profile_image = pendingProfileImage;
+        const updated = await UsersAPI.updateMe(payload);
+
         document.getElementById('user-display-name').textContent = updated.name;
         document.getElementById('user-display-company').textContent = updated.company || 'Private Buyer';
+        setProfilePhotoPreview(updated.profile_image || '', updated.name);
+        pendingProfileImage = null;
 
         showToast('Profile parameters updated successfully!', 'success');
       } catch (err) {

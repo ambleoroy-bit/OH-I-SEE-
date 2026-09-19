@@ -11,16 +11,21 @@ const SupabaseSession = {
   // Load session + profile from Supabase, cache on window
   async init() {
     try {
-      if (typeof supabase === 'undefined') return;
-      const { data: { session } } = await supabase.auth.getSession();
-      window._ohiseeSession = session;
-      if (session?.user) {
-        window._ohiseeUser = await SupabaseAuth.getUserProfile(session.user.id);
-      } else {
-        window._ohiseeUser = null;
+      if (typeof supabase !== 'undefined') {
+        const { data: { session } } = await supabase.auth.getSession();
+        window._ohiseeSession = session;
+        if (session?.user) {
+          window._ohiseeUser = await SupabaseAuth.getUserProfile(session.user.id);
+        }
+      }
+      if (!window._ohiseeUser && typeof UserCache !== 'undefined') {
+        window._ohiseeUser = UserCache.get();
       }
     } catch (e) {
       console.warn('SupabaseSession.init error:', e.message);
+      if (typeof UserCache !== 'undefined') {
+        window._ohiseeUser = UserCache.get();
+      }
     }
   },
 
@@ -115,7 +120,7 @@ const PartnerManager = {
 const Security = {
   // Returns the cached Supabase user profile (or null)
   getCurrentUser() {
-    return window._ohiseeUser || null;
+    return window._ohiseeUser || (typeof UserCache !== 'undefined' ? UserCache.get() : null) || null;
   },
 
   getCurrentRole() {
@@ -697,6 +702,10 @@ function initLoginTabs() {
         f.classList.remove('active');
         if (f.id === target) f.classList.add('active');
       });
+      document.querySelector('.login-form')?.classList.toggle('login-form--wide', target === 'register-panel');
+      if (typeof updateAuthLocationBarVisibility === 'function') {
+        updateAuthLocationBarVisibility(target);
+      }
     });
   });
 
@@ -792,8 +801,49 @@ function initScrollEffects() {
   }
 }
 
+// --- Day / Night (Light / Dark) Theme Switcher ---
+function initThemeToggle() {
+  const savedTheme = localStorage.getItem('ohisee_theme') || 'dark';
+  applyTheme(savedTheme);
+
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.theme-toggle-btn, #theme-toggle');
+    if (btn) {
+      const currentTheme = document.documentElement.getAttribute('data-theme') || (document.body.classList.contains('home-dark') ? 'dark' : 'light');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      applyTheme(newTheme);
+      localStorage.setItem('ohisee_theme', newTheme);
+      if (typeof showToast === 'function') {
+        showToast(`Switched to ${newTheme === 'light' ? 'Day Mode ☀️' : 'Night Mode 🌙'}`, 'info');
+      }
+    }
+  });
+}
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  const toggleBtns = document.querySelectorAll('.theme-toggle-btn, #theme-toggle');
+  
+  if (theme === 'light') {
+    document.body.classList.remove('home-dark');
+    document.body.classList.add('home-light', 'theme-light');
+    toggleBtns.forEach(btn => {
+      btn.textContent = '☀️';
+      btn.title = 'Switch to Night Mode (Dark)';
+    });
+  } else {
+    document.body.classList.remove('home-light', 'theme-light');
+    document.body.classList.add('home-dark');
+    toggleBtns.forEach(btn => {
+      btn.textContent = '🌙';
+      btn.title = 'Switch to Day Mode (Light)';
+    });
+  }
+}
+
 // --- Initialize App ---
 document.addEventListener('DOMContentLoaded', async () => {
+  initThemeToggle();
   initLoader();
   initMobileNav();
   initSearch();

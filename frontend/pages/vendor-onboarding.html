@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="OH I SEE — Vendor Onboarding Portal. Register your business as a verified material supplier.">
+  <title>Vendor Onboarding Portal — OH I SEE AI Construction Platform</title>
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/home-ai.css">
+  <link rel="icon" href="/images/logo.png" type="image/png">
+  <style>
+    body { background: #000; color: #fff; }
+    .onboard-card {
+      max-width: 760px;
+      margin: 40px auto 80px;
+      background: #0d0d0d;
+      border: 1px solid #1e1e1e;
+      border-radius: 16px;
+      padding: 40px;
+    }
+    .onboard-step { display: none; }
+    .onboard-step.active { display: block; }
+    .onboard-progress {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 32px;
+    }
+    .onboard-progress-bar {
+      flex: 1;
+      height: 4px;
+      background: #222;
+      border-radius: 2px;
+    }
+    .onboard-progress-bar.active { background: #FFD400; }
+    .onboard-title {
+      font-family: 'Space Grotesk', monospace;
+      font-size: 24px;
+      font-weight: 700;
+      color: #fff;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .onboard-subtitle {
+      font-size: 13px;
+      color: #666;
+      margin-bottom: 24px;
+    }
+    .onboard-label {
+      font-family: 'Space Grotesk', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: #FFD400;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      display: block;
+    }
+    .onboard-input, .onboard-select, .onboard-textarea {
+      width: 100%;
+      box-sizing: border-box;
+      background: #181818;
+      border: 1px solid #333;
+      color: #fff;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      margin-bottom: 16px;
+    }
+    .onboard-input:focus, .onboard-select:focus, .onboard-textarea:focus { border-color: #FFD400; }
+    .onboard-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .cat-checkboxes {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .cat-checkbox-item {
+      background: #141414;
+      border: 1px solid #262626;
+      border-radius: 8px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+    .onboard-nav {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 32px;
+      border-top: 1px solid #1a1a1a;
+      padding-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Header -->
+  <header class="site-header">
+    <div class="header-top">
+      <a href="index.html" class="header-logo">
+        <img src="/images/logo.png" alt="OH I SEE">
+        <span class="header-logo-text">OH I SEE</span>
+      </a>
+      <a href="enterprise.html" style="color:#888;font-size:13px;text-decoration:none;">Enterprise Dashboard →</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="onboard-card">
+      
+      <!-- Progress Bar -->
+      <div class="onboard-progress">
+        <div class="onboard-progress-bar active"></div>
+        <div class="onboard-progress-bar"></div>
+        <div class="onboard-progress-bar"></div>
+        <div class="onboard-progress-bar"></div>
+        <div class="onboard-progress-bar"></div>
+      </div>
+
+      <!-- Step 1: Company Profile -->
+      <div class="onboard-step active" data-step="1">
+        <div class="onboard-title">Step 1 — Vendor Profile</div>
+        <div class="onboard-subtitle">Enter your registered business & contact details.</div>
+        <label class="onboard-label">Company Legal Name *</label>
+        <input type="text" id="ob-company" class="onboard-input" placeholder="e.g. Schneider Electric India Ltd">
+
+        <div class="onboard-grid">
+          <div>
+            <label class="onboard-label">Legal Structure</label>
+            <select id="ob-entity" class="onboard-select">
+              <option value="Private Limited">Private Limited</option>
+              <option value="Partnership">Partnership</option>
+              <option value="Proprietorship">Proprietorship</option>
+              <option value="LLP">LLP</option>
+            </select>
+          </div>
+          <div>
+            <label class="onboard-label">Year Established</label>
+            <input type="number" id="ob-year" class="onboard-input" value="2015">
+          </div>
+        </div>
+
+        <div class="onboard-grid">
+          <div>
+            <label class="onboard-label">Business Email *</label>
+            <input type="email" id="ob-email" class="onboard-input" placeholder="vendor@company.com">
+          </div>
+          <div>
+            <label class="onboard-label">Contact Phone *</label>
+            <input type="text" id="ob-phone" class="onboard-input" placeholder="+91 98765 43210">
+          </div>
+        </div>
+
+        <label class="onboard-label">Registered Office Address</label>
+        <input type="text" id="ob-address" class="onboard-input" placeholder="e.g. 102 Industrial Estate, Peelamedu">
+
+        <div class="onboard-grid">
+          <div>
+            <label class="onboard-label">City *</label>
+            <input type="text" id="ob-city" class="onboard-input" value="Coimbatore">
+          </div>
+          <div>
+            <label class="onboard-label">Pincode *</label>
+            <input type="text" id="ob-pincode" class="onboard-input" value="641004">
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Tax & Financial Credentials -->
+      <div class="onboard-step" data-step="2">
+        <div class="onboard-title">Step 2 — Tax & Banking Credentials</div>
+        <div class="onboard-subtitle">Verify your tax compliance & settlement bank account.</div>
+        <div class="onboard-grid">
+          <div>
+            <label class="onboard-label">GSTIN Number *</label>
+            <input type="text" id="ob-gstin" class="onboard-input" placeholder="33AAACS1234A1Z1">
+          </div>
+          <div>
+            <label class="onboard-label">PAN Number *</label>
+            <input type="text" id="ob-pan" class="onboard-input" placeholder="AAACS1234A">
+          </div>
+        </div>
+        <label class="onboard-label">Bank Name *</label>
+        <input type="text" id="ob-bank" class="onboard-input" value="State Bank of India">
+
+        <div class="onboard-grid">
+          <div>
+            <label class="onboard-label">Account Number *</label>
+            <input type="text" id="ob-account" class="onboard-input" placeholder="98765432101">
+          </div>
+          <div>
+            <label class="onboard-label">IFSC Code *</label>
+            <input type="text" id="ob-ifsc" class="onboard-input" value="SBIN0001234">
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3: Supply Categories -->
+      <div class="onboard-step" data-step="3">
+        <div class="onboard-title">Step 3 — Supply Portfolio</div>
+        <div class="onboard-subtitle">Select material categories and brands you represent.</div>
+        <label class="onboard-label">Supply Categories *</label>
+        <div class="cat-checkboxes">
+          <label class="cat-checkbox-item"><input type="checkbox" name="cat" value="Electrical" checked> ⚡ Electrical & Wiring</label>
+          <label class="cat-checkbox-item"><input type="checkbox" name="cat" value="Plumbing" checked> 🚰 Plumbing & Pipes</label>
+          <label class="cat-checkbox-item"><input type="checkbox" name="cat" value="Civil"> 🏗️ Civil & Cement</label>
+          <label class="cat-checkbox-item"><input type="checkbox" name="cat" value="Tools"> 🛠️ Industrial Tools</label>
+        </div>
+
+        <label class="onboard-label">Brands Represented</label>
+        <input type="text" id="ob-brands" class="onboard-input" value="Schneider, Finolex, Supreme, Havells">
+
+        <label class="onboard-label">Service Pincodes / Delivery Coverage</label>
+        <input type="text" id="ob-coverage" class="onboard-input" value="641001, 641002, 641003, 641004, 641014">
+      </div>
+
+      <!-- Step 4: Document Verification -->
+      <div class="onboard-step" data-step="4">
+        <div class="onboard-title">Step 4 — Document Uploads</div>
+        <div class="onboard-subtitle">Upload statutory registration certificates for admin verification.</div>
+        
+        <label class="onboard-label">GST Certificate Reference / URL</label>
+        <input type="text" id="ob-doc-gst" class="onboard-input" value="https://storage.ohisee.com/docs/gst_cert_sample.pdf">
+
+        <label class="onboard-label">PAN Card Copy Reference / URL</label>
+        <input type="text" id="ob-doc-pan" class="onboard-input" value="https://storage.ohisee.com/docs/pan_copy_sample.pdf">
+
+        <label class="onboard-label">Cancelled Cheque Reference / URL</label>
+        <input type="text" id="ob-doc-cheque" class="onboard-input" value="https://storage.ohisee.com/docs/cheque_sample.pdf">
+      </div>
+
+      <!-- Step 5: Declaration & Submit -->
+      <div class="onboard-step" data-step="5">
+        <div class="onboard-title">Step 5 — Declaration & Submission</div>
+        <div class="onboard-subtitle">Review your details and submit for verification.</div>
+        <div style="background:#141414;border:1px solid #262626;border-radius:10px;padding:20px;margin-bottom:20px;font-size:13px;color:#aaa;line-height:1.6;">
+          I hereby declare that all supplied GSTIN, PAN, and banking credentials are valid and legally registered under our company. I agree to OH I SEE vendor procurement terms.
+        </div>
+      </div>
+
+      <!-- Nav Buttons -->
+      <div class="onboard-nav">
+        <button id="ob-prev" class="btn-hero-outline" style="visibility:hidden;">← Previous</button>
+        <button id="ob-next" class="btn-hero-primary">Next Step →</button>
+      </div>
+
+    </div>
+  </main>
+
+  <script src="../js/utils/helpers.js"></script>
+  <script src="../js/components/notifications.js"></script>
+  <script src="../js/app.js"></script>
+  <script>
+    let step = 1;
+    const maxSteps = 5;
+
+    const prevBtn = document.getElementById('ob-prev');
+    const nextBtn = document.getElementById('ob-next');
+
+    function renderStep() {
+      document.querySelectorAll('.onboard-step').forEach(s => s.classList.remove('active'));
+      document.querySelector(`.onboard-step[data-step="${step}"]`).classList.add('active');
+
+      document.querySelectorAll('.onboard-progress-bar').forEach((bar, idx) => {
+        bar.classList.toggle('active', idx < step);
+      });
+
+      prevBtn.style.visibility = step === 1 ? 'hidden' : 'visible';
+      nextBtn.textContent = step === maxSteps ? '🚀 Submit Application' : 'Next Step →';
+    }
+
+    prevBtn.onclick = () => { if (step > 1) { step--; renderStep(); } };
+
+    nextBtn.onclick = async () => {
+      if (step < maxSteps) {
+        if (step === 1 && !document.getElementById('ob-company').value.trim()) {
+          alert('Please enter your Company Name.');
+          return;
+        }
+        if (step === 2 && !document.getElementById('ob-gstin').value.trim()) {
+          alert('Please enter your GSTIN number.');
+          return;
+        }
+        step++;
+        renderStep();
+      } else {
+        // Submit to API
+        nextBtn.disabled = true;
+        nextBtn.textContent = '⏳ Submitting...';
+
+        const API = ['localhost','127.0.0.1'].includes(location.hostname) ? location.protocol+'//'+location.hostname+':3001/api' : '/api';
+        
+        const categories = Array.from(document.querySelectorAll('input[name="cat"]:checked')).map(c => c.value);
+        const brands = document.getElementById('ob-brands').value.split(',').map(s => s.trim());
+
+        try {
+          const res = await fetch(`${API}/suppliers/onboard`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', Authorization:'Bearer '+(localStorage.getItem('ohisee_jwt')||localStorage.getItem('ohisee_token')||'') },
+            body: JSON.stringify({
+              companyName: document.getElementById('ob-company').value.trim(),
+              legalEntityType: document.getElementById('ob-entity').value,
+              yearEstablished: Number(document.getElementById('ob-year').value),
+              businessEmail: document.getElementById('ob-email').value.trim(),
+              contactPhone: document.getElementById('ob-phone').value.trim(),
+              officeAddress: document.getElementById('ob-address').value.trim(),
+              city: document.getElementById('ob-city').value.trim(),
+              pincode: document.getElementById('ob-pincode').value.trim(),
+              gstin: document.getElementById('ob-gstin').value.trim(),
+              pan: document.getElementById('ob-pan').value.trim(),
+              bankName: document.getElementById('ob-bank').value.trim(),
+              bankAccountNo: document.getElementById('ob-account').value.trim(),
+              ifscCode: document.getElementById('ob-ifsc').value.trim(),
+              categories,
+              brands,
+              gstDocUrl: document.getElementById('ob-doc-gst').value,
+              panDocUrl: document.getElementById('ob-doc-pan').value
+            })
+          });
+
+          const data = await res.json();
+          if (!res.ok) throw new Error(data.error || 'Submission failed');
+          alert('Vendor Onboarding Application submitted successfully! Status: PENDING_REVIEW');
+          window.location.href = 'enterprise.html';
+        } catch (err) {
+          alert('Failed to submit application: ' + err.message);
+          nextBtn.disabled = false;
+          nextBtn.textContent = '🚀 Submit Application';
+        }
+      }
+    };
+  </script>
+<p style="text-align:center;padding:24px"><a href="supplier-dashboard.html">Manage supplier company and product catalog</a></p>
+</body>
+</html>

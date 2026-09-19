@@ -1,0 +1,21 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: ohisee
+
+resources:
+  - ../../base
+
+patches:
+  - path: patches/replicas.yaml
+
+images:
+  - name: ohisee-api
+    newName: ghcr.io/your-org/ohisee-api
+    newTag: git-REPLACE_SHA
+  - name: ohisee-frontend
+    newName: ghcr.io/your-org/ohisee-frontend
+    newTag: git-REPLACE_SHA
+  - name: ohisee-design3d-worker
+    newName: ghcr.io/your-org/ohisee-design3d-worker
+    newTag: git-REPLACE_SHA

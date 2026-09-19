@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="OH I SEE — Construction Operations Enterprise Control Center. Unified ERP dashboard for Procurement, Subcontract, Logistics, Finance, Quality, and Analytics.">
+  <title>Enterprise Control Center — OH I SEE AI Construction Platform</title>
+  <link rel="stylesheet" href="../css/global.css">
+  <link rel="stylesheet" href="../css/enterprise.css">
+  <link rel="icon" href="/images/logo.png" type="image/png">
+</head>
+<body class="enterprise-mode">
+
+  <!-- Top Navigation -->
+  <header class="ent-navbar">
+    <div class="ent-nav-container">
+      <a href="index.html" class="ent-brand">
+        <img src="/images/logo.png" alt="OH I SEE">
+        <span class="ent-brand-text">OH I SEE</span>
+      </a>
+
+      <div class="ent-nav-scroll-wrapper">
+        <button class="ent-scroll-arrow prev" id="ent-nav-prev" title="Scroll left" aria-label="Scroll left">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+
+        <nav class="ent-nav-links" id="ent-nav-links">
+          <a href="#home" class="ent-nav-item active" data-nav="home">HOME</a>
+          <a href="#procurement" class="ent-nav-item" data-nav="procurement">PROCUREMENT</a>
+          <a href="#build-supply" class="ent-nav-item" data-nav="build-supply">BUILD SUPPLY</a>
+          <a href="#subcontract" class="ent-nav-item" data-nav="subcontract">SUB CONTRACT</a>
+          <a href="#suppliers" class="ent-nav-item" data-nav="suppliers">SUPPLIER MANAGEMENT</a>
+          <a href="#logistics" class="ent-nav-item" data-nav="logistics">LOGISTICS</a>
+          <a href="#finance" class="ent-nav-item" data-nav="finance">FINANCE & PAYMENTS</a>
+          <a href="#quality" class="ent-nav-item" data-nav="quality">QUALITY & SUPPORT</a>
+          <a href="#analytics" class="ent-nav-item" data-nav="analytics">ANALYTICS</a>
+        </nav>
+
+        <button class="ent-scroll-arrow next" id="ent-nav-next" title="Scroll right" aria-label="Scroll right">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+      </div>
+
+      <div class="ent-nav-right">
+        <button class="header-action-btn theme-toggle-btn" id="theme-toggle" title="Toggle Day/Night Mode" style="font-size:18px;margin-right:8px;">🌙</button>
+        <span class="ent-role-badge" id="ent-user-role">PROCUREMENT MANAGER</span>
+        <button onclick="window.location.href='index.html'" style="background:none;border:1px solid #333;color:#fff;padding:6px 12px;border-radius:6px;font-size:12px;cursor:pointer;">Exit Enterprise</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="ent-main-container">
+    
+    <!-- Welcome Header -->
+    <div class="ent-header-banner">
+      <h1 class="ent-welcome-title" id="ent-welcome-name">WELCOME BACK, OPERATIVE</h1>
+      <p class="ent-welcome-sub">Streamline your construction operations, procurement, logistics, and finance from one place.</p>
+    </div>
+
+    <!-- Summary Metrics Cards -->
+    <div class="ent-summary-grid">
+      <div class="ent-summary-card">
+        <div class="ent-summary-label">ACTIVE PROJECTS</div>
+        <div class="ent-summary-value" id="metric-projects">12</div>
+      </div>
+      <div class="ent-summary-card">
+        <div class="ent-summary-label">BUILD & SUPPLY</div>
+        <div class="ent-summary-value" id="metric-build-supply">8</div>
+      </div>
+      <div class="ent-summary-card">
+        <div class="ent-summary-label">PENDING REQUISITIONS</div>
+        <div class="ent-summary-value" id="metric-prs">5</div>
+      </div>
+      <div class="ent-summary-card">
+        <div class="ent-summary-label">OPEN RFQs</div>
+        <div class="ent-summary-value" id="metric-rfqs">8</div>
+      </div>
+      <div class="ent-summary-card">
+        <div class="ent-summary-label">ACTIVE POS</div>
+        <div class="ent-summary-value" id="metric-pos">14</div>
+      </div>
+      <div class="ent-summary-card">
+        <div class="ent-summary-label">INVOICES PENDING</div>
+        <div class="ent-summary-value" id="metric-invoices">4</div>
+      </div>
+      <div class="ent-summary-card">
+        <div class="ent-summary-label">QUALITY DISPUTES</div>
+        <div class="ent-summary-value" id="metric-disputes">1</div>
+      </div>
+    </div>
+
+    <!-- Global Search -->
+    <div class="ent-search-section">
+      <div class="ent-search-input-wrapper">
+        <span class="ent-search-icon">🔍</span>
+        <input type="text" id="ent-global-search" class="ent-search-input" placeholder="Search modules, projects, PRs, RFQs, POs, suppliers, invoices, or GRNs...">
+      </div>
+    </div>
+
+    <!-- Starred Favorites Section -->
+    <div id="ent-favorites-section" style="display:none;">
+      <div class="ent-section-title">⭐ FAVORITES</div>
+      <div class="ent-module-grid" id="ent-favorites-grid"></div>
+    </div>
+
+    <!-- Recently Used Section -->
+    <div id="ent-recent-section" style="display:none;">
+      <div class="ent-section-title">🕒 RECENTLY USED</div>
+      <div class="ent-module-grid" id="ent-recent-grid"></div>
+    </div>
+
+    <!-- MODULE GROUP 1: PROCUREMENT -->
+    <div class="ent-section-title" id="sec-procurement">PROCUREMENT OPERATIONS</div>
+    <div class="ent-module-grid">
+      <div class="ent-module-card" data-module="purchase-requisitions">
+        <div class="ent-card-header">
+          <div class="mod-icon-badge badge-amber">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          </div>
+          <button class="ent-star-btn" title="Favorite">★</button>
+        </div>
+        <div class="ent-card-name">Purchase Requisition</div>
+        <div class="ent-card-desc">Create and approve material purchase requisitions for active construction projects.</div>
+      </div>
+      <div class="ent-module-card" data-module="rfqs">
+        <div class="ent-card-header">
+          <div class="mod-icon-badge badge-blue">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <button class="ent-star-btn" title="Favorite">★</button>
+        </div>
+        <div class="ent-card-name">Request for Quotation</div>
+        <div class="ent-card-desc">Issue RFQs to verified material suppliers and track response deadlines.</div>
+      </div>
+      <div class="ent-module-card" data-module="quotation-comparison">
+        <div class="ent-card-header">
+          <div class="mod-icon-badge badge-purple">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 16v1a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h11a2 2 0 0 1 2 2v1"/><path d="M18 8l4 4-4 4"/><line x1="2" y1="12" x2="22" y2="12"/></svg>
+          </div>
+          <button class="ent-star-btn" title="Favorite">★</button>
+        </div>
+        <div class="ent-card-name">Quotation Comparison</div>
+        <div class="ent-card-desc">Compare supplier quotations side-by-side on price, delivery lead time, and terms.</div>
+      </div>
+      <div class="ent-module-card" data-module="purchase-orders">
+        <div class="ent-card-header">
+          <div class="mod-icon-badge badge-emerald">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 12l2 2 4-4"/></svg>
+          </div>
+          <button class="ent-star-btn" title="Favorite">★</button>
+        </div>
+        <div class="ent-card-name">Purchase Orders</div>
+        <div class="ent-card-desc">Generate, approve, and issue legal binding purchase orders to suppliers.</div>
+      </div>
+      <div class="ent-module-card" data-module="shipping-notifications">
+        <div class="ent-card-header">
+          <div class="mod-icon-badge badge-cyan">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          </div>
+          <button class="ent-star-btn" title="Favorite">★</button>
+        </div>
+        <div class="ent-card-name">Shipping Notification</div>
+        <div class="ent-card-desc">Receive Advanced Shipping Notifications (ASN) from suppliers and track vehicle dispatches.</div>
+      </div>
+    </div>
+
+    <!-- MODULE GROUP 2: BUILD SUPPLY -->
+    <div class="ent-section-title" id="sec-build-supply">BUILD &amp; SUPPLY COMMAND</div>
+    <div class="ent-module-grid">
+      <div class="ent-module-card" data-module="build-supply-orders">
+        <div class="ent-card-header">
+          <div class="mod-icon-badge badge-gold">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+          </div>
+          <button class="ent-star-btn" title="Favorite">★</button>
+        </div>
+        <div class="ent-card-name">Build &amp; Supply Orders</div>
+        <div class="ent-card-desc">End-to-end bundled material supply &amp; construction execution requisitions.</div>
+      </div>
+      <div class="ent-module-card" data-module="turnkey-kits">
+        <div class="ent-card-header">
+          <div class="mod-icon-badge badge-amber">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          </div>
+          <button class="ent-star-btn" title="Favorite">★</button>
+        </div>
+        <div class="ent-card-name">Turnkey Material Kits</div>
+        <div class="ent-card-desc">Pre-calculated structural, electrical, and plumbing supply packages.</div>
+      </div>
+      <div class="ent-module-card" data-module="site-supply-schedule">
+        <div class="ent-card-header">
+          <div class="mod-icon-badge badge-emerald">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <button class="ent-star-btn" title="Favorite">★</button>
+        </div>
+        <div class="ent-card-name">Site Supply Schedule</div>
+        <div class="ent-card-desc">Timeline and delivery dispatch tracker for active construction sites.</div>
+      </div>
+      <div class="ent-module-card" data-module="contractor-supply-matcher">
+        <div class="ent-card-header">
+          <div class="mod-icon-badge badge-purple">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <button class="ent-star-btn" title="Favorite">★</button>
+        </div>
+        <div class="ent-card-name">Contractor &amp; Supply Matcher</div>
+        <div class="ent-card-desc">Auto-pair verified material suppliers with trade execution contractors.</div>
+      </div>
+    </div>
+
+    <!-- MODULE GROUP 3: SUB CONTRACT -->
+    <div class="ent-section-title" id="sec-subcontract">SUBCONTRACT MANAGEMENT</div>
+    <div class="ent-module-grid">
+      <div class="ent-module-card" data-module="subcontract-po">
+        <div class="ent-card-header">
+          <div class="mod-icon-badge badge-amber">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20h20"/><path d="M5 20V8l7-5 7 5v12"/><path d="M9 18v-4h6v4"/></svg>
+          </div>
+          <button class="ent-star-btn" title="Favorite">★</button>
+        </div>
+        <div class="ent-card-name">Sub Contract PO</div>
+        <div class="ent-card-desc">Issue trade contracts to electrical, plumbing, and civil subcontractors.</div>
+      </div>
+      <div class="ent-module-card" data-module="material-supplied">
+        <div class="ent-card-header">
+          <div class="mod-icon-badge badge-gold">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          </div>
+          <button class="ent-star-btn" title="Favorite">★</button>
+        </div>
+        <div class="ent-card-name">Material Supplied</div>
+        <div class="ent-card-desc">Track client vs subcontractor supplied materials on active project sites.</div>
+      </div>
+      <div class="ent-module-card" data-module="subcontract-status">
+        <div class="ent-card-header">
+          <div class="mod-icon-badge badge-blue">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          </div>
+          <button class="ent-star-btn" title="Favorite">★</button>
+        </div>
+        <div class="ent-card-name">PO Status</div>
+        <div class="ent-card-desc">Monitor subcontractor execution progress across project milestones.</div>
+      </div>
+      <div class="ent-module-card" data-module="reconciliation-report">
+        <div class="ent-card-header">
+          <div class="mod-icon-badge badge-cyan">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><path d="M9 15l2 2 4-4"/></svg>
+          </div>
+          <button class="ent-star-btn" title="Favorite">★</button>
+        </div>
+        <div class="ent-card-name">Reconciliation Report</div>
+        <div class="ent-card-desc">Reconcile ordered vs consumed vs returned subcontractor materials.</div>
+      </div>
+    </div>
+
+    <!-- MODULE GROUP 4: SUPPLIER MANAGEMENT -->
+    <div class="ent-section-title" id="sec-suppliers">SUPPLIER NETWORK &amp; PROFILES</div>
+    <div class="ent-module-grid">
+      <div class="ent-module-card" data-module="vendor-onboarding">
+        <div class="ent-card-header">
+          <div class="mod-icon-badge badge-emerald">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+          </div>
+          <button class="ent-star-btn" title="Favorite">★</button>
+        </div>
+        <div class="ent-card-name">Vendor Onboarding</div>
+        <div class="ent-card-desc">Register and verify new material suppliers, GSTIN, and compliance documents.</div>
+      </div>
+      <div class="ent-module-card" data-module="vendor-list">
+        <div class="ent-card-header">
+          <div class="mod-icon-badge badge-purple">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          <button class="ent-star-btn" title="Favorite">★</button>
+        </div>
+        <div class="ent-card-name">Vendor List &amp; 360 View</div>
+        <div class="ent-card-desc">View verified supplier profiles, rating scores, historical spend, and performance.</div>
+      </div>
+    </div>
+
+    <!-- MODULE GROUP 5: LOGISTICS -->
+    <div class="ent-section-title" id="sec-logistics">LOGISTICS &amp; SITE DISPATCH</div>
+    <div class="ent-module-grid">
+      <div class="ent-module-card" data-module="smart-delivery">
+        <div class="ent-card-header">
+          <div class="mod-icon-badge badge-cyan">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <button class="ent-star-btn" title="Favorite">★</button>
+        </div>
+        <div class="ent-card-name">Smart Delivery</div>
+        <div class="ent-card-desc">Real-time status tracking for material shipments in transit.</div>
+      </div>
+      <div class="ent-module-card" data-module="gate-entry">
+        <div class="ent-card-header">
+          <div class="mod-icon-badge badge-amber">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <button class="ent-star-btn" title="Favorite">★</button>
+        </div>
+        <div class="ent-card-name">Gate Entry Integration</div>
+        <div class="ent-card-desc">Security gate log for arriving delivery vehicles and PO verification.</div>
+      </div>
+      <div class="ent-module-card" data-module="grn">
+        <div class="ent-card-header">
+          <div class="mod-icon-badge badge-emerald">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          </div>
+          <button class="ent-star-btn" title="Favorite">★</button>
+        </div>
+        <div class="ent-card-name">Goods Receipt Note (GRN)</div>
+        <div class="ent-card-desc">Record material receipts, perform quality checks, and update site inventory.</div>
+      </div>
+    </div>
+
+    <!-- MODULE GROUP 6: FINANCE & PAYMENTS -->
+    <div class="ent-section-title" id="sec-finance">FINANCE &amp; AP AUTOMATION</div>
+    <div class="ent-module-grid">
+      <div class="ent-module-card" data-module="ap-automation">
+        <div class="ent-card-header">
+          <div class="mod-icon-badge badge-purple">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          </div>
+          <button class="ent-star-btn" title="Favorite">★</button>
+        </div>
+        <div class="ent-card-name">AP Automation (3-Way Match)</div>
+        <div class="ent-card-desc">Automate 3-way matching between PO, GRN, and Supplier Invoice.</div>
+      </div>
+      <div class="ent-module-card" data-module="invoice-management">
+        <div class="ent-card-header">
+          <div class="mod-icon-badge badge-gold">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
+          </div>
+          <button class="ent-star-btn" title="Favorite">★</button>
+        </div>
+        <div class="ent-card-name">Invoice Management</div>
+        <div class="ent-card-desc">Review submitted vendor invoices, approve payments, and log transactions.</div>
+      </div>
+    </div>
+
+    <!-- MODULE GROUP 7: QUALITY & SUPPORT -->
+    <div class="ent-section-title" id="sec-quality">QUALITY CONTROL &amp; SUPPORT</div>
+    <div class="ent-module-grid">
+      <div class="ent-module-card" data-module="scoring-evaluation">
+        <div class="ent-card-header">
+          <div class="mod-icon-badge badge-amber">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <button class="ent-star-btn" title="Favorite">★</button>
+        </div>
+        <div class="ent-card-name">Scoring &amp; Evaluation</div>
+        <div class="ent-card-desc">Evaluate supplier performance based on quality, delivery promptness, and pricing.</div>
+      </div>
+      <div class="ent-module-card" data-module="dispute-management">
+        <div class="ent-card-header">
+          <div class="mod-icon-badge badge-rose">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <button class="ent-star-btn" title="Favorite">★</button>
+        </div>
+        <div class="ent-card-name">Dispute Management</div>
+        <div class="ent-card-desc">Raise and resolve material defect or invoice discrepancy disputes.</div>
+      </div>
+      <div class="ent-module-card" data-module="communication-hub">
+        <div class="ent-card-header">
+          <div class="mod-icon-badge badge-blue">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <button class="ent-star-btn" title="Favorite">★</button>
+        </div>
+        <div class="ent-card-name">Communication Hub</div>
+        <div class="ent-card-desc">Unified messaging thread between project managers, suppliers, and contractors.</div>
+      </div>
+    </div>
+
+    <!-- MODULE GROUP 8: ANALYTICS -->
+    <div class="ent-section-title" id="sec-analytics">ANALYTICS &amp; COST REPORTING</div>
+    <div class="ent-module-grid">
+      <div class="ent-module-card" data-module="reports-analytics">
+        <div class="ent-card-header">
+          <div class="mod-icon-badge badge-cyan">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+          </div>
+          <button class="ent-star-btn" title="Favorite">★</button>
+        </div>
+        <div class="ent-card-name">Reports &amp; Analytics</div>
+        <div class="ent-card-desc">Comprehensive procurement spend, cost variance, and CSV export engine.</div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Module Detail Drawer Modal -->
+  <div class="ent-drawer-overlay" id="ent-drawer">
+    <div class="ent-drawer-content">
+      <div class="ent-drawer-header">
+        <div class="ent-drawer-title" id="ent-drawer-title">Module Title</div>
+        <button id="ent-drawer-close" style="background:none;border:none;color:#aaa;font-size:24px;cursor:pointer;">✕</button>
+      </div>
+      <div class="ent-drawer-body" id="ent-drawer-body">
+        <!-- Dynamic module content rendered here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="../js/utils/helpers.js"></script>
+  <script src="../js/components/notifications.js"></script>
+  <script src="../js/app.js"></script>
+  <script src="../js/enterprise.js"></script>
+</body>
+</html>

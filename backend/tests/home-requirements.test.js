@@ -1,0 +1,10 @@
+'use strict';
+const test=require('node:test'),assert=require('node:assert/strict');const m=require('../../frontend/js/home-requirements-model');const valid=()=>({...m.defaults(),length:40,width:30});
+test('typed requirement serialization and live arithmetic',()=>{const d=m.serialize(valid());assert.equal(d.plot.areaSqFt,1200);assert.equal(d.building.bedrooms,3);assert.equal(d.ruleEvaluation.legalBuildableAreaSqFt,null);assert.equal(d.planning.masterBuildingModel,null);assert.equal(d.outputs.floorPlan3D,true)});
+test('rejects invalid, zero and negative dimensions',()=>{for(const n of [0,-1,NaN,Infinity,'40'])assert(m.validate({...valid(),length:n}).length)});
+test('does not accept a preferred area above gross physical capacity',()=>{assert(m.validate({...valid(),areaMode:'manual',preferredArea:1201}).preferredArea);assert(!m.validate({...valid(),floorsMode:'2',areaMode:'manual',preferredArea:2000}).preferredArea)});
+test('custom floors require a number',()=>assert(m.validate({...valid(),floorsMode:'custom',floorsCustom:null}).floorsCustom));
+test('manual rooms preserve dimensions and calculate areas',()=>{let s={...valid(),roomSizing:'manual'},sizes=Object.fromEntries(m.roomList(s).map(r=>[r.id,{widthFt:8,lengthFt:8}]));const data=m.serialize(s,sizes);assert.equal(data.rooms[0].areaSqFt,64);sizes.living_1.widthFt=31;assert(m.validate(s,sizes).room_living_1)});
+test('priority limit and order are preserved',()=>{assert(m.validate({...valid(),priorities:['privacy','cost','area','living']}).priorities);assert.deepEqual(m.serialize({...valid(),priorities:['privacy','cost']}).preferences.priorities,[{key:'privacy',rank:1},{key:'cost',rank:2}])});
+test('kitchen utility is represented once in room inventory',()=>{const s={...valid(),kitchen:'utility',optionalRooms:['utility']};assert.equal(m.serialize(s).rooms.filter(r=>r.id==='utility').length,1)});
+test('corner directions and square geometry are checked',()=>{assert(m.validate({...valid(),corner:true,secondRoadFacing:'East'}).secondRoadFacing);assert(m.validate({...valid(),shape:'square'}).shape)});
